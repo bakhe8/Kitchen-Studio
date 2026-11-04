@@ -113,7 +113,7 @@
 - Produces: truthful implemented/partial/pending status for every reconciliation row.
 
 - [x] **Step 1: Run all focused interaction checks**; 13/13 scripts pass. Exact commands and limits are recorded in `docs/kitchen-studio/interaction-reconciliation-verification-2026-11-04.md`.
-- [ ] **Step 2: Full `npm test` not run in this change.** Verification was narrowed to the modified domain, UI, routing, project persistence, and shared move paths. This is not evidence that every project check passes.
+- [x] **Step 2: Run full verification.** `npm test` passes 240/240 checks after regenerating the source inventory and correcting a pre-existing asynchronous wait in the oversight test. Lint passes with zero errors and 109 warnings after fixing nine pre-existing storage-fixture assignments; typecheck and build also pass. Exact failures, fixes, runtime, and evidence limits are recorded in the verification report.
 - [ ] **Step 3: Browser journeys not completed.** A temporary page using the real source and fixture was prepared, but both available browsers returned connection refused for the local preview. Mouse/keyboard/reduced-motion/narrow-layout browser checks and real-device/technician acceptance remain separate gates.
 - [x] **Step 4: Update the reconciliation matrix** from evidence only.
 
