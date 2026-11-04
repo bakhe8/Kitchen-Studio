@@ -195,7 +195,7 @@ export function previewKitchenWidthChange(doc,unitId,deltaMm,{withEffects=true,e
  }
  const left=sideChoices(e.locks.position?[]:neighbors(-1),'left',sign,limits),right=sideChoices(neighbors(1),'right',sign,limits);
  const available=dragEdge==='start'?left.max:dragEdge==='end'?right.max:left.max+right.max;
- if(dragEdge&&n>available)return fail(doc,'تمنع حدود الصف أو تثبيت الوحدة المجاورة نقل هذه الحافة. جرّب الحافة الأخرى أو أدخل العرض في الخصائص.');
+ if(dragEdge&&n>available)return fail(doc,'تمنع حدود الصف أو تثبيت الوحدة المجاورة نقل هذه الحافة. جرّب الحافة الأخرى أو أدخل العرض في الخصائص. ينقص التعديل '+(n-available)+' مم عند هذه الحافة.');
  if(n>available)return fail(doc,'ينقص التعديل '+(n-available)+' مم في الجزء المتصل حول الوحدة بعد تثبيت الأجهزة واحترام حدود التخزين.');
  const alternatives=[];
  const transfers=dragEdge==='start'?[n]:dragEdge==='end'?[0]:[0,n,...Array.from({length:n-1},(_,k)=>k+1)];
