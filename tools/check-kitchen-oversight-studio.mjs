@@ -139,7 +139,7 @@ async function start({workshop=false,focus={},doc=apiFixture.localDoc,as='owner'
  await settle();
  const query=selector=>host.querySelector(selector);
  const action=async name=>{await fire('click',query('[data-os-action="'+name+'"]'));await settle();};
- const choose=async(key,value)=>{const field=query('[data-os-context="'+key+'"]');assert(field,'context exists: '+key);field.value=value;await fire('change',field);await settle();};
+ const choose=async(key,value)=>{const field=query('[data-os-context="'+key+'"]');assert(field,'context exists: '+key);field.value=value;await fire('change',field);await settle();await until(()=>query('[data-os-action="refresh"]')?.disabled===false,'selected context refresh completes');};
  const stage=async id=>{await fire('click',query('[data-os-stage="'+id+'"]'));await settle();};
  const task=async id=>{await fire('click',query('[data-os-task="'+id+'"]'));await settle();};
  return {host,query,action,choose,stage,task,controller,shell,saves,histories,advance,notices,get doc(){return live;},set doc(value){live=value;},set failSave(value){failSave=value;},set editable(value){editable=value;},close(){if(controller)controller();shell?.close(false);host.remove();}};

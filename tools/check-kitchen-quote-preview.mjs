@@ -143,7 +143,7 @@ await test('provenance comes from actual produced pieces and grouped purchases w
 });
 
 await test('preview commits once through actual save/reopen/undo/redo without losing catalog ownership',()=>{
- localStorage=new Store();sessionStorage=new Store();assert(saveProject(fixture()));
+ globalThis.localStorage=new Store();globalThis.sessionStorage=new Store();assert(saveProject(fixture()));
  const doc=openKitchenProject(),out=reviewQuotePreview(doc,{prices:{'BODY-6':120},terms:{delivery:45}}),result=commitProject(doc,out.doc);
  assert(result.ok&&result.saved,result.reason);assert.deepEqual(buildFactoryQuote(storedKitchenProject()),out.quote);
  const undone=undoProject(result.next);assert(undone?.saved);assert.equal(getFactoryCatalog(undone.next).terms.delivery,30);
@@ -153,7 +153,7 @@ await test('preview commits once through actual save/reopen/undo/redo without lo
 });
 
 await test('storage failure and stale source reject preview application without replacing the saved order',()=>{
- localStorage=new Store();sessionStorage=new Store();assert(saveProject(fixture()));let doc=openKitchenProject();
+ globalThis.localStorage=new Store();globalThis.sessionStorage=new Store();assert(saveProject(fixture()));let doc=openKitchenProject();
  const out=reviewQuotePreview(doc,{prices:{'BODY-6':130}}),old=localStorage.getItem('atlas-kitchen:project:v1');localStorage.fail=true;
  const failed=commitProject(doc,out.doc);assert.equal(failed.ok,false);assert.equal(localStorage.getItem('atlas-kitchen:project:v1'),old);localStorage.fail=false;
  doc=openKitchenProject();const next=reviewQuotePreview(doc,{terms:{delivery:60}});

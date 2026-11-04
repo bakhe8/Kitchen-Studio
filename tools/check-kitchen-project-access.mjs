@@ -57,7 +57,7 @@ globalThis.fetch=async()=>{throw Error('offline');};
 assert.equal((await refreshProjectAccess(doc)).status,'unavailable');assert.equal(saveProject(next),false);
 
 // A new module/storage lifetime never restores the last server role as trusted.
-localStorage=new Store(localStorage.values);sessionStorage=new Store(sessionStorage.values);
+globalThis.localStorage=new Store(localStorage.values);globalThis.sessionStorage=new Store(sessionStorage.values);
 assert.equal(getProjectAccess(doc).status,'checking');assert.equal(getProjectAccess(doc).role,null);
 assert(getProjectAccess(doc).remoteProjectId);
 globalThis.fetch=async()=>Response.json({id:remote,role:'invented',revision:3});
@@ -100,14 +100,14 @@ assert(notices>0);stop();
   throw Error('install callback failed');
  }),/install callback failed/);
  localStorage.setItem=set;assert.equal(getProjectAccess(incoming).status,'unavailable');assert.equal(getProjectAccess(incoming).role,null);assert.equal(saveProject(incoming),false);
- localStorage=new Store(localStorage.values);assert.equal(getProjectAccess(incoming).status,'unavailable','Recovery lock survives a module/storage lifetime through session metadata.');
+ globalThis.localStorage=new Store(localStorage.values);assert.equal(getProjectAccess(incoming).status,'unavailable','Recovery lock survives a module/storage lifetime through session metadata.');
 }
 
 // Adopt the old session link only for the open slot, then persist the association.
 reset();let legacy=make('Legacy linked');assert(saveProject(legacy));
 sessionStorage.setItem('kitchen-workshop:remote:v1',JSON.stringify({id:remote,revision:4}));
 assert.equal(getProjectAccess(legacy).status,'checking');assert.equal(getProjectAccess(make('Other local')).status,'local');
-sessionStorage=new Store();localStorage=new Store(localStorage.values);
+globalThis.sessionStorage=new Store();globalThis.localStorage=new Store(localStorage.values);
 assert.equal(getProjectAccess(legacy).remoteProjectId,remote,'The association survives losing the old session link.');
 
 // An owner may save an independent full copy, preserving the source identity.
