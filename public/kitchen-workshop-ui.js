@@ -27,6 +27,7 @@ import {gateways,pageOwner,factoryPageOf,stageCount} from './kitchen-gateways.js
 import {getProjectAccess} from './kitchen-project-access.js';
 import {canOpenWorkshopPage,canEditWorkshopPage,visibleGatewayIds,roleHome} from './kitchen-role-pages.js';
 import {mountOwnerOverview} from './kitchen-owner-ui.js';
+import {consumeDesignerReturn} from './kitchen-designer-navigation.js';
 // A fault in the versions card must never take the approvals screen down with it.
 const guarded=build=>{try{return build();}catch{return '';}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -363,7 +364,8 @@ export function mountWorkshop(el,{getDoc,apply,tell,closeOthers,opener,onExterna
    const external=['defaults','assist','field','placement','cad-run','cad-material','top-detail','unit-interior','room-finish','field-part','floor-point'].includes(step);
    if(!canOpenWorkshopPage(currentRole(),external?step:resolveStep(step,focus))){notify('هذه الصفحة خارج صلاحيتك الحالية.');navigate(roleHome(currentRole()));return;}
    if(['defaults','assist','field','placement','cad-run','cad-material','top-detail','unit-interior','room-finish','field-part','floor-point'].includes(step)&&onExternalStep){
-     hide(false);onExternalStep(step,focus);return;
+     const origin=step==='unit-interior'&&active==='whole'?dispose?.selectionForReturn?.():null;
+     hide(false);if(origin)onExternalStep(step,focus,origin);else onExternalStep(step,focus);return;
    }
    navigate(step,focus);
  }
@@ -512,6 +514,7 @@ export function mountWorkshop(el,{getDoc,apply,tell,closeOthers,opener,onExterna
  function setModality(){if(mobile.matches)panel.setAttribute('aria-modal','true');else panel.removeAttribute('aria-modal');}
  mobile.addEventListener('change',setModality);setModality();
  function open(step,focus,keepTrail=false){
+   if(step==='whole'&&focus==null&&globalThis.location?.href)focus=consumeDesignerReturn(getDoc(),new URL(location.href).searchParams)||undefined;
    if(!panel.hidden){if(step)begin(step,focus);else chooser.focus();return;}
    const trigger=document.activeElement;
    returnFocus=trigger?.matches('button,a[href]')&&el.contains(trigger)?trigger:opener;

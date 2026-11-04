@@ -54,19 +54,19 @@
     ]
   },
   "counts": {
-    "files": 363,
+    "files": 364,
     "stylesheets": 64,
-    "scripts": 299,
+    "scripts": 300,
     "routes": 48,
     "screens": 43,
     "components": 1580
   },
   "coverage": {
-    "totalFiles": 363,
-    "classifiedFiles": 363,
+    "totalFiles": 364,
+    "classifiedFiles": 364,
     "unclassifiedFiles": 0,
     "percent": 100,
-    "entryReachableFiles": 332,
+    "entryReachableFiles": 333,
     "unlinkedFiles": 31,
     "systemNativeFiles": 0
   },
@@ -177,6 +177,7 @@
         "public/kitchen-creative-model.js",
         "public/kitchen-creative.js",
         "public/kitchen-design-pages.css",
+        "public/kitchen-designer-navigation.js",
         "public/kitchen-designer-precision.js",
         "public/kitchen-designer-studio.css",
         "public/kitchen-designer-studio.js",
@@ -279,9 +280,9 @@
         "whole"
       ],
       "counts": {
-        "files": 102,
+        "files": 103,
         "stylesheets": 17,
-        "scripts": 85,
+        "scripts": 86,
         "screens": 9,
         "components": 302
       }
@@ -23844,6 +23845,19 @@
       "inlineStyleFragments": 1
     },
     {
+      "path": "public/kitchen-designer-navigation.js",
+      "type": "js",
+      "family": "design",
+      "migrationWave": 4,
+      "status": "legacy",
+      "bytes": 1382,
+      "sha256": "1d259ca5edecfc97632d0a5bdad8f525e837be537a3b22388073cc8f10ff7999",
+      "entryLinked": false,
+      "reachableFromEntry": true,
+      "references": [],
+      "inlineStyleFragments": 0
+    },
+    {
       "path": "public/kitchen-designer-precision.js",
       "type": "js",
       "family": "design",
@@ -24093,8 +24107,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 31253,
-      "sha256": "161c9619348b5d2b81f190db2fab05bf72297fd5a2ef01e9116d8ecb0b128179",
+      "bytes": 31353,
+      "sha256": "79d9f272106d842be97a536cf15eea3be482b4414cfbaa3905ef9831add6e56b",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -26045,8 +26059,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 22880,
-      "sha256": "9eababe07cd8a12a08181e66e507c1a1cc85d1634b71a845fb58076a0b7c002f",
+      "bytes": 23033,
+      "sha256": "5cbabdae630a8a591f061b703af8436907236593132b846e3fe883fbddb6dd1d",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -26055,6 +26069,7 @@
         "public/kitchen-catalog-view.js",
         "public/kitchen-chain-model.js",
         "public/kitchen-defaults-model.js",
+        "public/kitchen-designer-navigation.js",
         "public/kitchen-field-model.js",
         "public/kitchen-fitout-visual.js",
         "public/kitchen-model.js",
@@ -27861,8 +27876,8 @@
       "family": "design",
       "migrationWave": 4,
       "status": "legacy",
-      "bytes": 66497,
-      "sha256": "d9dae89596f18c0ce1f2de4d804297c72907d1e4a969fb6381e7da2231fb9647",
+      "bytes": 66598,
+      "sha256": "db0ad7493f9c6d7b0cd3ad684ede03df43b10527ef3ac8550cef765239b1d737",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -28316,8 +28331,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 49513,
-      "sha256": "decfcb65a3e7baa5707f4e124d28be9cd29d3387485bb7baba3a0d5339d781b2",
+      "bytes": 49878,
+      "sha256": "d506d2c56b8b49d3689cf62708f132e74e8c449b3829ab0354508053885515d6",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -28328,6 +28343,7 @@
         "public/kitchen-chain-ui.js",
         "public/kitchen-client-usage-ui.js",
         "public/kitchen-design-versions.js",
+        "public/kitchen-designer-navigation.js",
         "public/kitchen-finish-desk.js",
         "public/kitchen-finish-parts.js",
         "public/kitchen-fitout-ui.js",

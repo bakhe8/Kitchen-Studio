@@ -304,4 +304,11 @@ await contextCheck('Escape closes transient details before clearing selection or
  assert.equal(f.controller.selectionForReturn(),null,'second Escape clears selection');
  const third=await f.fire('keydown',f.svg,{key:'Escape'});assert(!third.defaultPrevented,'surrounding navigation can handle the next Escape');f.destroy();
 });
+await contextCheck('restoring settings abandons its snapshot before another unit opens details',async()=>{
+ const f=fixture();await f.action('settings');await f.action('restore');await f.choose(storage.id);await f.view('plan');
+ await f.fire('keydown',f.svg,{key:'+'});const before=f.svg.getAttribute('viewBox');
+ await f.action('details');await f.action('close-sheet');
+ assert.equal(f.controller.selectionForReturn()?.unitId,storage.id,'the current unit B replaces the abandoned settings origin A');
+ assert.equal(f.controller.selectionForReturn()?.proposalView,'plan');assert.equal(f.svg.getAttribute('viewBox'),before);f.destroy();
+});
 assert.equal(contextFailures.length,0,contextFailures.map(error=>error.message).join('\n'));

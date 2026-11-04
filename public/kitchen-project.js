@@ -17,12 +17,13 @@ import {frontAppearanceSource} from './kitchen-render-factory-fronts.js';
 import {cleanStudioRoom,readWallPhotos,validRoomCladding,purgeOrphanPhotos} from './kitchen-studio-room.js';
 import {getRoom,roomWallData,roomWallIds} from './shelf-room-model.js';
 import {createKitchen,validateKitchen,updateUnit,kitchenGeometry,validateKitchenChange,validateSurveyFeatureChange,kitchenUnitSpecs} from './kitchen-model.js';
+import {withDesignerReturn} from './kitchen-designer-navigation.js';
 const shelfKey='atlas-shelves:plan:v1',key='atlas-kitchen:project:v1',historyKey='atlas-kitchen:undo:v1',artKey='atlas-shelves:wall-image:v1';
 const read=(s,k)=>{try{const v=s.getItem(k);return v?JSON.parse(v):null;}catch{return null;}};
 const write=(s,k,v)=>{try{s.setItem(k,JSON.stringify(v));return true;}catch{return false;}};
-export const kitchenProjectURL=(view='kitchen',unit=null,pose=null)=>{const u=new URL(location.href);u.pathname=view==='kitchen-unit'?'/unit.html':'/';u.searchParams.set('view',view);if(unit)u.searchParams.set('unit',unit);else u.searchParams.delete('unit');
+export const kitchenProjectURL=(view='kitchen',unit=null,pose=null,designerOrigin=null)=>{const u=new URL(location.href);u.pathname=view==='kitchen-unit'?'/unit.html':'/';u.searchParams.set('view',view);if(unit)u.searchParams.set('unit',unit);else u.searchParams.delete('unit');
  if(pose){u.searchParams.set('space',pose.view==='top'?'top':'volume');for(const k of ['yaw','pitch'])if(Number.isFinite(pose[k]))u.searchParams.set(k,String(pose[k]));}
- u.hash='';return u.href;};
+ u.hash='';return view==='kitchen-unit'?withDesignerReturn(u.href,designerOrigin):u.href;};
 export function savedRoom(store=localStorage){const s=validatePlan(read(store,shelfKey))||createShelfPlan(),r=getRoom(s);return {width:r.width,length:r.length,height:r.height,colors:Object.fromEntries(roomWallIds.map(id=>[id,roomWallData(s,id)?.color||'sand']))};}
 const roomOK=r=>r&&[r.width,r.length].every(v=>Number.isFinite(v)&&v>=60&&v<=1200)&&Number.isFinite(r.height)&&r.height>=60&&r.height<=600;
 export function scenePlan(r,kitchen){const fitout=installedFitout(r,kitchen);const p=createShelfPlan(),colors=r.colors||{},layers={};

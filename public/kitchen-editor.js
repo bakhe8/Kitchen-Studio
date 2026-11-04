@@ -115,16 +115,16 @@ function applyCad(next,msg){
  if(reason){tell(reason);return {ok:false,changed:false,saved:false,reason};}
  return apply(next,msg);
 }
-function editUnit(id){
+function editUnit(id,designerOrigin=null){
  if(!permitted('unit-interior',true))return;
  const u=doc.kitchen.units.find(v=>v.id===id),g=kitchenGeometry(doc.kitchen,rp).units.find(v=>v.id===id);
  if(!u||!g||!shapeForUnit(u,g)){tell('لا تتّسع هذه الوحدة لتقسيم داخلي قابل للتحرير.');return;}
  if(projectChangedElsewhere()){tell(staleProjectMessage);return;}
  if(!saveProject(doc)){tell('تعذّر حفظ المطبخ قبل فتح الوحدة.');return;}
  const pose=rememberKitchenViewport(kit.getState());
- location.assign(kitchenProjectURL('kitchen-unit',id,pose));
+ location.assign(kitchenProjectURL('kitchen-unit',id,pose,designerOrigin));
 }
-function inspectPart(route,focus={}){
+function inspectPart(route,focus={},designerOrigin=null){
  const dest=workshopPartTarget(doc,route,focus);
  if(!dest){tell('لم يعد العنصر موجودًا في هذا المشروع.');return;}
  if(!permitted(dest.route==='factory'?workshopRoute(dest.route,dest.focus):dest.route))return;
@@ -135,7 +135,7 @@ function inspectPart(route,focus={}){
  case 'cad-run':return kit.inspectItem('run',f.runId);
  case 'cad-material':return kit.inspectMaterial('unit',f.unitId,f.part);
  case 'top-detail':return kit.inspectMaterial('run',f.runId,'worktop',f);
- case 'unit-interior':return editUnit(f.unitId);
+ case 'unit-interior':return editUnit(f.unitId,designerOrigin);
  case 'floor-point':return survey.open('points',f.pointId);
  case 'room-finish':return panels.open('project','room',f);
  case 'field-part':{
@@ -247,8 +247,8 @@ workshop=mountWorkshop(el,{getDoc:()=>doc,apply,tell,opener:workshopButton,onHis
    guideEntry.setAttribute('aria-label','دليل المشروع · '+preview.label+' · '+preview.text);
    guideEntry.title=preview.text;
  },
- onExternalStep(step,focus){
-   if(!['defaults','assist','field'].includes(step)){inspectPart(step,focus);return;}
+ onExternalStep(step,focus,designerOrigin){
+   if(!['defaults','assist','field'].includes(step)){inspectPart(step,focus,designerOrigin);return;}
    panels.close(false);shutPanels();fieldFromGuide=true;
    fieldReg.open({...focus,fromGuide:true,mode:step==='field'?'records':step==='defaults'?'defaults':'assist'});
    $('[data-open-field]').setAttribute('aria-expanded','true');

@@ -277,7 +277,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   paintScene();if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
   if(unapplied())scheduleDesignDraft();
  }
- function clearInteraction(){pending=false;epoch++;error='';widthPreview=null;cancelWidthInteraction();cancelDrag(false);dragged=false;computed=null;}
+ function clearInteraction(){pending=false;epoch++;detailContext=null;error='';widthPreview=null;cancelWidthInteraction();cancelDrag(false);dragged=false;computed=null;}
  function observeDesignerSize(){if(!resizeObserver)return;resizeObserver.disconnect();resizeObserver.observe(host);const wrap=host.querySelector('.ds-canvas-wrap');if(wrap)resizeObserver.observe(wrap);}
  function rawBlocked(){
   if(!widthPreview)return false;
@@ -340,7 +340,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  }
  async function generate(params=readSettings()){
   if(!canEdit()||rawBlocked()||pending)return;if(stale()){tell('تغيّر المشروع. أعد فتح المقترح.');return;}
-  const t=++epoch,source=s.base;s.settings=params;error='';pending=true;s.issue=null;s.sheet='';render();
+  const t=++epoch,source=s.base;detailContext=null;s.settings=params;error='';pending=true;s.issue=null;s.sheet='';render();
   try{
    const res=await proposeWholeKitchen(source,{walls:params.walls,wanted:{sink:params.sink,rice:params.rice,dishwasher:params.dishwasher},pause:()=>new Promise(resolve=>setTimeout(resolve,0)),cancel:()=>signal.aborted||t!==epoch||stale()||!canEdit()});
    if(signal.aborted||t!==epoch||!canEdit())return;
@@ -377,6 +377,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function selectUnit(id,focus,part=null){
   if(rawBlocked()||!usable())return;
   const unit=facts().units.find(u=>u.id===id);if(!unit)return;
+  if(!s.sheet)detailContext=null;
   s.part=id;s.pickedPart=part;
   if(s.face==='plan')s.planTier=unit.tier==='upper'?'upper':'base';
   else if(s.face!=='volume'&&s.face!==unit.wall)s.face=unit.wall||'plan';
@@ -402,7 +403,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   }else{s.pickedPart=null;render();restoreDesignerOpener(host,selectionOpener);}
  }
  function rememberDetail(opener){
-  if(!detailContext)detailContext={unitId:s.part,face:s.face,planTier:s.planTier,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera(),pickedPart:s.pickedPart,opener:captureDesignerOpener(host,opener)};
+  if(!s.sheet||!detailContext)detailContext={unitId:s.part,face:s.face,planTier:s.planTier,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera(),pickedPart:s.pickedPart,opener:captureDesignerOpener(host,opener)};
  }
  function openPanel(key,opener){
   if(rawBlocked())return;
@@ -470,7 +471,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
     const unit=facts().units.find(u=>u.id===s.part),row=facts().units.filter(u=>u.runId===unit?.runId).sort((a,b)=>a.startMm-b.startMm),index=row.findIndex(u=>u.id===unit?.id),target=row[index+(b.dataset.wp==='move-before'?-1:1)];
     if(target)moveUnit(target.id);else sayGesture('الوحدة عند طرف الصف.');break;
    }
-   case 'restore':if(s.generatedSettings&&!stale()){s.settings=s.generatedSettings;s.requestFailed=false;s.issue=null;s.sheet='';computed=null;render();}break;
+   case 'restore':if(s.generatedSettings&&!stale()){detailContext=null;s.settings=s.generatedSettings;s.requestFailed=false;s.issue=null;s.sheet='';computed=null;render();}break;
    case 'generate':void generate();break;
    case 'cancel':clearInteraction();render();break;
    case 'settings':case 'details':case 'questions':case 'changes':openPanel(b.dataset.wp,b);break;
