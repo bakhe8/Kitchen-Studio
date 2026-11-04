@@ -1,0 +1,56 @@
+/* Both editors use the same working surface on tablets and larger windows. */
+@media (max-width: 767px) {
+  html:not([data-workspace-open]) body[data-project-mode] > :not(.studio-width-note, noscript) {
+    display: none !important;
+  }
+}
+.studio-scroll-sheet {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100dvh;
+  overflow: auto;
+  direction: rtl;
+}
+.studio-scroll-sheet iframe {
+  display: block;
+  width: max(768px, 100%);
+  height: 100%;
+  border: 0;
+}
+.studio-width-note {
+  direction: rtl;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  padding: 28px;
+  color: var(--ks-ink);
+  background: var(--ks-surface-1);
+  font: 400 16px/1.75 Tahoma, Arial, sans-serif;
+}
+.studio-width-note > section { max-width: 31rem; margin-inline: auto; border-block-start: 2px solid var(--ks-line-strong); padding-block: 22px; }
+.studio-width-note img { vertical-align: middle; }
+.studio-width-note p { margin: 8px 0; color: var(--ks-ink); }
+.studio-width-note h1 { margin: 10px 0; font: 700 26px/1.5 Tahoma, Arial, sans-serif; }
+.studio-width-note button { margin-block-start: 16px; min-height: 44px; padding: 5px 16px; color: var(--ks-on-dark); background: var(--ks-ink-strong); border: 1px solid var(--ks-line-strong); border-radius: var(--ks-radius-control); cursor: pointer; font: inherit; }
+.studio-width-note button:focus-visible { outline: 3px solid var(--ks-focus-ring); outline-offset: 2px; }
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .k-workshop[data-ws-route="survey"] .ws-content { padding-inline: 12px; }
+  .sv .sv-ink-tools { column-gap: 4px; }
+  .sv .sv-ink-tool, .sv .sv-ink-more > summary,
+  .sv .sv-ink-editor > button, .sv .sv-ink-editor input,
+  .sv .sv-ink-kinds button, .sv .sv-ink-note button,
+  .sv .sv-ink-aside .sv-readings button, .sv .sv-footer-actions button,
+  .ws-content .proposal-studio :is(.pd-segment, .pd-elevation, .pd-stepper, .pd-unitpicker) {
+    min-height: 44px;
+  }
+  @container proposal (min-width: 621px) {
+    .proposal-studio .pd-layout { grid-template-columns: minmax(0, 1fr) minmax(200px, 27%); gap: 12px; }
+    .proposal-studio .pd-stagebar { flex-wrap: wrap; row-gap: 3px; }
+    .proposal-studio .pd-unitrow { flex-wrap: wrap; }
+  }
+  .k-workshop[data-ws-route="assembly"] .ws-content :is(button, input:not([type="checkbox"]), select) {
+    min-height: 44px;
+  }
+}

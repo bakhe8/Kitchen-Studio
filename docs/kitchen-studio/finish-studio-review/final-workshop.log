@@ -1,0 +1,5 @@
+Finish workshop: actual approved async mount, pending navigation/close/unload guards, explicit project save/remount, authoritative undo/redo, discard and reopen.
+Finish workshop: rejected project apply returns its reason and keeps preview; cancel releases the actual workshop dirty guard.
+Finish workshop: a session-only application keeps the persistence failure visible and points to project export.
+Finish workshop: Escape resolves the active preview while retaining the owning workshop.
+Finish workshop: live role revocation freezes the pending editor, blocks preview/save/history, and requires explicit discard to navigate.

@@ -1,0 +1,38 @@
+import {confirmFixtureFitout} from './fixture-kitchen-fitout.mjs';
+import assert from 'node:assert/strict';
+import {makeChainExample,attestChain,readChainRange} from '../public/kitchen-chain-model.js';
+import {planWorkshopRow} from '../public/kitchen-production-row.js';
+import {seedCatalog} from '../public/kitchen-workshop-factory.js';
+import {recordReleaseIssues} from '../public/kitchen-field-release.js';
+import {upsertFieldRecord} from '../public/kitchen-field-model.js';
+import {approvalState,batchReleaseState,releaseConcerns,cleanWorkshop} from '../public/kitchen-workshop-state.js';
+import {approveSurface,surfaceReleaseIssues} from '../public/kitchen-surface-release.js';
+const d=makeChainExample(),ws=d.room.workshop,catalog=seedCatalog();
+catalog.approved=true;catalog.items.forEach(i=>i.price=10);
+Object.assign(catalog.terms,{worktop:'separate',labor:0,installation:0,delivery:0,marginPct:0,taxPct:0});
+ws.catalog=catalog;ws.chains.back=attestChain(d,'back',ws.chains.back,{name:'فني تجريبي',reference:'رفع تحقق'}).chain;
+const outcome=planWorkshopRow(d,{...readChainRange(d,'back'),tier:'base',wanted:{rice:false,sink:false,dishwasher:false}});assert(outcome.ok,outcome.reason);
+const doc=outcome.doc,w=doc.room.workshop;
+confirmFixtureFitout(doc);
+const ids=doc.kitchen.units.map(u=>u.id),run=doc.kitchen.runs[0];
+w.approvals={};for(const key of ['structure','customer']){const state=await approvalState(doc);w.approvals[key]={key:state.keys[key],name:'اختبار',date:new Date().toISOString()};}
+const scope={unitIds:[ids[0]],walls:['back'],runIds:[run.id]};
+function add(data){const out=upsertFieldRecord(doc.room,{inputCode:'SITE-17',valueType:'number',unit:'مم',value:500,property:'عرض تحقق',itemId:ids[0],source:'QA',...data});assert(out.ok,out.reason);doc.room=out.room;}
+add({id:'first',verification:'measured',value:500});add({id:'same',verification:'measured',unit:'سم',value:50});
+assert.deepEqual(recordReleaseIssues(doc,scope),[]);
+add({id:'different',verification:'measured',value:505});
+assert(recordReleaseIssues(doc,scope).length);assert.deepEqual(recordReleaseIssues(doc,{...scope,unitIds:[ids[1]]}),[]);
+add({id:'different',verification:'measured',value:505,execution:'excluded'});assert.deepEqual(recordReleaseIssues(doc,scope),[]);
+add({id:'missing',property:'ارتفاع الموضع',verification:'unknown',value:null,shopCritical:true});
+assert(recordReleaseIssues(doc,scope).length);assert((await approvalState(doc)).valid.customer,'technical notes must not change the sale approval');
+assert(!(await batchReleaseState(doc,[ids[1]])).issues.length);
+add({id:'missing',property:'ارتفاع الموضع',verification:'measured',value:820,shopCritical:true});
+assert(!releaseConcerns(doc,await approvalState(doc)).length);
+const top=structuredClone(doc);top.room.workshop.catalog.terms.worktop='include';
+assert(surfaceReleaseIssues(top).length);
+const templ=approveSurface(top,{reference:'قالب T',levelRecord:'محضر التثبيت',inspector:'فني الأسطح',date:'2026-10-31',cutouts:''});assert(templ.ok,templ.reason);assert(!surfaceReleaseIssues(templ.doc).length);
+assert(cleanWorkshop(templ.doc.room.workshop)?.surfaceTemplate);
+const taller=structuredClone(templ.doc);taller.kitchen.runs[0].height+=1;assert(surfaceReleaseIssues(taller).length);
+const unsupported={...doc,room:{...doc.room,workshop:{...doc.room.workshop,approvals:{}}}};
+assert((await batchReleaseState(unsupported,[ids[0]])).issues.some(s=>s.includes('اعتمد التصميم')));
+console.log('Release dependencies: same measurement in cm/mm, contradictory and mandatory data scoped to one unit, no false signoff from unknown, unchanged sale after a technical observation, whole-surface template and invalidation after changing the actual base.');

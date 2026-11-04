@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {makeChainExample} from '../public/kitchen-chain-model.js';
+import {seedCatalog,buildFactoryQuote} from '../public/kitchen-workshop-factory.js';
+import {compareKitchenLayouts} from '../public/kitchen-production-alternatives.js';
+import {budgetHold,cleanLayoutBrief,dividerMismatch} from '../public/kitchen-layout-brief.js';
+import {cleanIdea} from '../public/kitchen-ideas.js';
+import {approvalState,releaseConcerns} from '../public/kitchen-workshop-state.js';
+const d=makeChainExample(),cat=seedCatalog();cat.approved=true;cat.items.forEach(i=>i.price=i.kind==='panel'?115:15);
+Object.assign(cat.terms,{worktop:'separate',labor:80,installation:90,delivery:30,marginPct:10,taxPct:15});d.room.workshop.catalog=cat;
+const options={walls:['back'],wanted:{sink:true,rice:false,dishwasher:false}};
+const brief={mode:'preferred',capSar:100000,extraSar:250,scope:'نموذج فقط، السطح خارجي',reference:'اتفاق التجربة',weights:{contract:4,storage:1,cuts:2,travel:0,alignment:0}};
+const before=JSON.stringify(d),proposals=await compareKitchenLayouts(d,{...options,brief});
+assert.equal(proposals.candidates.length,3);assert.equal(JSON.stringify(d),before);
+const costs=proposals.candidates.map(c=>c.budget.total).sort((a,b)=>a-b);assert(costs[0]<costs.at(-1));
+for(const c of proposals.candidates){assert.equal(c.budget.total,buildFactoryQuote(c.doc).total+250);assert(c.rankScore!==null);assert.equal(c.doc.kitchen.units.filter(u=>u.kind==='sink').length,1);}
+const fixed={...brief,mode:'fixed',capSar:costs[0]};
+const bounded=await compareKitchenLayouts(d,{...options,brief:fixed});assert(bounded.candidates.length);assert(bounded.budgetCounts.over>0);
+assert(bounded.candidates.every(c=>c.budget.total<=fixed.capSar));
+const empty=await compareKitchenLayouts(d,{...options,brief:{...fixed,capSar:costs[0]-.01}});assert.equal(empty.candidates.length,0);
+const result=cleanIdea(JSON.parse(JSON.stringify(bounded.candidates[0].doc)));assert(result?.room.workshop.layoutBrief);
+const sig=await approvalState(result);result.room.workshop.approvals={structure:{key:sig.keys.structure,name:'QA',date:'2026-10-31'}};
+const beforeSale=await approvalState(result);result.room.workshop.approvals.customer={key:beforeSale.keys.customer,name:'QA',date:'2026-10-31'};
+assert((await approvalState(result)).valid.customer);
+result.room.workshop.pricingTerms.terms.delivery+=10;
+const changed=await approvalState(result);assert(!changed.valid.customer);assert(budgetHold(changed.quote,result.room.workshop.layoutBrief));assert(releaseConcerns(result,changed).some(e=>e.includes('سقف العميل')));
+const unknown=structuredClone(d);unknown.room.workshop.catalog.items.find(i=>i.sku==='AL-20').price=null;
+const unsolved=await compareKitchenLayouts(unknown,{...options,brief:fixed});assert.equal(unsolved.candidates.length,0);assert(unsolved.budgetCounts.unknown>0);
+assert.equal(cleanLayoutBrief({...brief,capSar:null}),null);assert.equal(cleanLayoutBrief({...brief,weights:{contract:0}}),null);
+const simple={kitchen:{runs:[{id:'lo',wall:'back',tier:'base'},{id:'hi',wall:'back',tier:'upper'}],units:[
+ {runId:'lo',u:0,width:60},{runId:'lo',u:60,width:60},{runId:'hi',u:0,width:63},{runId:'hi',u:63,width:57}]}};
+assert.equal(dividerMismatch(simple,['back']),30);simple.kitchen.units[2].width=60;simple.kitchen.units[3].u=60;assert.equal(dividerMismatch(simple,['back']),0);
+console.log('True priced alternatives including services/margin/tax + declared external SAR, strict cap and penny boundary, unknown cost hold, protected scope, full quote approval invalidation, weighted ranking and actual 30 mm -> 0 mm upper/lower divider gaps.',costs);

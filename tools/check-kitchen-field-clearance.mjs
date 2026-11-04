@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {evaluateLedgeClearance as calc,fieldMM,isClearanceCandidate} from '../public/kitchen-field-clearance.js';
+import {fieldInputs,fieldInputByCode,fieldGroups} from '../public/kitchen-field-catalog.js';
+assert.equal(fieldGroups.length,11);assert.equal(fieldInputs.length,146);for(const v of fieldInputs)assert(v.waiting&&v.representation&&v.impact);
+const baseline={ledge:100,floor:0,top:880,min:820};
+assert.deepEqual(calc(baseline).map(r=>r.delta),[-40,60]);assert.equal(calc({...baseline,ledge:50})[0].delta,10);
+assert.deepEqual(calc({...baseline,ledge:null}).map(r=>r.outcome),['waiting','fits']);assert.deepEqual(calc({...baseline,min:null}).map(r=>r.outcome),['waiting','waiting']);
+const real={inputCode:'SITE-19',valueType:'number',property:'منسوب أعلى التعلية',verification:'measured',execution:'existing',unit:'سم',value:10};
+assert.equal(fieldMM(real),100);assert.equal(fieldMM({...real,value:0}),0);assert.equal(fieldMM({...real,verification:'conflict'}),null);assert.equal(fieldMM({...real,unit:'كجم'}),null);
+assert(isClearanceCandidate({key:'ledge',ref:'D2-LEDGE'},real));assert(!isClearanceCandidate({key:'ledge',ref:'D2-LEDGE'},{...real,property:'العمق عند بداية الضلع'}));assert(!isClearanceCandidate({key:'min',ref:'D2-MIN'},real));
+console.log('v10 reference guide (146), actual type/unit gating, demonstrated –40 → +10 mm, missing ≠ zero, floor +60 remains independent.');

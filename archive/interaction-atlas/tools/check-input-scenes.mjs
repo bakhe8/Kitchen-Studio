@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {secondaryModel} from '../dist/channel-scenes.js';
+import {wheelModel,wheelGuide} from '../dist/wheel-scene.js';
+const s=secondaryModel();
+assert.equal(s.down({x:180,y:105},0,0,1),false);assert.equal(s.down({x:180,y:105},0,2,3),false);
+assert.equal(s.down({x:270,y:105},0),false);assert(s.down({x:190,y:110},0));s.move({x:430,y:140},700);
+assert.deepEqual(s.state().box,{x:420,y:135});s.up({x:430,y:140},800);assert.equal(s.state().phase,'release');
+assert(s.down({x:425,y:135},900));s.move({x:920,y:300},1300);assert.deepEqual(s.state().box,{x:674,y:181});s.cancel();assert.deepEqual(s.state().box,{x:420,y:135});
+const w=wheelModel();for(const e of wheelGuide)assert(w.add(e));const shape=w.state();
+assert.deepEqual([...shape.rows].reverse().map(x=>[x.group,x.qty]),[[1,52],[1,53],[1,52],[2,53]]);assert.deepEqual(shape.sums,[120,-1,1]);assert.equal(shape.open,true);w.advance(1250);assert.equal(w.state().open,false);
+assert.equal(w.add({dy:40,mode:0,buttons:1,t:1300}),false);assert.equal(w.add({dy:40,mode:0,modified:true,t:1300}),false);assert.equal(w.state().count,4);assert(w.add({dy:0,dx:40,mode:0,t:1300}));assert.equal(w.state().qty,53);
+assert(w.add({dy:9999,mode:1,t:1320}));assert.equal(w.state().qty,100);assert(w.add({dy:-4,mode:2,t:1390}));assert.equal(w.state().qty,96);
+w.reset();assert(w.add({dy:-150,mode:1,t:0}));assert.equal(w.state().qty,0);assert(w.add({dy:1,mode:1,t:400}));assert.equal(w.state().group,2);
+console.log('PASS: isolated secondary binding; relative drag and rollback; timestamped wheel units, policies, idle boundary, excluded buttons, quantity bounds.');

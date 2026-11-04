@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {createShelfPlan,setFinish,moveCab,updateWall} from '../public/shelf-model.js';
+import {comparisonArtwork} from '../public/shelf-canvas.js';
+import {placeSizedScreen} from '../public/shelf-sized-object.js';
+const a=placeSizedScreen(createShelfPlan(),{kind:'cell',key:'0:0'},{w:32.3,h:18.7}).plan;
+const original=JSON.stringify(a),b=moveCab(updateWall(setFinish(a,'walnut'),{w:a.wall.w,h:a.wall.h+15}),10,1);
+const photo='data:image/jpeg;base64,AA==',art=comparisonArtwork(a,b,photo);
+assert.equal(art.w,b.wall.w);assert(art.total>b.wall.h);
+assert.equal(art.svg.split('<image ').length-1,1,'both alternatives must share one wall photograph');
+assert.match(art.svg,/data-compare-clip="a"/);assert.match(art.svg,/data-compare-clip="b"/);
+assert(art.svg.includes('translate('+a.cab.x+' '+(a.cab.y+15)+')'),'same distance above the floor despite changed wall envelope');
+assert.equal(art.svg.split('data-screen-width="32.3"').length-1,2,'real-sized objects appear at identical scale in both options');
+assert.equal(JSON.stringify(a),original,'comparison cannot mutate A');
+console.log('PASS: A/B uses one photograph, physical scale and floor reference; preserves both plans and the physical screen.');

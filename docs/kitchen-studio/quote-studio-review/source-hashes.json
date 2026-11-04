@@ -1,0 +1,50 @@
+[
+  {
+    "path": "public/kitchen-quote-studio.js",
+    "sha256": "C5AE39BDD1DBED5F56ECBAB3628722E60F00DF34CB9BA64045355BE8D558FAB4"
+  },
+  {
+    "path": "public/kitchen-quote-studio.css",
+    "sha256": "7A517044BAA115327DA4667FB1A4F9B212864AAE08CAC66AA30F7EDD16504B58"
+  },
+  {
+    "path": "public/kitchen-quote-preview.js",
+    "sha256": "47E6470337F741D6DAA2B7070A69564DA07E3379B6BCDB8AA5D8BB16F4740D47"
+  },
+  {
+    "path": "public/kitchen-role-pages.js",
+    "sha256": "763D62607D9B8659AECF9D8FE79D51D77339194FB0A2918E2BFD0958A92F6E76"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "D9412422D78097E910696BCA8F9BB9F3B7AD66516F20A6AAFB2B04EB218CA3DF"
+  },
+  {
+    "path": "public/kitchen-workshop-factory-ui.js",
+    "sha256": "3446578858023C0237440B596E4A5D4E9039520D4A33248074483DCF72095EB3"
+  },
+  {
+    "path": "public/kitchen-report-preview.js",
+    "sha256": "B51B9CBA97FDACAF6BAF6C31700AEDCF4A89329E0F35BD7FBF150C3D6020830F"
+  },
+  {
+    "path": "tools/check-kitchen-quote-preview.mjs",
+    "sha256": "B32B4ABF10D7D135158B2A9CFBADD17C23ECC6E87DC11F0D7D6CF966C4D819E4"
+  },
+  {
+    "path": "tools/check-kitchen-quote-workshop.mjs",
+    "sha256": "884E1B817FA6A6E0727F7C02183875F601CCAD772E24C3477E801F9890A00047"
+  },
+  {
+    "path": "tools/check-kitchen-report-preview.mjs",
+    "sha256": "C94B7B356D2F2F87DBDBF656411E191B80FBA887A8002E8072DDFE052F97E77C"
+  },
+  {
+    "path": "tools/fixture-kitchen-quote-ready.mjs",
+    "sha256": "8D0BFDDB566AFEC4B645FAEF46E96BA3078BE795528B9D97B71AFA6760CD9F97"
+  },
+  {
+    "path": "tools/make-quote-studio-fixture.mjs",
+    "sha256": "6A122FE3C124CDC2D090A0DE185BAD50C80513BC8A1027BAEAE91AE561B5DFE2"
+  }
+]

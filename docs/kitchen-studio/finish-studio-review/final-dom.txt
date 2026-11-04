@@ -1,0 +1,135 @@
+- link "انتقل إلى مساحة التصميم":
+  - /url: "#kitchen-workspace"
+- main:
+  - button "بوابات العمل"
+  - paragraph: استوديو المطابخ
+  - heading "اختبار التشطيب — رحلة التكامل" [level=1]
+  - navigation "أدوات الاستوديو":
+    - button "أدوات الخامات والعتاد":
+  - option "الصفّان" [selected]
+  - option "السفلي"
+  - option "العلوي"
+  - dialog "الخامات والعتاد":
+    - button "اختيار المرحلة":
+      - generic: المرحلة ٣ من ٤ · التشطيب
+      - strong: الخامات والعتاد
+    - button "دليل المشروع":
+      - generic: دليل المشروع
+    - button "الرجوع للرسم":
+    - generic: من القياس إلى الملمس
+    - heading "استوديو التشطيب" [level=2]
+    - generic: كتالوج اختبار التشطيب · منشور من المصنع
+    - heading "تشطيب الوحدات" [level=3]:
+      - text: تشطيب الوحدات
+    - button "تراجع عن التشطيب":
+      - text: تراجع
+    - button "إعادة التشطيب" [disabled]:
+      - text: إعادة
+    - button "الحصر والسعر":
+      - text: الحصر والسعر
+    - navigation "وحدات التشطيب":
+      - strong: الوحدات
+      - button "الكل الوحدات المؤهلة":
+        - strong: الكل
+        - generic: الوحدات المؤهلة
+      - button "U1 خزانة تخزين" [pressed]:
+        - strong: U1
+        - generic: خزانة تخزين
+      - button "U2 خزانة تخزين":
+        - strong: U2
+        - generic: خزانة تخزين
+      - button "U3 خزانة تخزين":
+        - strong: U3
+        - generic: خزانة تخزين
+      - button "U4 خزانة تخزين":
+        - strong: U4
+        - generic: خزانة تخزين
+      - button "U5 خزانة تخزين":
+        - strong: U5
+        - generic: خزانة تخزين
+      - button "U6 خزانة تخزين":
+        - strong: U6
+        - generic: خزانة تخزين
+      - button "U7 خزانة تخزين":
+        - strong: U7
+        - generic: خزانة تخزين
+      - button "U8 خزانة علوية معلّقة":
+        - strong: U8
+        - generic: خزانة علوية معلّقة
+      - button "U9 خزانة علوية معلّقة":
+        - strong: U9
+        - generic: خزانة علوية معلّقة
+      - button "U10 خزانة علوية معلّقة":
+        - strong: U10
+        - generic: خزانة علوية معلّقة
+      - button "U11 خزانة علوية معلّقة":
+        - strong: U11
+        - generic: خزانة علوية معلّقة
+      - button "U12 خزانة علوية معلّقة":
+        - strong: U12
+        - generic: خزانة علوية معلّقة
+      - button "U13 خزانة علوية معلّقة":
+        - strong: U13
+        - generic: خزانة علوية معلّقة
+    - button "منظور" [pressed]:
+      - text: منظور
+    - button "واجهة":
+      - text: واجهة
+    - strong: الجدار الخلفي
+    - button "احتواء الرسم":
+    - img "معاينة تشطيب الوحدات"
+    - strong: U1 · الأيدي والمفصلات
+    - status: جرّب العينة على الوحدة ثم احفظ الاختيار.
+    - button "حفظ الاختيار" [disabled]
+    - button "إلغاء المعاينة" [disabled]
+    - paragraph: المس الوحدة أو الجزء لاختيار خامته. عجلة الفأرة أو إصبعان للتقريب والتحريك.
+    - text: نطاق التطبيق
+    - combobox "نطاق التطبيق":
+      - option "المطبخ · الوحدات المؤهلة"
+      - option "U1 · خزانة تخزين" [selected]
+      - option "U2 · خزانة تخزين"
+      - option "U3 · خزانة تخزين"
+      - option "U4 · خزانة تخزين"
+      - option "U5 · خزانة تخزين"
+      - option "U6 · خزانة تخزين"
+      - option "U7 · خزانة تخزين"
+      - option "U8 · خزانة علوية معلّقة"
+      - option "U9 · خزانة علوية معلّقة"
+      - option "U10 · خزانة علوية معلّقة"
+      - option "U11 · خزانة علوية معلّقة"
+      - option "U12 · خزانة علوية معلّقة"
+      - option "U13 · خزانة علوية معلّقة"
+    - group "نوع التشطيب":
+      - button "خامة الواجهة":
+        - generic: الواجهة
+      - button "مواد الجسم والحواف":
+        - generic: الجسم
+      - button "الأيدي والمفصلات" [active] [pressed]:
+        - generic: العتاد
+    - paragraph: كل لون أو موديل صنف من كتالوج المشروع. يطبّق الاختيار على نوع الجزء في الوحدة كاملة.
+    - text: الجزء
+    - combobox "الجزء":
+      - option "اليد" [selected]
+    - text: صنف المصنع
+    - combobox "صنف المصنع":
+      - option "يد باب أو درج · PULL"
+      - option "يد نحاسية — عينة اختبار · PULL-BRASS · نحاسي" [selected]
+    - group "عينات الجزء من المصنع":
+      - button "يد باب أو درج لون غير محدد · PULL":
+        - strong: يد باب أو درج
+        - generic: لون غير محدد · PULL
+      - button "يد نحاسية — عينة اختبار نحاسي · PULL-BRASS" [pressed]:
+        - strong: يد نحاسية — عينة اختبار
+        - generic: نحاسي · PULL-BRASS
+    - paragraph: الاختيار المثبت PULL-BRASS · الوحدات المشمولة ١
+    - paragraph: شكل تقريبي. لم ينشر المصنع قالب تثقيب لهذا الصنف.
+    - paragraph: فرق قيمة مواد النطاق ٠ ر.س.
+    - button "تطبيق الصنف على القطع والحصر"
+    - button "إعادة هذا الجزء للاختيار الموروث"
+    - complementary:
+      - generic: قيمة مواد المشروع
+      - strong: ٢٬١٣٣ ر.س.
+      - generic: "فرق المواد: —"
+      - generic: "إجمالي العرض المحسوب: ٣٬١٤١ ر.س."
+      - generic: توجد بنود تجهيز لم تُحسم؛ راجعها في الحصر والسعر.
+      - generic: يشمل الحصر كل المشروع؛ يُراجع الاعتماد من الحصر والسعر.

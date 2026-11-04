@@ -1,0 +1,78 @@
+/* Use the width of the work surface, including in a split tablet window.
+   Only the page scrolls; a long reference or register remains reachable. */
+.dp-fit-work,.dp-fit-review,.dp-usage-work,.dp-usage-results,.site-device-work,.site-device-links{
+  display:grid;gap:12px;align-content:start;min-inline-size:0
+}
+.k-workshop :is(.dp-fit-work,.dp-fit-review,.dp-usage-work,.dp-usage-results,.site-device-work,.site-device-links)>.ws-card{margin-block:0}
+.k-workshop .dp-fit-work .dp-appliance-fit{display:grid;grid-template-columns:minmax(0,1fr);align-content:start}
+.k-workshop .dp-fit-evidence{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;align-content:start}
+.k-workshop .dp-fit-evidence>h4{margin:0 0 3px}
+.k-workshop .dp-fit-evidence>button,.k-workshop .site-device-links>button{justify-self:start}
+.k-workshop .dp-fit-verify{line-height:1.5}
+.k-workshop form[data-usage]>button{justify-self:start}
+.k-workshop .dp-usage-results [data-drawer-pack]>.ws-card{margin-block:0}
+.k-workshop .site-open-decisions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:8px}
+.k-workshop .site-open-decisions>:is(h3,p){grid-column:1/-1}
+.k-workshop .site-open-decisions>.ws-card{margin:0}
+.k-workshop .site-device-work:has(.site-device-form)>*{min-inline-size:0}
+
+@media screen and (min-width:980px){
+  .dp-fit-work,.dp-usage-work,.site-device-work[data-context]{
+    grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+    align-items:start;gap:clamp(12px,1.3vw,24px)
+  }
+  .dp-fit-work .dp-fit-table td input{max-width:none}
+  .dp-fit-work>.dp-fit-report{grid-column:1/-1}
+  .dp-fit-report ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));column-gap:32px;row-gap:5px}
+  .k-workshop .dp-appliance-fit>.dp-fit-actionbar{border-block-end:0}
+  .site-device-work[data-context] .site-device-sizes{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+  .k-workshop .project-guide:has(>.pg-rest){
+    display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);
+    align-items:start;align-content:start;gap:12px 20px
+  }
+  .project-guide .pg-current{grid-column:1;grid-row:1}.project-guide>.pg-rest{grid-column:2;grid-row:1 / span 2;margin-block:0}
+  .project-guide>p[role=status]{grid-column:1}
+}
+
+/* The catalog's sidebar used to require 860 pixels of screen height as
+   well as a wide window. Wide, short laptops can use the same hierarchy. */
+@media screen and (min-width:1100px) and (max-height:859px){
+  .k-workshop[data-ws-route=factory] .kw-catalog-workspace{grid-template-columns:clamp(185px,19%,240px) minmax(0,1fr)}
+  .k-workshop[data-ws-route=factory] .kw-catalog-nav{padding:0;border:0}
+  .k-workshop[data-ws-route=factory] .kw-catalog-nav .kw-catalog-picker{display:none}
+  .k-workshop[data-ws-route=factory] .kw-catalog-nav .kw-tabs{display:grid;margin:0;border-inline-end:1px solid var(--ws-line);padding-inline-end:10px}
+  .k-workshop[data-ws-route=factory] .kw-catalog-nav .kw-tabs button{text-align:start}
+}
+
+/* Show the actual measured pair next to the exact input; a saved installation
+   check remains available at its own unit/project scope. */
+.k-workshop .dp-fit-head>label{margin-inline-start:auto}
+.k-workshop .dp-fit-head>label select{max-inline-size:min(50vw,30rem)}
+.k-workshop .dp-fit-head>[data-af-act="newDevice"]{min-height:44px}
+.dp-bay-preview{padding:8px 12px 6px;background:var(--ks-surface-1);border:1px solid var(--ks-attention-soft);border-radius:var(--ks-radius-control)}
+.dp-bay-preview header,.dp-bay-key,.dp-bay-key>span{display:flex;align-items:center;gap:6px}
+.dp-bay-preview header{justify-content:space-between;flex-wrap:wrap;line-height:1.4}
+.dp-bay-preview header b{color:var(--ks-attention)}.dp-bay-preview strong{font-size:13px;color:var(--ks-attention)}
+.dp-bay-preview[data-tone=short] strong{color:var(--ks-danger)}.dp-bay-preview[data-tone=fits] strong{color:var(--ks-attention)}
+.dp-bay-views{display:flex;gap:8px;justify-content:center}.k-workshop .dp-bay-views>.dp-bay-view{margin:2px 0 0;min-inline-size:0;flex:1;max-width:190px;text-align:center;border:1px solid transparent;background:transparent;padding:0 1px;line-height:1.4}.k-workshop .dp-bay-view:is(:hover,:focus-visible){border-color:var(--ks-action);background:var(--ks-surface-1)}
+.dp-bay-views svg{display:block;width:100%;height:74px}.dp-bay-view>span,.dp-bay-key{font-size:12px;color:var(--ks-ink)}
+.dp-bay-required{fill:#ceddd9;stroke:#214e52;stroke-width:1.8}.dp-bay-measured{fill:none;stroke:#97501c;stroke-dasharray:4 2;stroke-width:2}
+.dp-bay-key{gap:14px;justify-content:center;padding-top:4px}.dp-bay-key span::before{content:"";width:16px;border-block-start:2px solid var(--ks-line-strong)}
+.dp-bay-key span+span::before{border-block-start:2px dashed var(--ks-line-strong)}
+.dp-fit-report{border-block-start:1px solid var(--ks-line)}
+.dp-saved-result>summary{cursor:pointer;min-height:44px;align-content:center;color:var(--ks-action)}
+.dp-saved-result>summary span{display:inline-block;margin-inline-start:10px;font-size:13px;color:var(--ks-action)}
+.dp-saved-result ul{padding-inline-start:24px}.dp-saved-result+.dp-saved-result{border-block-start:1px solid var(--ks-on-dark-muted)}
+.k-workshop .dp-fit-target{grid-template-columns:minmax(0,.88fr) minmax(0,1.35fr) minmax(0,1fr)}
+.k-workshop .dp-fit-target :is(select,label){width:100%;min-width:0}
+.k-workshop .dp-fit-evidence>.dp-fit-verify{display:flex;align-items:center;gap:8px;min-height:42px;margin:0}
+.dp-fit-verify input{flex:none}
+.k-workshop .dp-fit-report .dp-saved-result ul{display:block}
+
+@media screen and (min-width:980px){.dp-bay-views svg{height:clamp(76px,calc(100dvh - 625px),148px)}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.dp-bay-preview[data-tone=short]{border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft)}
+.dp-bay-preview[data-tone=short] strong{color:var(--ks-danger)}
+.dp-bay-preview[data-tone=fits]{border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft)}
+.dp-bay-preview[data-tone=fits] strong{color:var(--ks-complete)}

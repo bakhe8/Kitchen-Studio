@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {cleanMeasuredSurfaces,evaluateSurveyedSurfaces,surveyedSurfaceIssues} from '../public/kitchen-surveyed-surfaces.js';
+import {addRun,addUnit,createKitchen,kitchenRunPolygon} from '../public/kitchen-model.js';
+const room={width:500,length:500,height:300},base=createKitchen(room,'empty');
+const run=addRun(base,room,{id:'island',placement:'free',x:140,z:170,length:100,angle:30,depth:60,height:86});assert(run.ok,run.reason);
+const added=addUnit(run.kitchen,room,{id:'test-unit',runId:'island',kind:'storage',u:10,width:60});assert(added.ok,added.reason);
+const unit=added.kitchen.units[0],support={mountMm:130,minLegMm:102,maxLegMm:125,maxPadDeltaMm:3,pads:[[15,15,50,50],[520,15,50,50],[15,525,50,50],[520,525,50,50]]};
+const check={target:unit.id,reference:'Supplier F-3 signed',clearanceMm:80,support};
+function mesh(kind,elev,lo=0,hi=5000,err=.2){
+ const vertices=[[lo,0],[hi,0],[hi,5000],[lo,5000]].map(([x,z])=>[x,z,elev(x,z)]);
+ return [[0,1,2],[2,3,0]].map((indices,i)=>({id:kind+'-'+i+'-'+lo,kind,reference:'Laser #17 / '+i,errorMm:err,triangle:indices.map(n=>vertices[n])}));
+}
+const floor=mesh('floor',x=>x/100),ceiling=mesh('ceiling',()=>2900);
+const doc=(patches,checks=[check])=>({kitchen:added.kitchen,room:{...room,workshop:{surfaces3d:{patches,checks}}}});
+const good=doc([...floor,...ceiling]);
+assert(cleanMeasuredSurfaces(good.room.workshop.surfaces3d));assert.deepEqual(surveyedSurfaceIssues(good),[]);
+const r=evaluateSurveyedSurfaces(good).results[0].pads[0];const pad=support.pads[0],coords=kitchenRunPolygon(room,run.kitchen.runs[0],unit.u+pad[0]/10,pad[2]/10,pad[3]/10,pad[1]/10);
+assert(Math.abs(r.minLegMm-(130-Math.max(...coords.map(p=>p.x/10))-.2))<.00001);
+assert(surveyedSurfaceIssues(doc([floor[0],...ceiling])).some(s=>s.includes('لا يغطي')||s.includes('لم تُغطّ')));
+assert(surveyedSurfaceIssues(doc([...floor,...mesh('ceiling',()=>950)])).some(s=>s.includes('السقف المقاس')));
+assert(surveyedSurfaceIssues(doc([...floor,...ceiling],[{...check,support:{...support,minLegMm:120}}])).some(s=>s.includes('نطاق الضبط')));
+const xx=coords.reduce((sum,p)=>sum+p.x,0)*10/4;
+const step=doc([...mesh('floor',()=>0,0,xx,0),...mesh('plinth',()=>30,xx,5000,0),...ceiling],[{...check,support:{...support,minLegMm:0,maxLegMm:200}}]);
+assert(surveyedSurfaceIssues(step).some(s=>s.includes('تفاوت المنسوب تحت قاعدة الرجل 1')));
+assert.deepEqual(surveyedSurfaceIssues(step,{unitIds:['unrelated']}),[]);
+assert(surveyedSurfaceIssues(doc([...floor,...ceiling,...mesh('plinth',()=>200)])).some(s=>s.includes('تتراكب')));
+assert(surveyedSurfaceIssues(doc([...floor,...ceiling],[])).some(s=>s.includes('مساحات الارتكاز')));
+assert(surveyedSurfaceIssues(doc([...floor,ceiling[0]])).some(s=>s.includes('تغطي قراءات السقف')));
+assert.equal(cleanMeasuredSurfaces({patches:floor,checks:[{...check,support:{...support,pads:[support.pads[0],...support.pads]}}]}),null);
+console.log('Interior surveyed floor/plinth/ceiling triangles, elevation uncertainty, exact rotated pad clipping/interpolation, mixed-step support, bounded leg ranges, unknown coverage, roof over island worktop, scoped checks and overlapping surveys verified.');

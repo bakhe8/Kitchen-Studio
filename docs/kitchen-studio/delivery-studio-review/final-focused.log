@@ -1,0 +1,15 @@
+(node:37920) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Delivery studio: actual receipt selection, Arabic raw preview, no implicit API writes, local undo/redo and cancel.
+Delivery studio: invalid/blank input stays visible; explicit draft save/reopen is separate from API history and isolated by authenticated subject.
+Delivery studio: transient save failure retains immutable attempted fields and retries the same request successfully.
+Delivery studio: a lost POST response uses the original request identity and produces one durable event.
+Delivery studio: confirmed POST plus failed reload exposes recovery and never resends the acknowledged event.
+Delivery studio: real drawing anchor → saved blocking observation → rejected installation → resolution → installation → owner customer acceptance, with exact unit isolation.
+Delivery studio: a genuinely saved older draft remains inspectable and locked after another worker advances the sequence; discard starts the current stage.
+Delivery studio: live controller permissions and actual server revocation block writes while preserving the attempted raw draft.
+Delivery studio: changing authenticated account between preview and save cannot transfer another subject’s draft into an event.
+Delivery studio: local storage failure preserves typed values and prevents an unrepeatable server submission.
+Delivery studio: destroy removes handlers and late server completion cannot redraw or notify the closed editor.
+Delivery studio: independent resolution drafts retain their own observation identity and cannot reuse another observation’s repair note.
+Delivery workshop: real mount, guarded route/unit changes, discard, explicit server commit, clean shell navigation and no local project write.

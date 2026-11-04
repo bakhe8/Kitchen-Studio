@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {makeChainExample} from '../public/kitchen-chain-model.js';
+import {encodeCloudProject,decodeCloudProject} from '../public/kitchen-workshop-sync-ui.js';
+import {putWallPhoto} from '../public/kitchen-studio-room.js';
+
+const map=new Map();
+globalThis.localStorage={setItem:(key,value)=>map.set(key,String(value)),getItem:key=>map.get(key)??null};
+const doc=makeChainExample(),jpeg=await readFile(new URL('../docs/kitchen-studio/lower-row-depth.jpg',import.meta.url));
+const pic='data:image/jpeg;base64,'+jpeg.toString('base64'),ref=await putWallPhoto(pic);
+doc.room.photoRefs={back:ref};
+const a=await encodeCloudProject(doc),b=await encodeCloudProject(doc);
+assert.equal(a.hash,b.hash);
+const snapshot=JSON.parse(a.raw);
+assert.equal(snapshot.photos.back,pic);
+map.clear();const opened=await decodeCloudProject(snapshot);
+assert.equal(opened.room.photoRefs.back,ref);assert.ok(map.get('studio-photo:'+ref));assert.equal(opened.kitchen.features.length,5);
+await assert.rejects(()=>decodeCloudProject({...snapshot,photos:{}}),/صورة/);
+await assert.rejects(()=>decodeCloudProject({...snapshot,fieldFiles:[{id:'unreferenced',data:'eA=='}]}),/مرفق/);
+await assert.rejects(()=>decodeCloudProject({...snapshot,design:{}}),/التحقق/);
+map.clear();await assert.rejects(()=>encodeCloudProject(doc),/مفقودة/);
+console.log('Photo bytes restored on a clean device, compatible project and item geometry, same-content hash, missing photo, unexpected measurement attachment and invalid geometry rejected.');

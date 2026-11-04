@@ -1,0 +1,537 @@
+/* Production survey notebook. The controller, field datums and save guards stay
+   in the existing survey modules. Structural !important declarations below only
+   reset older stage/container rules; this stylesheet never applies to localFace. */
+.sv.sv-notebook {
+  --sv-ink: var(--ks-ink);
+  --sv-accent: var(--ks-action);
+  --sv-quiet: var(--ks-ink-muted);
+  --sv-line: var(--ks-line);
+  --sv-pale: var(--ks-action-soft);
+  --nb-paper: var(--ks-canvas);
+  --nb-surface: var(--ks-surface-1);
+  --nb-amber: var(--ks-attention);
+  --nb-amber-bg: var(--ks-attention-soft);
+  --nb-error: var(--ks-danger);
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr);
+  grid-template-rows: auto auto auto !important;
+  align-content: start;
+  gap: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  min-width: 0;
+  color: var(--sv-ink);
+  background: var(--nb-paper);
+  font-family: system-ui, "Segoe UI", Tahoma, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.sv.sv-notebook *, .sv.sv-notebook *::before, .sv.sv-notebook *::after { box-sizing: border-box; }
+.sv.sv-notebook :is(button,input,select,summary) { font-family: inherit; }
+.sv.sv-notebook :is(button,input,select,summary) { min-height: 44px; }
+.sv.sv-notebook button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 8px 11px;
+  border: 1px solid var(--sv-line);
+  border-radius: var(--ks-radius-control);
+  background: var(--nb-surface);
+  color: var(--sv-ink);
+  font-size: 13px;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: background-color var(--ks-duration-fast) var(--ks-ease), border-color var(--ks-duration-fast) var(--ks-ease), color var(--ks-duration-fast) var(--ks-ease);
+}
+.sv.sv-notebook button:hover:not(:disabled) { background: var(--sv-pale); border-color: var(--ks-line-strong); }
+.sv.sv-notebook button:disabled { opacity: .48; cursor: default; }
+.sv.sv-notebook :is(button,input,select,summary,[tabindex]):focus-visible {
+  outline: 3px solid var(--ks-focus-ring);
+  outline-offset: 2px;
+}
+.sv.sv-notebook button svg { width: 19px; height: 19px; flex: none; }
+.sv.sv-notebook small { font-size: 12px; line-height: 1.6; }
+.sv.sv-notebook [hidden] { display: none !important; }
+
+/* Header and three persistent work areas, ordered from the RTL starting edge. */
+.sv.sv-notebook .sv-notebook-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--sv-line);
+  background: var(--nb-surface);
+}
+.sv.sv-notebook .sv-notebook-head > div { min-width: 0; }
+.sv.sv-notebook .sv-notebook-head :is(h1,h2,h3,p) { margin: 0; }
+.sv.sv-notebook .sv-notebook-head :is(h1,h2) { font-size: 25px; line-height: 1.4; font-weight: 650; letter-spacing: -.45px; }
+.sv.sv-notebook .sv-notebook-head :is(p,small) { color: var(--sv-quiet); font-size: 12px; }
+.sv.sv-notebook .sv-notebook-head strong { font-size: 14px; }
+.sv.sv-notebook .sv-notebook-history {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+}
+.sv.sv-notebook .sv-notebook-history button { min-width: 44px; }
+.sv.sv-notebook .sv-notebook-history [data-notebook-history-hint] { flex-basis: 100%; color: var(--sv-quiet); font-size: 12px; line-height: 1.7; }
+.sv.sv-notebook [data-notebook-project] { max-width: 56ch; overflow-wrap: anywhere; }
+.sv.sv-notebook .sv-work {
+  display: grid !important;
+  grid-template-columns: 220px minmax(0,1fr) 300px !important;
+  grid-template-rows: auto !important;
+  grid-template-areas: "objects drawing inspector";
+  align-items: stretch;
+  gap: 0 !important;
+  min-width: 0;
+  min-height: 0;
+}
+.sv.sv-notebook .sv-work > :is(.sv-notebook-objects,.sv-plate,.sv-notebook-inspector) {
+  min-width: 0;
+  min-height: 0;
+  grid-template-columns: minmax(0,1fr);
+  align-content: start;
+}
+.sv.sv-notebook .sv-notebook-objects {
+  grid-area: objects;
+  display: grid;
+  gap: 16px;
+  padding: 22px 15px;
+  border-inline-end: 1px solid var(--sv-line);
+  background: var(--ks-surface-2);
+}
+.sv.sv-notebook .sv-notebook-objects :is(h2,h3,p) { margin: 0; }
+.sv.sv-notebook .sv-notebook-objects :is(h2,h3) { font-size: 15px; line-height: 1.5; }
+.sv.sv-notebook .sv-notebook-objects > p { font-size: 12px; color: var(--sv-quiet); }
+.sv.sv-notebook :is(.sv-notebook-walls,[data-notebook-walls]) {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 7px;
+}
+.sv.sv-notebook .sv-notebook-wall {
+  display: grid;
+  grid-template-columns: 23px minmax(0,1fr);
+  align-items: center;
+  justify-content: stretch;
+  min-height: 68px;
+  width: 100%;
+  min-width: 0;
+  text-align: start;
+  gap: 3px 8px;
+  padding: 8px 9px;
+  background: var(--ks-surface-1);
+  overflow-wrap: anywhere;
+}
+.sv.sv-notebook .sv-notebook-wall :is(strong,span) { font-size: 13px; }
+.sv.sv-notebook .sv-notebook-wall :is(strong,small) { display: block; }
+.sv.sv-notebook .sv-notebook-wall > i { display: grid; place-items: center; width: 23px; height: 23px; font-size: 12px; font-style: normal; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control); color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-wall > span:not([data-notebook-wall-state]) { display: grid; gap: 1px; min-width: 0; }
+.sv.sv-notebook .sv-notebook-wall small { color: var(--sv-quiet); font-variant-numeric: tabular-nums; }
+.sv.sv-notebook .sv-notebook-wall [data-notebook-wall-state] { grid-column: 2; font-size: 12px; color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-wall[data-state="dirty"] [data-notebook-wall-state] { color: var(--nb-amber); }
+.sv.sv-notebook .sv-notebook-wall[data-state="confirmed"] [data-notebook-wall-state] { color: var(--ks-complete); font-weight: 650; }
+.sv.sv-notebook .sv-notebook-wall[aria-pressed="true"] {
+  background: var(--sv-accent);
+  border-color: var(--sv-accent);
+  color: var(--ks-surface-1);
+}
+.sv.sv-notebook .sv-notebook-wall[aria-pressed="true"] small { color: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-wall[aria-pressed="true"] > i { color: var(--ks-surface-1); border-color: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-wall[aria-pressed="true"] [data-notebook-wall-state] { color: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-wall[aria-pressed="true"]:hover { background: var(--ks-action-hover); color: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-objects .sv-map-box {
+  width: 100% !important;
+  max-width: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--sv-line);
+  border-radius: var(--ks-radius-control);
+  background: var(--ks-surface-1);
+}
+.sv.sv-notebook .sv-notebook-objects .sv-map-box svg { display: block; width: 100%; max-height: 132px; margin-inline: auto; }
+.sv.sv-notebook .sv-notebook-objects .sv-reading-tray { display: block !important; min-width: 0; }
+.sv.sv-notebook .sv-notebook-objects .sv-reading-tray > [data-browse-readings] { display: none; }
+.sv.sv-notebook .sv-notebook-objects .sv-readings {
+  display: flex;
+  flex-direction: column !important;
+  gap: 7px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--sv-line);
+  overflow: visible;
+  max-height: none;
+}
+.sv.sv-notebook .sv-notebook-objects .sv-readings button {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 62px;
+  gap: 9px;
+  padding: 9px;
+  text-align: start;
+  background: transparent;
+  border-color: transparent;
+  border-radius: var(--ks-radius-control);
+}
+.sv.sv-notebook .sv-notebook-objects .sv-readings button > span { flex: 1; min-width: 0; }
+.sv.sv-notebook .sv-notebook-objects .sv-readings small { font-size: 12px; white-space: normal; overflow-wrap: anywhere; }
+.sv.sv-notebook .sv-notebook-objects .sv-readings .sv-type-icon { width: 23px; height: 23px; color: var(--ks-ink); }
+.sv.sv-notebook .sv-notebook-objects .sv-readings i { min-width: 23px; width: 23px; height: 23px; font-size: 12px; background: var(--ks-surface-inset); color: var(--sv-ink); }
+.sv.sv-notebook .sv-notebook-objects .sv-readings [aria-pressed="true"] {
+  background: var(--nb-surface);
+  border-color: var(--ks-action);
+  color: var(--sv-accent);
+  box-shadow: none;
+}
+.sv.sv-notebook .sv-notebook-objects .sv-readings [aria-pressed="true"] i { background: var(--sv-accent); color: var(--ks-surface-1); }
+
+/* The SVG retains its native viewBox and pointer geometry. The paper is not a
+   fixed-height application viewport, so expanded tools cannot clip its footer. */
+.sv.sv-notebook .sv-plate {
+  grid-area: drawing;
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  gap: 14px;
+  padding: 22px 22px 18px;
+  align-content: start;
+}
+.sv.sv-notebook .sv-plate .sv-survey-card { display: block !important; border: 0; border-radius: 0; background: transparent; min-width: 0; }
+.sv.sv-notebook .sv-plate .sv-ink-canvas {
+  display: block !important;
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  background: transparent;
+}
+.sv.sv-notebook .sv-plate .sv-ink-canvas > .sv-walk-head {
+  display: block !important;
+  padding: 0 0 15px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
+.sv.sv-notebook .sv-plate .sv-wall-meta { display: flex !important; flex-wrap: wrap; align-items: center; gap: 7px 14px; text-align: start; white-space: normal; }
+.sv.sv-notebook .sv-plate .sv-wall-index { width: 100%; color: var(--sv-quiet); font-size: 12px; }
+.sv.sv-notebook .sv-plate .sv-wall-meta label { display: flex; flex: 1 1 180px; gap: 8px; min-width: 0; }
+.sv.sv-notebook .sv-plate .sv-wall-meta label > span { font-size: 13px; }
+.sv.sv-notebook .sv-plate [data-chain-wall] { width: 100%; max-width: 280px; background: var(--nb-surface); border-color: var(--ks-line); font-size: 17px; font-weight: 600; }
+.sv.sv-notebook .sv-plate .sv-wall-length { margin: 0; color: var(--sv-quiet); font-size: 12px; }
+.sv.sv-notebook .sv-plate .sv-wall-length b { display: inline; font-size: 14px; color: var(--sv-ink); font-variant-numeric: tabular-nums; }
+.sv.sv-notebook .sv-plate .sv-datums { flex: 1 0 100%; margin: 0; font-size: 12px; color: var(--sv-quiet); line-height: 1.7; }
+.sv.sv-notebook .sv-plate .sv-paper-desk { position: relative; display: flex !important; flex-direction: column; min-width: 0; min-height: 0; border: 0; background: transparent; }
+.sv.sv-notebook .sv-plate .sv-workbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 8px;
+  padding: 5px;
+  border: 1px solid var(--sv-line);
+  border-radius: var(--ks-radius-control);
+  background: var(--nb-surface);
+  color: var(--sv-ink);
+}
+.sv.sv-notebook .sv-workbar .sv-ink-tools { display: flex; flex: 1 1 250px; flex-wrap: wrap; gap: 2px; padding: 0; border: 0; background: transparent; }
+.sv.sv-notebook .sv-workbar :is(.sv-ink-tool,.sv-ink-more > summary,.sv-sheet-camera button) { min-height: 44px; padding: 7px 8px; color: var(--sv-ink); border: 1px solid transparent; background: transparent; font-size: 12px; }
+.sv.sv-notebook .sv-workbar :is(.sv-ink-tool,.sv-sheet-camera button):hover { color: var(--sv-accent); background: var(--sv-pale); }
+.sv.sv-notebook .sv-workbar :is(.sv-ink-tool[aria-pressed="true"],.sv-service-active) { color: var(--sv-accent); background: var(--sv-pale); border-color: var(--ks-action); }
+.sv.sv-notebook .sv-workbar .sv-ink-stagebar { min-height: 44px; color: var(--sv-quiet); font-size: 13px; line-height: 1.6; }
+.sv.sv-notebook .sv-workbar .sv-sheet-camera { display: flex; flex: 0 0 auto; margin-inline-start: auto; gap: 0; padding-inline-start: 5px; border-inline-start: 1px solid var(--sv-line); }
+.sv.sv-notebook .sv-workbar .sv-sheet-camera button { min-width: 44px; }
+.sv.sv-notebook .sv-workbar .sv-ink-more > div { background: var(--nb-surface); border-color: var(--sv-line); z-index: var(--ks-z-popover); }
+.sv.sv-notebook .sv-plate .sv-elevation {
+  position: relative !important;
+  flex: none !important;
+  display: grid;
+  place-items: center;
+  min-height: 350px !important;
+  height: auto;
+  margin: 14px 0 0;
+  padding: 24px 4px;
+  border: 1px solid var(--ks-line);
+  border-radius: var(--ks-radius-control);
+  background-color: var(--ks-surface-1);
+  background-image: radial-gradient(var(--ks-surface-inset) .65px,transparent .65px);
+  background-size: 16px 16px;
+  overflow: hidden;
+}
+.sv.sv-notebook .sv-plate .sv-elevation .survey-wall-sheet {
+  --plate-ink: var(--ks-ink-strong);
+  --plate-dim: var(--ks-ink-muted);
+  --plate-focus: var(--ks-action);
+  --plate-paper: var(--ks-surface-1);
+  position: relative !important;
+  inset: auto !important;
+  display: block;
+  width: 100%;
+  height: clamp(290px,43dvh,580px) !important;
+  max-height: none !important;
+  min-height: 0;
+}
+.sv.sv-notebook .survey-wall-sheet .wsheet-grid { stroke: var(--ks-line); }
+.sv.sv-notebook .survey-wall-sheet .wsheet-opening { fill: #e7eddf; stroke: #79916f; }
+.sv.sv-notebook .survey-wall-sheet [data-wall-kind="door"] .wsheet-opening { fill: #eee7d7; stroke: #8c755a; }
+.sv.sv-notebook .survey-wall-sheet .wsheet-current :is(.wsheet-opening,.wsheet-obstacle,.wsheet-utility,.wsheet-center) { fill: var(--ks-action-soft); stroke: var(--sv-accent); }
+.sv.sv-notebook .survey-wall-sheet .wsheet-muted { fill: var(--ks-ink-muted); }
+.sv.sv-notebook .survey-wall-sheet .wsheet-item:focus-visible { outline: 3px solid var(--ks-focus-ring); }
+.sv.sv-notebook .survey-wall-sheet .wsheet-item:focus-visible :is(.wsheet-opening,.wsheet-center,.wsheet-marker) { stroke: var(--ks-action); stroke-width: 3; }
+.sv.sv-notebook .sv-notebook-hud {
+  position: absolute;
+  inset-inline-end: auto;
+  bottom: auto;
+  z-index: var(--ks-z-popover);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px 10px;
+  width: max-content;
+  max-width: calc(100% - 16px);
+  margin: 0;
+  padding: 5px 9px;
+  border: 1px solid var(--ks-line-strong);
+  border-radius: var(--ks-radius-overlay);
+  color: var(--ks-surface-1);
+  background: var(--ks-ink-strong);
+  box-shadow: var(--ks-shadow-overlay);
+  font-size: 13px;
+}
+.sv.sv-notebook .sv-notebook-hud :is(small,span) { color: var(--ks-surface-1); font-size: 12px; }
+.sv.sv-notebook .sv-notebook-hud button { min-height: 44px; color: var(--ks-surface-1); border-color: var(--ks-surface-1); background: transparent; font-size: 12px; }
+.sv.sv-notebook .sv-notebook-hud button:hover { color: var(--ks-surface-1); background: var(--ks-action-hover); border-color: var(--ks-surface-1); }
+.sv.sv-notebook .sv-plate .sv-totals { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 12px 0 0; border-top: 1px solid var(--sv-line); font-size: 13px; }
+.sv.sv-notebook .sv-plate .sv-totals:empty { display: none; }
+.sv.sv-notebook .sv-totals details { max-width: 100%; width: 100%; margin: 0; }
+.sv.sv-notebook .sv-totals summary { font-size: 13px; }
+
+/* All original property, advanced, pair, proof and options controls remain in
+   this lane. Existing single-number popovers become ordinary inspector cards. */
+.sv.sv-notebook .sv-notebook-inspector {
+  grid-area: inspector;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) !important;
+  grid-template-rows: auto !important;
+  grid-template-areas: none !important;
+  grid-auto-flow: row;
+  gap: 17px;
+  padding: 22px 18px;
+  border-inline-start: 1px solid var(--sv-line);
+  background: var(--nb-surface);
+}
+.sv.sv-notebook .sv-notebook-inspector > :is(.sv-ink-aside,.sv-form,.sv-notebook-review) { grid-area: auto !important; min-width: 0; width: 100%; }
+.sv.sv-notebook .sv-notebook-inspector > :is(.sv-ink-aside,.sv-form) {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) !important;
+  align-content: start;
+  gap: 12px;
+  position: static;
+  max-height: none !important;
+  min-height: 0;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  contain: none !important;
+  overflow: visible !important;
+}
+.sv.sv-notebook .sv-notebook-inspector .sv-statusline { display: flex; padding: 0; font-size: 12px; line-height: 1.7; }
+.sv.sv-notebook .sv-notebook-inspector [data-chain-state] { display: inline-flex; align-items: center; padding: 6px 9px; border-radius: var(--ks-radius-surface); background: var(--sv-pale); color: var(--sv-accent); }
+.sv.sv-notebook .sv-notebook-inspector [data-chain-state].sv-dirty { color: var(--nb-amber); background: var(--nb-amber-bg); }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-layer { min-width: 0; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-layer:empty { display: none; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-editor {
+  position: static !important;
+  inset: auto !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  width: 100% !important;
+  min-width: 0;
+  padding: 0 !important;
+  gap: 10px 8px;
+  border: 0 !important;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent !important;
+  color: var(--sv-ink);
+}
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-title { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 0 0 3px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-title strong { font-size: 21px; font-weight: 600; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-title :is(small,span) { color: var(--sv-quiet); font-size: 12px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-title .sv-type-icon { color: var(--sv-accent); width: 28px; height: 28px; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ink-fields,.sv-fields,.sv-pair-values) {
+  display: grid;
+  grid-auto-flow: row !important;
+  grid-auto-columns: auto;
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  align-items: end;
+  gap: 11px 9px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ink-fields,.sv-fields,.sv-pair-values) label { min-width: 0; max-width: none; width: 100%; font-size: 12px; color: var(--sv-quiet); line-height: 1.7; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-dimension { width: 100%; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-editor label { touch-action: none; cursor: ew-resize; user-select: none; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-editor label input { touch-action: auto; cursor: text; user-select: text; }
+.sv.sv-notebook .sv-notebook-inspector :is(input,select) {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 8px 10px;
+  border: 1px solid var(--ks-line);
+  border-radius: var(--ks-radius-control);
+  color: var(--sv-ink);
+  background: var(--ks-surface-1);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+.sv.sv-notebook .sv-notebook-inspector :is(input,select):focus { border-color: var(--sv-accent); }
+.sv.sv-notebook .sv-notebook-inspector input:is([type="checkbox"],[type="radio"]) { width: 20px; height: 20px; min-height: var(--ks-target); flex: 0 0 20px; padding: 0; margin: 0; accent-color: var(--sv-accent); }
+.sv.sv-notebook .sv-notebook-inspector label:has(> input:is([type="checkbox"],[type="radio"])) { display: flex; flex-direction: row; align-items: center; gap: 8px; min-height: 44px; }
+.sv.sv-notebook .sv-notebook-inspector :is(input,select)[aria-invalid="true"] { color: var(--nb-error); border-color: var(--ks-danger); background: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-inspector .sv-tape-position { min-width: 0; width: 100%; margin: 0; padding: 8px; border: 1px solid var(--sv-line); border-radius: var(--ks-radius-surface); background: var(--ks-surface-2); }
+.sv.sv-notebook .sv-notebook-inspector .sv-tape-position legend { color: var(--sv-accent); font-size: 12px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-editor > details { flex-basis: 100%; width: 100%; }
+.sv.sv-notebook .sv-notebook-inspector summary { font-size: 12px; line-height: 1.7; color: var(--sv-ink); }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ink-shortcut,.sv-ink-batch,.sv-ink-note,.sv-next-label,.sv-ends-hint) { font-size: 12px; line-height: 1.8; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-note { display: flex; flex-wrap: wrap; gap: 7px; padding: 10px 0 !important; border-top: 1px solid var(--sv-line); background: transparent; color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-note span { flex: 1 0 100%; font-size: 12px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-note button { min-height: 44px; font-size: 12px; color: var(--sv-accent); }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-editor > button { min-height: 44px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-reading-details { flex-basis: 100%; justify-content: flex-start; margin: 0; padding: 7px 0; border: 0; text-decoration: underline; text-underline-offset: 3px; color: var(--sv-accent); }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ink-error,.sv-error) { color: var(--nb-error); font-size: 13px; line-height: 1.75; }
+.sv.sv-notebook .sv-notebook-inspector [data-ink-preview-hint]:not([hidden]) { padding: 7px 9px; background: var(--ks-surface-1); border-inline-start: 3px solid var(--nb-error); border-radius: var(--ks-radius-surface); }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-form,.sv-notebook-review) { border-top: 1px solid var(--sv-line) !important; padding-top: 16px !important; }
+.sv.sv-notebook .sv-notebook-inspector .sv-ink-manual { min-width: 0; width: 100%; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-editor,.sv-proof,.sv-pair) { padding: 11px; margin: 0; background: var(--ks-surface-1); border: 1px solid var(--sv-line); border-radius: var(--ks-radius-surface); min-width: 0; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-editor,.sv-proof) h3 { font-size: 16px; }
+.sv.sv-notebook .sv-notebook-inspector .sv-proof .sv-fields { grid-template-columns: minmax(0,1fr) !important; }
+.sv.sv-notebook .sv-notebook-inspector .sv-secondary { margin: 0; border-top: 1px solid var(--sv-line); padding-top: 8px; justify-content: flex-start; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ends,.sv-ends-actions,.sv-context,.sv-tools,.sv-more,.sv-kinds) { display: flex; flex-wrap: wrap; gap: 6px; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ends,.sv-ends-actions) button { flex: 1 1 105px; }
+.sv.sv-notebook .sv-notebook-inspector :is(.sv-ends-hint,.sv-notebook-review) { color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-review { display: grid; gap: 8px; padding: 14px 0 0; font-size: 13px; line-height: 1.8; }
+.sv.sv-notebook .sv-notebook-review :is(h2,h3,p,ul) { margin: 0; }
+.sv.sv-notebook .sv-notebook-review :is(h2,h3) { color: var(--sv-ink); font-size: 16px; }
+.sv.sv-notebook .sv-notebook-review :is(small,li) { font-size: 12px; }
+.sv.sv-notebook .sv-notebook-review ul { padding-inline-start: 20px; }
+.sv.sv-notebook .sv-notebook-review dl { display: grid; gap: 11px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--sv-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); }
+.sv.sv-notebook .sv-notebook-review dl > div { display: grid; gap: 3px; min-width: 0; }
+.sv.sv-notebook .sv-notebook-review dt { font-size: 12px; color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-review dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--sv-ink); overflow-wrap: anywhere; }
+.sv.sv-notebook .sv-notebook-review [data-notebook-state] { padding: 7px 10px; border-inline-start: 3px solid var(--ks-line-strong); border-radius: var(--ks-radius-control); background: var(--ks-surface-2); color: var(--sv-quiet); }
+.sv.sv-notebook[data-notebook-status="confirmed"] .sv-notebook-review [data-notebook-state] { background: var(--sv-pale); border-color: var(--sv-accent); color: var(--sv-accent); }
+.sv.sv-notebook:is([data-notebook-status="pending"],[data-notebook-status="dirty"],[data-notebook-status="review"]) .sv-notebook-review [data-notebook-state] { background: var(--nb-amber-bg); border-color: var(--nb-amber); color: var(--nb-amber); }
+.sv.sv-notebook[data-notebook-status="invalid"] .sv-notebook-review [data-notebook-state] { background: var(--ks-surface-1); border-color: var(--nb-error); color: var(--nb-error); }
+.sv.sv-notebook .sv-notebook-inspector .sv-notebook-precision-hint { flex-basis: 100%; width: 100%; margin: 4px 0 0; padding-top: 9px; border-top: 1px solid var(--sv-line); color: var(--sv-quiet); font-size: 12px; line-height: 1.8; }
+.sv.sv-notebook .sv-notebook-review [data-notebook-recovery] { font-size: 12px; line-height: 1.8; color: var(--sv-quiet); }
+.sv.sv-notebook .sv-notebook-empty:has([data-notebook-empty]:empty) { display: none; }
+.sv.sv-notebook .sv-notebook-review [data-chain-act="proof"] { width: 100%; color: var(--sv-accent); border-color: var(--sv-accent); background: transparent; }
+.sv.sv-notebook :is(.sv-primary,.sv-ink-primary) { color: var(--ks-surface-1); background: var(--sv-accent); border-color: var(--sv-accent); }
+.sv.sv-notebook :is(.sv-primary,.sv-ink-primary):hover:not(:disabled) { color: var(--ks-surface-1); background: var(--ks-action); border-color: var(--ks-action); }
+.sv.sv-notebook :is([data-chain-act="remove"],.sv-remove) { color: var(--nb-error); }
+
+/* Save and leave controls stay in the same root footer and remain reachable. */
+.sv.sv-notebook > .sv-footer {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: 6;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 20px max(12px,env(safe-area-inset-bottom));
+  border-top: 1px solid var(--sv-line);
+  background: var(--ks-surface-1);
+  box-shadow: var(--ks-shadow-surface);
+}
+.sv.sv-notebook .sv-footer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.sv.sv-notebook .sv-footer-actions button { flex: 0 1 auto; min-height: 44px; padding-inline: 13px; font-size: 13px; }
+.sv.sv-notebook [data-chain-notice] { font-size: 13px; line-height: 1.75; }
+.sv.sv-notebook [data-chain-notice]:empty { margin: 0; }
+.sv.sv-notebook .sv-guard { padding: 12px; margin-bottom: 10px; background: var(--nb-amber-bg); border: 1px solid var(--ks-attention); color: var(--ks-attention); }
+.sv.sv-notebook .sv-guard p { font-size: 13px; }
+.sv.sv-notebook .sv-guard > div { gap: 7px; }
+
+@media (max-width: 1250px) and (min-width: 1001px) {
+  .sv.sv-notebook .sv-work { grid-template-columns: 190px minmax(0,1fr) 280px !important; }
+  .sv.sv-notebook .sv-notebook-objects { padding-inline: 12px; }
+  .sv.sv-notebook .sv-plate { padding-inline: 15px; }
+  .sv.sv-notebook .sv-notebook-inspector { padding-inline: 14px; }
+}
+@media (max-width: 1000px) {
+  .sv.sv-notebook .sv-work {
+    grid-template-columns: 180px minmax(0,1fr) !important;
+    grid-template-areas: "objects drawing" "inspector inspector";
+    align-items: start;
+  }
+  .sv.sv-notebook .sv-notebook-head { padding: 16px 18px; gap: 10px 18px; }
+  .sv.sv-notebook .sv-notebook-objects { padding: 18px 12px; }
+  .sv.sv-notebook .sv-plate { padding: 18px 16px; }
+  .sv.sv-notebook .sv-notebook-inspector {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 22px;
+    padding: 22px;
+    border-inline-start: 0;
+    border-top: 1px solid var(--sv-line);
+  }
+  .sv.sv-notebook .sv-notebook-inspector > .sv-form { border-top: 0 !important; padding-top: 0 !important; border-inline-start: 1px solid var(--sv-line) !important; padding-inline-start: 20px !important; }
+  .sv.sv-notebook .sv-notebook-inspector > .sv-notebook-review { grid-column: 1 / -1 !important; }
+  .sv.sv-notebook .sv-plate .sv-elevation { min-height: 320px !important; }
+  .sv.sv-notebook .sv-plate .sv-elevation .survey-wall-sheet { height: clamp(270px,40dvh,480px) !important; }
+}
+@media (max-width: 650px) {
+  .sv.sv-notebook .sv-work { display: flex !important; flex-direction: column; gap: 0 !important; }
+  .sv.sv-notebook .sv-work > :is(.sv-notebook-objects,.sv-plate,.sv-notebook-inspector) { width: 100%; }
+  .sv.sv-notebook .sv-notebook-head { align-items: flex-start; padding: 15px; gap: 12px; }
+  .sv.sv-notebook .sv-notebook-head :is(h1,h2) { font-size: 23px; }
+  .sv.sv-notebook .sv-notebook-history { margin-inline-start: auto; }
+  .sv.sv-notebook .sv-notebook-history button { padding-inline: 9px; }
+  .sv.sv-notebook .sv-notebook-objects { display: grid; gap: 11px; padding: 15px; border-inline-end: 0; border-bottom: 1px solid var(--sv-line); }
+  .sv.sv-notebook :is(.sv-notebook-walls,[data-notebook-walls]) { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sv.sv-notebook .sv-notebook-wall { min-height: 62px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-map-box { max-width: 210px; justify-self: center; padding: 6px 10px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-map-box svg { max-height: 100px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-reading-tray[data-overflow] { display: grid !important; grid-template-columns: 44px minmax(0,1fr) 44px; align-items: center; gap: 3px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-reading-tray[data-overflow] > [data-browse-readings] { display: inline-flex; min-width: 44px; padding: 6px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-readings { flex-direction: row !important; overflow-x: auto; overscroll-behavior-inline: contain; gap: 6px; padding: 9px 1px 3px; }
+  .sv.sv-notebook .sv-notebook-objects .sv-readings button { width: auto; flex: 0 0 160px; min-height: 63px; }
+  .sv.sv-notebook .sv-plate { padding: 17px 12px; gap: 11px; }
+  .sv.sv-notebook .sv-plate .sv-wall-meta { gap: 8px; }
+  .sv.sv-notebook .sv-plate [data-chain-wall] { max-width: none; }
+  .sv.sv-notebook .sv-plate .sv-wall-length { flex-basis: 100%; }
+  .sv.sv-notebook .sv-plate .sv-workbar { gap: 4px; }
+  .sv.sv-notebook .sv-workbar .sv-ink-tools { flex-basis: 100%; }
+  .sv.sv-notebook .sv-workbar .sv-sheet-camera { border-inline-start: 0; padding: 0; border-top: 1px solid var(--sv-line); width: 100%; justify-content: flex-end; }
+  .sv.sv-notebook .sv-workbar :is(.sv-ink-tool,.sv-ink-more > summary) { font-size: 12px; padding-inline: 8px; }
+  .sv.sv-notebook .sv-plate .sv-elevation { min-height: 255px !important; margin-top: 10px; padding: 12px 0; }
+  .sv.sv-notebook .sv-plate .sv-elevation .survey-wall-sheet { height: clamp(240px,38dvh,380px) !important; }
+  .sv.sv-notebook .sv-notebook-hud { justify-content: flex-start; width: max-content; max-width: calc(100% - 16px); padding: 7px; gap: 6px; }
+  .sv.sv-notebook .sv-notebook-hud > :is(strong,span) { overflow-wrap: anywhere; }
+  .sv.sv-notebook .sv-notebook-inspector { display: grid; grid-template-columns: minmax(0,1fr) !important; gap: 20px; padding: 22px 18px; }
+  .sv.sv-notebook .sv-notebook-inspector > .sv-form { border-inline-start: 0 !important; padding-inline-start: 0 !important; border-top: 1px solid var(--sv-line) !important; padding-top: 17px !important; }
+  .sv.sv-notebook .sv-notebook-inspector .sv-ink-fields { gap: 13px 10px; }
+  .sv.sv-notebook .sv-notebook-inspector .sv-ink-editor input { min-height: 48px; font-size: 18px; }
+  .sv.sv-notebook > .sv-footer { padding: 10px 12px max(10px,env(safe-area-inset-bottom)); }
+  .sv.sv-notebook .sv-footer-actions button { flex: 1 1 120px; padding-inline: 10px; }
+  .sv.sv-notebook .sv-footer-actions [data-chain-act="previous-wall"] { flex: 0 0 44px; }
+  .sv.sv-notebook .sv-object-save-footer small { flex-basis: 100%; }
+}
+@media (max-width: 380px) {
+  .sv.sv-notebook .sv-notebook-inspector { padding-inline: 13px; }
+  .sv.sv-notebook .sv-notebook-inspector .sv-tape-position .sv-ink-fields { grid-template-columns: minmax(0,1fr) !important; }
+  .sv.sv-notebook .sv-notebook-head { padding-inline: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sv.sv-notebook *, .sv.sv-notebook *::before, .sv.sv-notebook *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* Text labels from the controller and boundary morphology both identify state. */
+.sv.sv-notebook[data-notebook-status="confirmed"] .sv-notebook-review [data-notebook-state]{border:3px double var(--ks-complete);border-style:double;color:var(--ks-complete);background:var(--ks-complete-soft)}
+.sv.sv-notebook[data-notebook-status="invalid"] .sv-notebook-review [data-notebook-state]{border:2px dashed var(--ks-danger);border-style:dashed;color:var(--ks-danger);background:var(--ks-danger-soft)}
+.sv.sv-notebook:is([data-notebook-status="pending"],[data-notebook-status="dirty"],[data-notebook-status="review"]) .sv-notebook-review [data-notebook-state]{border-inline-start:4px solid var(--ks-attention)}
+
+/* Dark structural chrome needs its dedicated high-contrast focus ring. */
+.sv.sv-notebook .sv-notebook-hud :is(button,a,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}

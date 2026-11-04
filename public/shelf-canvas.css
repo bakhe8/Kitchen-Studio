@@ -1,0 +1,63 @@
+.shc-view{width:100%;min-width:0;isolation:isolate;color:var(--ks-ink-strong);font-family:inherit;direction:rtl}
+.shc-view [hidden]{display:none!important}
+.shc-board{display:block;width:100%;height:auto;aspect-ratio:var(--shc-ratio,1.33);max-height:clamp(340px,67vh,690px);min-height:210px;background:var(--ks-surface-2);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;direction:ltr!important}
+.shc-board text{user-select:none}
+.shc-view:is([data-tool=select],[data-tool=structure]) :is([data-shelf-cell],[data-shelf-zone],[data-shelf-wall],[data-shelf-frame],[data-shelf-material-divider]){cursor:pointer}
+.shc-view:is([data-tool=draw],[data-tool=measure],[data-tool=point-insert]) .shc-board{cursor:crosshair}
+.shc-view[data-tool=move] [data-shelf-body],.shc-view[data-tool=move] [data-shelf-move]{cursor:grab}
+.shc-view:is([data-tool=select],[data-tool=structure],[data-tool=point-insert]) .shc-divider-col{cursor:ew-resize}
+.shc-view:is([data-tool=select],[data-tool=structure],[data-tool=point-insert]) .shc-divider-row{cursor:ns-resize}
+.shc-view:is([data-tool=select],[data-tool=point-insert],[data-tool=move]) [data-shelf-art-key]{cursor:grab}
+.shc-view[data-tool=select] [data-shelf-quick-grip][data-axis=col]{cursor:ew-resize}
+.shc-view[data-tool=select] [data-shelf-quick-grip][data-axis=row]{cursor:ns-resize}
+.shc-view:is([data-tool=select],[data-tool=point-insert]) [data-shelf-selected-divider][data-axis=col]{cursor:ew-resize}
+.shc-view:is([data-tool=select],[data-tool=point-insert]) [data-shelf-selected-divider][data-axis=row]{cursor:ns-resize}
+.shc-view[data-dragging=art-transfer] .shc-board,.shc-view[data-dragging=art-transfer] .shc-board *{cursor:grabbing}
+.shc-view[data-tool=resize] :is(.shc-nw,.shc-se){cursor:nwse-resize}
+.shc-view[data-tool=resize] :is(.shc-ne,.shc-sw){cursor:nesw-resize}
+.shc-view[data-dragging=move] .shc-board,.shc-view[data-dragging=move] .shc-board *{cursor:grabbing}
+.shc-view[data-dragging=draw] [data-shc-cabinet]{opacity:.62}
+.shc-divider[data-divider-scope=wall]:hover path,.shc-divider[data-divider-scope=zone]:hover path{stroke:var(--ks-line-strong)}
+.shc-caption{font-size:12px;line-height:1.7;padding:7px 12px;color:var(--ks-ink);border-top:1px solid var(--ks-line);background:var(--ks-surface-2)}
+.shc-caption[data-drop-tone=limit]{color:var(--ks-attention);border-top-color:var(--ks-attention);background:var(--ks-attention-soft)}
+.shc-caption[data-drop-tone=valid]{color:var(--ks-complete);border-top-color:var(--ks-complete);background:var(--ks-complete-soft)}
+.shc-caption[data-drop-tone=invalid]{color:var(--ks-danger);border-top-color:var(--ks-danger);background:var(--ks-danger-soft)}
+.shc-caption[data-drop-tone=noop]{color:var(--ks-ink);border-top-color:var(--ks-line);background:var(--ks-surface-2)}
+.shc-view [data-shc-drop-layer],.shc-view [data-shc-drop-layer] *{pointer-events:none}
+.shc-view[data-preview=true] .shc-board,.shc-view[data-preview=true] .shc-board *{cursor:default}
+.shc-view[data-preview=true] .shc-board{background:var(--ks-attention-soft);touch-action:auto}
+.shc-view[data-preview=true] [data-shelf-body]{pointer-events:none}
+.shc-view[data-preview=true] :is([data-shc-zones],[data-shc-controls],[data-shc-multi-layer],[data-shc-pointer-cue],[data-shc-drop-layer]){display:none}
+@media(max-width:600px){.shc-caption{padding:7px 9px;font-size:11px}.shc-board{max-height:56vh;min-height:190px}}
+
+.shc-view:is([data-tool=point-insert],[data-tool=move])[data-hover-divider=col] .shc-board *{cursor:ew-resize}
+.shc-view:is([data-tool=point-insert],[data-tool=move])[data-hover-divider=row] .shc-board *{cursor:ns-resize}
+
+.shc-view[data-aiming-other-scope] :is([data-shelf-active],[data-shelf-dimension]){visibility:hidden}
+
+.shc-view[data-tool=delete] .shc-board{cursor:default}
+.shc-view[data-tool=delete][data-delete-hit] .shc-board,.shc-view[data-tool=delete][data-delete-hit] .shc-board *{cursor:pointer}
+.shc-view [data-shc-pointer-cue],.shc-view [data-shc-pointer-cue] *{pointer-events:none}
+
+.shc-view [data-shc-multi-layer],.shc-view [data-shc-multi-layer] *{pointer-events:none}
+.shc-view[data-dragging=marquee] .shc-board,.shc-view[data-dragging=marquee] .shc-board *{cursor:crosshair}
+
+.shc-view[data-group-active=true][data-tool=move] .shc-board *{cursor:default}
+.shc-view[data-group-active=true][data-tool=move][data-group-move-hit=yes] .shc-board *,.shc-view[data-group-active=true][data-tool=move] [data-shelf-group-move]{cursor:grab}
+.shc-view[data-group-active=true][data-dragging=group-transform][data-tool=move] .shc-board *{cursor:grabbing}
+.shc-view[data-group-active=true][data-tool=delete][data-delete-hit=group-content] [data-shelf-group-cell]{fill:var(--ks-danger);stroke:var(--ks-danger)}
+
+.shc-view[data-group-active=true]:is([data-tool=select],[data-tool=move]) :is([data-shelf-group-shared-grip],[data-shelf-group-shared-pad])[data-axis=col],.shc-view[data-group-active=true]:is([data-tool=select],[data-tool=move]) [data-shelf-group-shared-grip][data-axis=col] *{cursor:ew-resize}
+.shc-view[data-group-active=true]:is([data-tool=select],[data-tool=move]) :is([data-shelf-group-shared-grip],[data-shelf-group-shared-pad])[data-axis=row],.shc-view[data-group-active=true]:is([data-tool=select],[data-tool=move]) [data-shelf-group-shared-grip][data-axis=row] *{cursor:ns-resize}
+.shc-view:is([data-tool=select],[data-tool=move])[data-group-active=true][data-hover-divider=col] .shc-board *{cursor:ew-resize}
+.shc-view:is([data-tool=select],[data-tool=move])[data-group-active=true][data-hover-divider=row] .shc-board *{cursor:ns-resize}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.shc-view [data-shelf-active]{stroke:var(--ks-action)}
+.shc-view [data-shelf-active]>rect{stroke:var(--ks-action);fill:var(--ks-action)}
+.shc-view [data-shelf-selected-divider]>g:first-child :is(line:last-of-type,circle){stroke:var(--ks-action)}
+.shc-view [data-shelf-group-cell]{stroke:var(--ks-action)}
+.shc-view[data-tool=delete] [data-shelf-group-cell]{stroke:var(--ks-danger)}
+.shc-caption[data-drop-tone=invalid]{border-inline-start:4px dashed var(--ks-danger)}
+.shc-caption[data-drop-tone=valid]{border-inline-start:4px double var(--ks-complete)}
+.shc-caption[data-drop-tone=limit]{border-inline-start:4px solid var(--ks-attention)}

@@ -1,0 +1,251 @@
+/* Keep the drawing and the decision it informs in the same working area. */
+@media (min-width: 768px) {
+  .k-workshop .proposal-studio {padding:10px 12px}
+  .k-workshop .proposal-studio .pd-title {margin:0 0 8px;padding:0;border:0}
+  .proposal-studio .pd-title>div {display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .k-workshop .proposal-studio .pd-title h2 {font-size:1.12rem}
+  .pd-title .pd-size {color:var(--ks-ink);font-size:.8rem}
+  .k-workshop .proposal-studio .pd-support {margin:0;padding:0;border:0;gap:2px}
+  .k-workshop .proposal-studio .pd-stagebar,.k-workshop .proposal-studio .pd-stagefoot {min-height:46px;padding:2px 6px;flex-wrap:wrap;gap:4px}
+  .k-workshop .proposal-studio .pd-stagefoot {padding-inline-start:10px}
+  .k-workshop .proposal-studio :is(.pd-segment,.pd-elevation,.pd-icon-tool,.pd-link,.pd-help summary,.pd-tiers button) {min-width:44px;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0}
+  .k-workshop .proposal-studio .pd-help {position:relative}
+  .k-workshop .proposal-studio .pd-help summary {list-style:none;cursor:pointer;border-radius:var(--ks-radius-group);padding:0}
+  .proposal-studio .pd-help summary::-webkit-details-marker {display:none}
+  .proposal-studio .pd-help p {position:absolute;inset-block-start:100%;inset-inline-end:0;width:min(260px,60vw);z-index:2;padding:10px 14px;background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);box-shadow:var(--ks-shadow-surface)}
+  .proposal-studio .pd-help[open] summary,.k-workshop .proposal-studio .pd-icon-tool[aria-pressed="true"] {background:var(--ks-action-soft)}
+  .k-workshop .proposal-studio .pd-icon-tool {padding:0;flex:none}
+  .k-workshop .proposal-studio .pd-stagebar .pd-views {border-inline-end:1px solid var(--ks-line);padding-inline-end:6px}
+  .k-workshop .proposal-studio .pd-gesture-note:empty {display:none}
+  .k-workshop .proposal-studio .pd-gesture-note:not(:empty) {padding:4px 10px;color:var(--ks-ink-strong);background:var(--ks-surface-2)}
+  .k-workshop .proposal-studio .pd-stage:has(.pd-help[open]) {overflow:visible}
+  .k-workshop .proposal-studio :is(.pd-start,.pd-inspector,.pd-open) {padding:10px}
+  .k-workshop .proposal-studio .pd-stagefoot .pd-selection-key {min-width:0}
+  .k-workshop .proposal-studio :is(.pd-stepper,.pd-width input,.pd-unitpicker,.pd-exact,.pd-alts button) {min-height:44px}
+
+  .k-workshop .proposal-studio .pd-side {gap:10px}
+  .k-workshop .proposal-studio .pd-open {margin:0;min-inline-size:0}
+  .k-workshop .proposal-studio .pd-open fieldset {min-inline-size:0}
+  .k-workshop .proposal-studio .pd-unit-detail {color:var(--pd-muted);margin-block:4px 10px}
+  .k-workshop .proposal-studio .pd-opentitle {gap:4px}
+  @container proposal (min-width:790px) {
+    .k-workshop .proposal-studio .pd-layout {
+      grid-template-columns:minmax(0,1fr) clamp(246px,27%,355px);
+      gap:12px;
+    }
+
+  }
+  @container proposal (max-width:789.98px) {
+    .k-workshop .proposal-studio .pd-layout {grid-template-columns:minmax(0,1fr);gap:10px}
+    .k-workshop .proposal-studio .pd-mainarea {position:static}
+
+    .k-workshop .proposal-studio .pd-side:has(.pd-commit) {grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+    .k-workshop .proposal-studio .pd-side>.pd-summary {grid-column:1/-1}
+    .k-workshop .proposal-studio .pd-side>.pd-error,
+    .k-workshop .proposal-studio .pd-side>.pd-commit {grid-column:1/-1}
+    .k-workshop .proposal-studio .pd-commit {grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  }
+
+  .pwr-desk {container:rowdesk / inline-size}
+  .pwr-desk>header {margin-block-end:12px}
+  .pwr-desk>header h2,.pwr-desk .pwr-saved>h3 {margin-block-start:0}
+  .pwr-desk .pwr-layout {display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:start}
+  .pwr-desk :is(.pwr-entry,.pwr-output,fieldset) {min-inline-size:0}
+  .pwr-desk .pwr-entry,.pwr-desk .pwr-output {display:grid;align-content:start;gap:8px}
+  .pwr-desk .pwr-output:not(:has(.pwr-saved,[data-pwr-result]:not(:empty))) {display:none}
+  .pwr-desk .pwr-entry>.ws-card,.pwr-desk .pwr-output>.ws-card,
+  .pwr-desk [data-pwr-result]>.ws-card {margin:0}
+  .pwr-desk [data-pwr-result]:empty {display:none}
+  .pwr-desk [data-pwr-result]>section {border-inline-start:3px solid var(--ks-line-strong)}
+  .pwr-desk [data-pwr-result] .pwr-track {height:60px}
+  .pwr-desk details>summary {min-height:42px;align-content:center;padding-block:4px;cursor:pointer}
+  .pwr-desk :is(input:not([type="checkbox"]),select,button) {min-height:44px}
+  .pwr-desk .ws-inline>label {max-width:100%}
+  .pwr-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .pwr-heading h2,.pwr-desk .pwr-config>summary {display:flex;align-items:center;gap:8px}
+  .pwr-desk .pwr-heading h2 {margin:0}
+  .pwr-heading>label {display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pwr-heading select {max-width:100%}
+  .pwr-desk .pwr-saved h3 small {display:inline-block;padding-inline:7px;background:var(--ks-complete-soft);border-radius:var(--ks-radius-surface);font-weight:600}
+  .pwr-desk details>summary {min-height:44px}
+  .pwr-desk .pwr-config>summary::after {content:'⌄';margin-inline-start:auto}
+  .pwr-desk .pwr-config[open]>summary::after {transform:rotate(180deg)}
+  .pwr-desk .pwr-config summary::-webkit-details-marker {display:none}
+  @container rowdesk (min-width:820px) {
+    .pwr-layout:has(.pwr-saved) {grid-template-columns:minmax(0,1fr) minmax(235px,32%)}
+
+    .pwr-layout:not(:has(.pwr-saved)):has([data-pwr-result]:not(:empty)) {grid-template-columns:minmax(330px,.85fr) minmax(0,1.15fr)}
+  }
+
+  .k-workshop .ws-screen>.finish-desk {container:finishdesk / inline-size;margin:0;padding:0;border:0;background:transparent}
+  .finish-desk .finish-heading,.finish-desk .finish-viewbar,.finish-desk .finish-heading h3,.finish-desk .finish-next,.finish-desk [data-finish-confirm] {display:flex;align-items:center;gap:8px}
+  .k-workshop .finish-desk .finish-heading {justify-content:space-between;padding-block-end:8px}
+  .k-workshop .finish-desk .finish-heading h3 {margin:0;font-size:1.12rem}
+  .k-workshop .finish-desk .finish-heading button {margin:0;min-height:44px}
+  .finish-desk .finish-overview {min-width:0;border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1);overflow:hidden}
+  .finish-desk .finish-viewbar {padding:3px 10px;min-height:44px;box-sizing:border-box;border-bottom:1px solid var(--ks-line)}
+  .finish-desk .finish-viewbar>span {margin-inline-start:auto;font-size:.78rem;color:var(--ks-ink)}
+  .k-workshop .finish-desk .finish-viewbar select {width:auto;min-height:44px;max-width:60%}
+  .k-workshop .finish-desk [data-finish-drawing] {margin:0;border:none;border-radius:0;background:var(--ks-surface-1)}
+  .k-workshop .finish-desk .finish-instruction {margin:0;padding:8px 10px;border-top:1px solid var(--ks-line);color:var(--ks-ink);font-size:.8rem}
+  .k-workshop .finish-desk .finish-options {min-width:0;display:grid;align-content:start;gap:12px;padding:12px;background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface)}
+  .k-workshop .finish-desk :is(.finish-options>label,.finish-material-field) {display:grid;gap:4px;margin:0;min-width:0}
+  .finish-desk .finish-options select {width:100%}
+  .k-workshop .finish-desk .finish-options fieldset {min-width:0}
+  .k-workshop .finish-desk .finish-kinds {display:grid;grid-template-columns:repeat(auto-fit,minmax(65px,1fr));gap:4px;margin:0}
+  .k-workshop .finish-desk .finish-kinds button {display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;min-width:0;min-height:44px;padding:4px;margin:0;font-size:.81rem;line-height:1.35}
+  .k-workshop .finish-desk .finish-kinds button[aria-pressed="true"] {background:var(--ks-action-soft);border-color:var(--ks-action);color:var(--ks-action)}
+  .k-workshop .finish-desk :is(.finish-kinds,.finish-viewbar,.finish-heading) .studio-icon {flex:none}
+  .k-workshop .finish-desk .finish-material-field {display:grid;gap:4px}
+  .finish-sample-control {display:grid;position:relative;align-items:center;cursor:pointer;border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);min-height:52px;padding:4px 7px;padding-inline-end:24px}
+  .finish-sample-control::after {content:'';position:absolute;inset-inline-end:8px;top:calc(50% - 5px);width:7px;height:7px;border:solid var(--ks-line-strong);border-width:0 0 1.5px 1.5px;transform:rotate(-45deg);pointer-events:none}
+  .finish-sample-control:focus-within {outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+  .k-workshop .finish-desk .finish-sample-control [data-finish-sku] {position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+  .k-workshop .finish-desk .finish-sample-control [data-finish-sample] {display:flex;align-items:center;gap:8px;border:0;padding:0;margin:0;background:transparent;overflow-wrap:anywhere}
+  .finish-sample-control [data-finish-sample] strong,.finish-sample-control [data-finish-sample] small {display:block;line-height:1.45}
+  .finish-sample-control [data-finish-sample] small {color:var(--ks-ink)}
+  .k-workshop .finish-desk .finish-chip {inline-size:29px;block-size:36px;box-sizing:border-box;flex:none}
+  .k-workshop .finish-desk [data-finish-confirm] {justify-content:center;width:100%;min-height:44px;margin:12px 0 0;font-weight:700;background:var(--ks-attention-soft);border-color:var(--ks-attention)}
+  .k-workshop .finish-desk .finish-all {margin-inline-start:auto;min-width:44px;min-height:44px}
+  .k-workshop .finish-desk .finish-part-title {margin:0}
+  @container finishdesk (min-width:760px) {
+    .k-workshop .finish-desk:has([data-finish-drawing]) .finish-workspace {display:grid;grid-template-columns:minmax(0,1fr) clamp(242px,28%,348px);gap:12px;align-items:start}
+    .k-workshop .finish-desk .finish-options {overflow:auto;overscroll-behavior:contain}
+  }
+  @container finishdesk (max-width:759.98px) {
+    .k-workshop .finish-desk:has([data-finish-drawing]) .finish-workspace {display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+    .k-workshop .finish-desk [data-finish-drawing] svg {height:clamp(245px,39dvh,430px);max-height:none}
+    .k-workshop .finish-desk .finish-options:has(.finish-kinds) {grid-template-columns:minmax(180px,.85fr) minmax(0,1.15fr);align-items:end}
+    .k-workshop .finish-desk .finish-options:has(.finish-kinds)>[data-finish-editor] {grid-column:1/-1}
+  }
+}
+
+.pd-site-values {display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin:8px 0 12px}
+.pd-site-values div {border-block-start:1px solid var(--ks-line);padding-block:5px}
+.pd-site-values dt,.pd-site-wall {color:var(--ks-ink);font-size:.85rem}
+.pd-site-values dd {margin:2px 0 0;font-weight:700}
+.proposal-studio .pd-canvas polygon.pd-site-selected,.proposal-studio .pd-canvas g.pd-site-selected>rect:first-of-type,
+.finish-desk [data-finish-drawing] g.finish-picked>rect:first-of-type {stroke:var(--ks-action);stroke-width:2.5;vector-effect:non-scaling-stroke}
+
+.finish-desk .finish-part-title {display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-block:.6rem}
+.finish-desk [data-sheet-part="shelf"].finish-picked {stroke:var(--ks-action)}
+.finish-desk [data-sheet-part="handle"].finish-picked {filter:none}
+
+@media (max-width:767px){.finish-sample-control>[data-finish-sample]{display:none!important}}
+
+/* Project actions sit above the sheet. A side column exists only for an open editor. */
+.k-workshop .proposal-studio .pd-layout.pd-overview {grid-template-columns:minmax(0,1fr)}
+.k-workshop .proposal-studio .pd-title {position:relative;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.k-workshop .proposal-studio .pd-title .pd-project {flex:1 1 100px;min-width:0;display:grid;justify-content:start;gap:0}
+.k-workshop .proposal-studio .pd-size {white-space:nowrap}
+.k-workshop .proposal-studio .pd-title .pd-start:not(.pd-superseded),
+.k-workshop .proposal-studio .pd-title .pd-commit {display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin:0;padding:0;border:0;background:none}
+.k-workshop .proposal-studio .pd-visit-summary {margin-inline-end:5px;font-size:.8rem;color:var(--pd-muted)}
+.k-workshop .proposal-studio .pd-title .pd-summary {display:flex;margin:0;padding:0;border:0;gap:8px}
+.k-workshop .proposal-studio .pd-summary strong {font-size:1rem}
+.k-workshop .proposal-studio .pd-title .pd-superseded {flex:1 1 100%}
+.k-workshop .proposal-studio .pd-title>.pd-error {width:100%;order:1}
+.k-workshop .proposal-studio .pd-compare {display:block;margin:0}
+.k-workshop .proposal-studio .pd-compare>summary {display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 9px;cursor:pointer;min-height:44px;font-size:.82rem;color:var(--pd-ink);border:1px solid var(--pd-line);border-radius:var(--ks-radius-group)}
+.k-workshop .proposal-studio .pd-compare>summary::-webkit-details-marker {display:none}
+.k-workshop .proposal-studio .pd-compare>summary::after {content:'';width:6px;height:6px;border:solid currentColor;border-width:0 0 1.5px 1.5px;transform:rotate(-45deg);margin-inline-start:4px}
+.k-workshop .proposal-studio .pd-compare[open]>summary {background:var(--pd-tint)}
+.k-workshop .proposal-studio .pd-choices {position:absolute;inset-block-start:100%;inset-inline-end:0;z-index:5;width:min(100%,480px);padding:10px;background:var(--ks-surface-1);border:1px solid var(--pd-line);border-radius:var(--ks-radius-overlay);box-shadow:var(--ks-shadow-overlay)}
+.k-workshop .proposal-studio .pd-comparison-station {padding-block-start:6px}
+.k-workshop .proposal-studio .pd-unitrow>[data-wp="clear-unit"] {margin-inline-start:auto}
+.k-workshop .proposal-studio .pd-stagefoot .pd-unitpicker {min-width:0;margin:0;padding-inline:9px;gap:8px;color:var(--pd-ink);font-weight:650;border:1px solid var(--pd-line);border-radius:var(--ks-radius-surface)}
+.k-workshop .proposal-studio .pd-stagefoot .pd-unitpicker span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Split off the real header and tool rows, so the paper receives the
+   remaining pixels even when Arabic labels wrap or the notice opens. */
+@media screen and (min-width:768px) {
+  .k-workshop[data-ws-route=whole] > .ws-content {padding:0;scrollbar-gutter:auto}
+  .k-workshop[data-ws-route=whole] .ws-screen:has(>.proposal-studio),
+  .k-workshop[data-ws-route=finish] .ws-screen:has(.finish-overview) {height:100%}
+  .k-workshop .proposal-studio,
+  .k-workshop .finish-desk:has(.finish-overview) {box-sizing:border-box;height:100%;display:flex;flex-direction:column}
+  .k-workshop .proposal-studio {padding:0}
+  .k-workshop .proposal-studio .pd-title {padding:4px 10px;margin:0}
+  .k-workshop .proposal-studio .pd-layout {flex:1 0 260px;min-height:0;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+  .k-workshop .proposal-studio .pd-mainarea,
+  .k-workshop .proposal-studio .pd-stage {display:flex;flex-direction:column;min-height:0}
+  .k-workshop .proposal-studio .pd-stage {flex:1}
+  .k-workshop .proposal-studio .pd-canvas {flex:1 1 0;height:0;min-height:100px}
+  .k-workshop .proposal-studio :is(.pd-title,.pd-alert,.pd-stagebar,.pd-stagefoot,.pd-gesture-note) {flex:none}
+  .k-workshop .proposal-studio .pd-side {min-height:0;overflow:auto;overscroll-behavior:contain}
+  @container proposal (max-width:789.98px) {
+    .k-workshop .proposal-studio .pd-layout:not(.pd-overview) {
+      flex-basis:440px;grid-template-rows:minmax(225px,1.55fr) minmax(190px,1fr);
+    }
+  }
+  @container finishdesk (min-width:760px) {
+    .k-workshop .finish-desk:has(.finish-overview) .finish-workspace {flex:1 0 240px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+    .k-workshop .finish-desk .finish-overview {display:flex;flex-direction:column;min-height:0}
+    .k-workshop .finish-desk [data-finish-drawing] {flex:1;min-height:0}
+    .k-workshop .finish-desk [data-finish-drawing] svg {display:block;width:100%;height:100%;max-height:none}
+  }
+  @container finishdesk (max-width:759.98px) {
+    .k-workshop .finish-desk:has(.finish-overview) {min-height:100%}
+    .k-workshop .finish-desk .finish-overview {min-height:0}
+  }
+}
+
+/* The view rail belongs to the drawing. Customer materials keep their CAD colours. */
+.k-workshop .proposal-studio .pd-stage {border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1)}
+.k-workshop .proposal-studio .pd-stagebar {background:var(--ks-ink-strong);border-bottom:1px solid var(--ks-line-strong);color:var(--ks-surface-1);padding:2px 6px}
+.k-workshop .proposal-studio .pd-stagebar .pd-views {border:0;padding:0;gap:2px}
+.k-workshop .proposal-studio .pd-stagebar :is(.pd-segment,.pd-elevation,.pd-icon-tool,.pd-tiers button,.pd-help summary) {color:var(--ks-surface-1);border-radius:var(--ks-radius-control)}
+.k-workshop .proposal-studio .pd-stagebar :is(button,label,summary):hover,
+.k-workshop .proposal-studio .pd-stagebar .pd-help[open] summary {background:var(--ks-action)}
+.k-workshop .proposal-studio .pd-stagebar :is(.pd-segment[aria-pressed=true],.pd-elevation.active) {background:var(--ks-action-soft);color:var(--ks-action);box-shadow:none}
+.k-workshop .proposal-studio .pd-stagebar :is(.pd-icon-tool[aria-pressed=true],.pd-tiers [aria-pressed=true]) {color:var(--ks-surface-1);background:var(--ks-action)}
+.k-workshop .proposal-studio .pd-stagebar :focus-visible,.k-workshop .proposal-studio .pd-stagebar label:has(select:focus-visible) {outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.k-workshop .proposal-studio .pd-help p {color:var(--pd-ink)}
+.proposal-studio .pd-canvas {background-color:var(--ks-surface-1);background-image:radial-gradient(color-mix(in srgb, var(--ks-line) 15.29%, transparent) .8px,transparent .8px);background-size:18px 18px}
+.k-workshop .proposal-studio .pd-stagefoot {background:var(--ks-surface-1);border-color:var(--ks-line)}
+.k-workshop .proposal-studio .pd-stagefoot .pd-unitpicker {border-color:var(--ks-line);color:var(--ks-ink);background:var(--ks-surface-1)}
+.proposal-studio .pd-picker-count {display:grid;place-items:center;min-width:21px;padding:0 4px;border-radius:var(--ks-radius-group);background:var(--ks-surface-inset);color:var(--ks-ink-strong);font-variant-numeric:tabular-nums}
+.k-workshop .proposal-studio .pd-title .pd-project {grid-template-columns:auto 1fr;column-gap:8px;align-items:center}
+.proposal-studio .pd-project .studio-icon {grid-row:1/3;width:24px;height:24px;color:var(--ks-ink)}
+.k-workshop .proposal-studio .pd-size {font-weight:650;font-size:.87rem;color:var(--pd-ink)}
+.proposal-studio .pd-state {display:inline-flex;align-items:center;gap:4px;padding:3px 7px}
+.proposal-studio .pd-state .studio-icon {width:14px;height:14px}
+.proposal-studio .pd-state[data-state=draft] {background:var(--ks-attention-soft);color:var(--ks-attention)}
+.proposal-studio .pd-state[data-state=saved] {background:var(--ks-complete-soft);color:var(--ks-complete)}
+.proposal-studio .pd-canvas .pd-cabinet-tag {color:var(--pd-ink)}
+.pd-cabinet-tag>rect {fill:var(--ks-surface-1);stroke:var(--ks-line-strong);stroke-width:.9}
+.pd-cabinet-tag>text {fill:currentColor}
+.proposal-studio .pd-canvas .pd-cabinet-tag:hover>rect {stroke:var(--ks-line-strong);stroke-width:1.7}
+.proposal-studio .pd-canvas .pd-cabinet-tag.pd-selected-shape {color:var(--ks-surface-1)}
+.proposal-studio .pd-canvas .pd-cabinet-tag.pd-selected-shape>rect {fill:var(--ks-action);stroke:var(--ks-surface-1);stroke-width:1}
+.k-workshop .proposal-studio :is(.pd-inspector,.pd-open) {border:1px solid var(--ks-line);border-block-start:3px solid var(--ks-line-strong);border-radius:var(--ks-radius-surface)}
+.k-workshop .proposal-studio .pd-unitrow {padding-block-end:8px;border-block-end:1px solid var(--pd-line);gap:8px}
+.k-workshop .proposal-studio .pd-unitmark {background:var(--ks-surface-inset);color:var(--ks-ink);border:0;border-radius:var(--ks-radius-control);width:42px;height:42px;padding:5px;flex:none}
+.proposal-studio .pd-unit-title {flex:1;min-width:0;overflow-wrap:anywhere}
+.proposal-studio .pd-editlabel label {font-weight:700;color:var(--pd-ink)}
+.proposal-studio .pd-alt-strip {width:100%;max-width:170px;display:block;color:var(--ks-ink)}
+.pd-alt-strip rect {fill:#e9edef;stroke:#889da4;stroke-width:.85}
+.pd-alt-strip .pd-alt-change {fill:#81b5bb;stroke:#155e6b;stroke-width:1.25}
+.pd-alt-strip path {stroke:#985c32;stroke-width:1.8}
+.k-workshop .proposal-studio .pd-choices {border-radius:var(--ks-radius-overlay)}
+.k-workshop .proposal-studio .pd-alts button {padding:7px;min-height:72px}
+
+/* Keep the customer's purposes with the measured cabinet that owns them. */
+.proposal-studio .pd-unit-use {border-block-start:1px solid var(--pd-line);padding-block-start:7px;margin-block-start:6px}
+.proposal-studio .pd-use-head {display:flex;justify-content:space-between;align-items:center;gap:5px;flex-wrap:wrap}
+.proposal-studio .pd-use-head h4 {margin:0;font-size:14px}
+.k-workshop .proposal-studio .pd-usage-add,.k-workshop .proposal-studio .pd-use-item,.proposal-studio .pd-unit-use summary {min-height:44px}
+.k-workshop .proposal-studio .pd-usage-add {color:var(--ks-ink-strong);background:var(--ks-surface-2);border:1px solid var(--ks-line-strong);font-size:14px;font-weight:650}
+.k-workshop .proposal-studio .pd-use-item {display:flex;align-items:center;gap:6px;width:100%;border:0;border-block-end:1px solid var(--ks-line);background:transparent;color:var(--ks-action);text-align:start;overflow-wrap:anywhere}
+.proposal-studio .pd-use-item svg {width:15px;flex:none}
+.proposal-studio .pd-unit-use summary {cursor:pointer;align-content:center}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.proposal-studio .pd-canvas .pd-selected-shape{stroke:var(--ks-action);stroke-width:3px;vector-effect:non-scaling-stroke}
+.proposal-studio .pd-canvas polygon.pd-site-selected,.proposal-studio .pd-canvas g.pd-site-selected>rect:first-of-type,.finish-desk [data-finish-drawing] g.finish-picked>rect:first-of-type{stroke:var(--ks-action);stroke-width:3px;vector-effect:non-scaling-stroke}
+.proposal-studio .pd-canvas .pd-cabinet-tag.pd-selected-shape>rect{fill:var(--ks-action);stroke:var(--ks-surface-1)}
+.proposal-studio .pd-canvas .pd-cabinet-tag.pd-selected-shape>text{stroke:none}
+.k-workshop .proposal-studio .pd-stagebar :focus-visible,.k-workshop .proposal-studio .pd-stagebar label:has(select:focus-visible){outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.k-workshop .proposal-studio .pd-help p :focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-workshop .proposal-studio .pd-choices{z-index:var(--ks-z-popover)}
+.k-workshop :is(.proposal-studio,.finish-desk) :is(button,summary,input:not([type=checkbox]):not([type=radio]),select){min-block-size:var(--ks-target)}
+@media(pointer:coarse){.k-workshop :is(.proposal-studio,.finish-desk) :is(button,summary){min-inline-size:var(--ks-target)}}

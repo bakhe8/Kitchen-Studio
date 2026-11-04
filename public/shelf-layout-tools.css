@@ -1,0 +1,9 @@
+.shc-view[data-tool=point-insert] [data-shelf-equal-handle]{filter:none}
+.shc-view[data-tool=point-insert] [data-shelf-equal-handle][data-axis=row],.shc-view[data-tool=point-insert] [data-shelf-equal-handle][data-axis=row] *{cursor:ns-resize}
+.shc-view[data-tool=point-insert] [data-shelf-equal-handle][data-axis=col],.shc-view[data-tool=point-insert] [data-shelf-equal-handle][data-axis=col] *{cursor:ew-resize}
+.shc-view [data-shc-layout-layer],.shc-view [data-shc-layout-layer] *{pointer-events:none}
+.shc-view[data-preview=true] [data-shc-layout-layer]{display:none}
+.shc-view [data-shelf-drag-handle]{filter:none}
+.shc-view [data-shelf-drag-handle]:hover .shc-grip-surface{fill:var(--ks-surface-1);stroke-width:1.4}
+.shc-view:is([data-tool=move],[data-tool=select],[data-tool=point-insert]) [data-shelf-drag-handle=group],.shc-view:is([data-tool=move],[data-tool=select],[data-tool=point-insert]) [data-shelf-drag-handle=group] *{cursor:grab}
+.shc-view[data-dragging=group-transform] [data-shelf-drag-handle=group],.shc-view[data-dragging=group-transform] [data-shelf-drag-handle=group] *{cursor:grabbing}

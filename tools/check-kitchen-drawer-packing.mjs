@@ -1,0 +1,95 @@
+import assert from 'node:assert/strict';
+import {makeChainExample} from '../public/kitchen-chain-model.js';
+import {planWorkshopRow} from '../public/kitchen-production-row.js';
+import {seedCatalog,cleanCatalog,buildFactoryQuote} from '../public/kitchen-workshop-factory.js';
+import {drawerPackHosts,proposeDrawerPacking,acceptDrawerPacking,drawerPackIssues} from '../public/kitchen-drawer-packing.js';
+import {cleanIdea} from '../public/kitchen-ideas.js';
+import {cleanDrawerChecks} from '../public/kitchen-drawer-fit.js';
+import {projectView,scopedEditable,mergeProjectEdit,scopedDrawerPackingResult,scopedDrawerPacking,scopedDrawerInputs,catalogView} from '../public/kitchen-project-scope.js';
+import {authorizeProjectChange} from '../public/kitchen-access-policy.js';
+import {checkedPortableArchive} from '../public/kitchen-archive-validation.js';
+import {catalogRecordsFromWorkshop} from '../public/kitchen-catalog-records.js';
+const doc=makeChainExample(),c=seedCatalog(),r=c.items.find(i=>i.sku==='SLIDE');c.approved=true;
+r.price=20;r.runnerSpec={minWidthMm:400,maxWidthMm:700,minDepthMm:400,maxDepthMm:650,minGapMm:12,maxGapMm:15,travelMm:450,movingKg:12,reference:'Light pair per supplier'};
+c.items.push({...r,sku:'HEAVY',price:70,runnerSpec:{...r.runnerSpec,movingKg:40}});
+c.families['custom-box']={...c.families.storage,base:'storage',cadKind:'drawers',reference:'Cabinet A / R2',drawerRunners:['SLIDE','HEAVY']};
+assert(cleanCatalog(c));doc.room.workshop.catalog=c;
+const act=(d,q)=>{const out=planWorkshopRow(d,q);assert(out.ok,out.reason);return out;};
+const first=act(doc,{wall:'right',tier:'base',startMm:1500,endMm:4500,additions:[{recipeId:'custom-box',widthMm:600,drawerCount:3}]});
+const uid=first.row.units.find(v=>v.recipeId==='custom-box').id,fixture={reference:'Cab #3',clearWidthMm:560,clearDepthMm:520,leftGapMm:13,rightGapMm:13,minTravelMm:400,freeTravelMm:520,emptyKg:3,contentsKg:1};
+const prepared=act(first.doc,{runId:first.runId,drawerChecks:{[uid]:{1:fixture,2:fixture,3:fixture}}}).doc,hosts=drawerPackHosts(prepared),bay=i=>uid+'#'+i;
+const dims=[[250,350,140],[450,400,150],[450,400,200]];
+const bays=dims.map((size,i)=>({id:bay(i+1),size,entry:[...size],entryAt:[0,0],basis:hosts.get(bay(i+1)).basis,reference:'unoccupied rectangular clear measured area R2',allowAuto:i===1}));
+const group=(id,name,size,massKg,extras={})=>({id,name,size,massKg,count:1,together:false,stack:false,rotate:true,...extras});
+const groups=[group('pot','قدر بمقبض',[280,210,90],10,{fixed:bay(1)}),group('tea','علب الشاي',[210,200,100],3,{count:2,together:true})];
+function scene(pack){return {...prepared,room:{...prepared.room,workshop:{...prepared.room.workshop,clientUsage:{tasks:[],pack}}}};}
+const original=scene({bays,groups}),sol=proposeDrawerPacking(original);assert(sol.ok,sol.reason);assert.equal(sol.slots.find(p=>p.group==='pot').turn,true);assert(sol.slots.filter(p=>p.group==='tea').every(p=>p.bay===bay(2)));assert.deepEqual(proposeDrawerPacking(original),sol);
+const accepted=acceptDrawerPacking(original,sol,'Customer call 17');assert(accepted);const saved=cleanIdea(accepted);assert(saved);assert.deepEqual(drawerPackIssues(saved),[]);
+const lines=buildFactoryQuote(saved).pieces.filter(p=>p.drawerIndex);
+assert.equal(lines.find(p=>p.drawerIndex===1).sku,'HEAVY');assert.equal(lines.find(p=>p.drawerIndex===2).sku,'SLIDE');assert.equal(buildFactoryQuote(saved).purchases.find(p=>p.sku==='HEAVY').cost,70);
+assert(sol.selection.some(v=>v.oldSku==='SLIDE'&&v.sku==='HEAVY'&&v.price-v.oldPrice===50));
+const p=saved.room.workshop.clientUsage.pack;
+const more=scene({...p,groups:[...p.groups,group('jar','علبة أخرى',[100,100,90],1)]}),next=proposeDrawerPacking(more);
+assert(next.ok,next.reason);for(const slot of sol.slots)assert.deepEqual(next.slots.find(c=>c.group===slot.group&&c.index===slot.index),slot);
+assert(drawerPackIssues(more).length);assert(buildFactoryQuote(more).issues.some(s=>s.includes('توزيع الأغراض')));assert.deepEqual(drawerPackIssues(more,{unitIds:['other']}),[]);
+const opening=scene({bays:bays.map(b=>b.id===bay(1)?{...b,entry:[150,240,110]}:b),groups});assert(!proposeDrawerPacking(opening).ok);
+const aperture=scene({bays:[{...bays[1],entry:[200,250,150],entryAt:[120,60]}],groups:[group('cup','دلة',[150,190,110],3)]});assert.deepEqual(proposeDrawerPacking(aperture).slots[0].at,[120,60,0]);
+const locked=scene({...p,groups:[{...groups[0],fixed:bay(3)},groups[1]]});assert(!proposeDrawerPacking(locked).ok);assert.equal(proposeDrawerPacking(locked,{preserve:false}).slots.find(s=>s.group==='pot').bay,bay(3));
+const stacked=scene({bays:[{...bays[0],allowAuto:true,size:[220,210,200],entry:[220,210,200]}],groups:[group('same','صناديق',[220,210,90],1,{count:2,stack:true,together:true})]});
+assert(proposeDrawerPacking(stacked).slots.some(p=>p.at[2]===90));
+const none=structuredClone(stacked);none.room.workshop.clientUsage.pack.groups[0].stack=false;assert.equal(proposeDrawerPacking(none).status,'unresolved');
+const overweight=scene({bays,groups:[{...groups[0],massKg:50}]});assert(!proposeDrawerPacking(overweight).ok);
+assert.equal(proposeDrawerPacking(original,{limit:1}).status,'unresolved');
+const tampered=structuredClone(saved);tampered.room.workshop.clientUsage.pack.accepted.slots[0].at[0]=2999;assert(drawerPackIssues(tampered).length);
+console.log('Measured free drawer boxes and insertion openings, pinned customer choice, permitted rotation, group cohesion, flat full-support stacking, deterministic bounded search, acceptance, saved coordinates, scope, fabricated overlap/outside guard, runner load/50 SAR BOM delta and existing approved positions verified.');
+
+// Scoped decisions use only physical fit and factory preference order. Neither
+// a price/stock change nor private descriptive prose can affect the response.
+const technicalDoc={...original,room:{...original.room,workshop:{...original.room.workshop,catalog:cleanCatalog(original.room.workshop.catalog)}}};
+const technical=proposeDrawerPacking(technicalDoc,{technicalOnly:true});assert(technical.ok,technical.reason);
+const publicTechnical=scopedDrawerPackingResult(technical,'rep');
+for(const privateKey of ['basis','price','oldPrice','oldSku','steps','reference'])assert(!JSON.stringify(publicTechnical).includes('"'+privateKey+'"'));
+const commercialChange=structuredClone(technicalDoc);
+for(const item of commercialChange.room.workshop.catalog.items){item.price=null;item.available=false;item.stockUnits=0;item.specRef='PRIVATE_SUPPLIER_REFERENCE';if(item.runnerSpec)item.runnerSpec.reference='PRIVATE_RUNNER_DOCUMENT';}
+Object.assign(commercialChange.room.workshop.catalog.terms,{labor:98765,marginPct:99,taxPct:99});
+commercialChange.room.workshop.catalog.families['custom-box'].reference='PRIVATE_FACTORY_DOCUMENT';
+for(const g of commercialChange.room.workshop.clientUsage.pack.groups)g.name='PRIVATE_CLIENT_NAME';
+assert.deepEqual(scopedDrawerPackingResult(proposeDrawerPacking(commercialChange,{technicalOnly:true}),'rep'),publicTechnical);
+assert(!proposeDrawerPacking(commercialChange).ok,'Commercial mode still enforces procurement availability');
+const poisoned=structuredClone(technicalDoc);let commercialReads=0;
+for(const item of poisoned.room.workshop.catalog.items)for(const key of ['price','available','stockUnits'])Object.defineProperty(item,key,{get(){commercialReads++;throw Error('Technical solver read '+key);}});
+assert.deepEqual(scopedDrawerPackingResult(proposeDrawerPacking(poisoned,{technicalOnly:true}),'factory'),publicTechnical);assert.equal(commercialReads,0);
+const technicalAccepted=acceptDrawerPacking(commercialChange,proposeDrawerPacking(commercialChange,{technicalOnly:true}),'Customer choice',{technicalOnly:true});assert(technicalAccepted);assert.deepEqual(drawerPackIssues(technicalAccepted,undefined,{technicalOnly:true}),[]);
+const pendingLoad=structuredClone(technicalDoc);for(const v of Object.values(pendingLoad.room.workshop.rows[first.runId].drawerChecks[uid]))v.contentsKg=null;
+for(const b of pendingLoad.room.workshop.clientUsage.pack.bays)b.basis=drawerPackHosts(pendingLoad,{technicalOnly:true}).get(b.id).basis;
+assert(cleanIdea(pendingLoad));assert(cleanDrawerChecks({1:{...fixture,basis:'existing-proof',contentsKg:null}}));assert.equal(cleanDrawerChecks({1:{...fixture,basis:'existing-proof',contentsKg:undefined}}),null);
+const loadPreview=proposeDrawerPacking(pendingLoad,{technicalOnly:true});assert.equal(loadPreview.ok,false);assert.equal(loadPreview.code,'CUSTOMER_LOAD_REQUIRED');assert(!proposeDrawerPacking(pendingLoad).ok);
+assert(scopedDrawerInputs(pendingLoad,'rep').every(d=>d.status==='CUSTOMER_LOAD_REQUIRED'&&d.contentsKg===null));
+for(const v of Object.values(pendingLoad.room.workshop.rows[first.runId].drawerChecks[uid]))v.contentsKg=0;
+for(const b of pendingLoad.room.workshop.clientUsage.pack.bays)b.basis=drawerPackHosts(pendingLoad,{technicalOnly:true}).get(b.id).basis;
+assert(proposeDrawerPacking(pendingLoad,{technicalOnly:true}).ok,'Explicit zero is a recorded customer answer');
+
+// V2 DTOs keep old canonical measurement, proof and acceptance fields intact.
+const secretDoc=structuredClone(saved);secretDoc.room.workshop.clientUsage.pack.groups[0].name='PRIVATE_CUSTOMER_GROUP';secretDoc.room.workshop.clientUsage.pack.accepted.reference='PRIVATE_CUSTOMER_ACCEPTANCE';
+const arc={type:'kitchen-studio',version:2,design:cleanIdea(secretDoc),photos:{},fieldFiles:[]},meta={id:'drawer-scope',revision:3,subject:'member'};checkedPortableArchive(arc);
+const repView=projectView('rep',arc,meta),factoryView=projectView('factory',arc,meta),repPack=repView.editable.workshop.clientUsage.pack;
+assert.equal(repView.access.scopeVersion,2);assert.deepEqual(Object.keys(repPack).sort(),['groups','permissions']);assert(!repView.editable.workshop.rows[first.runId].drawerChecks);
+assert.equal(repPack.permissions.length,bays.length);assert(repView.context.drawerPacking.bays.every(b=>!('reference' in b)&&!('basis' in b)));
+assert(!JSON.stringify(repView).includes('Cab #3'));assert(!JSON.stringify(repView).includes('unoccupied rectangular clear measured area R2'));
+assert(!JSON.stringify(factoryView).includes('PRIVATE_CUSTOMER_GROUP'));assert(!JSON.stringify(factoryView).includes('PRIVATE_CUSTOMER_ACCEPTANCE'));
+assert(factoryView.context.drawerWork.drawers.some(d=>d.measurement.reference==='Cab #3'));assert(factoryView.context.drawerWork.packing.groups.every(g=>!('name' in g)));
+const full=JSON.stringify(arc),makeEdit=change=>{const editable=structuredClone(repView.editable);change?.(editable);return {type:'kitchen-project-edit',version:1,scopeVersion:2,baseRevision:3,editable};},merge=e=>mergeProjectEdit('rep',arc,e,{expectedRevision:3});
+assert.equal(JSON.stringify(merge(makeEdit()).archive),full);
+const own=merge(makeEdit(e=>{e.workshop.clientUsage.pack.groups[0].count=2;e.workshop.clientUsage.pack.permissions[0].allowAuto=true;}));assert(own.ok,own.reason);checkedPortableArchive(own.archive);
+assert.deepEqual(own.archive.design.room.workshop.rows[first.runId].drawerChecks,arc.design.room.workshop.rows[first.runId].drawerChecks);
+assert.deepEqual(own.archive.design.room.workshop.clientUsage.pack.accepted,arc.design.room.workshop.clientUsage.pack.accepted);
+assert.deepEqual(own.archive.design.room.workshop.clientUsage.pack.bays.map(({allowAuto,...b})=>b),arc.design.room.workshop.clientUsage.pack.bays.map(({allowAuto,...b})=>b));
+for(const change of [e=>e.workshop.rows[first.runId].drawerChecks=structuredClone(arc.design.room.workshop.rows[first.runId].drawerChecks),e=>e.workshop.clientUsage.pack.bays=[],e=>e.workshop.clientUsage.pack.accepted={},e=>e.workshop.clientUsage.pack.permissions.pop(),e=>e.workshop.clientUsage.pack.permissions.push({bayId:'hidden#1',allowAuto:true}),e=>e.workshop.clientUsage=null,e=>delete e.workshop.rows[first.runId]])assert(!merge(makeEdit(change)).ok);
+for(const version of [undefined,1]){const packet=makeEdit();if(version===undefined)delete packet.scopeVersion;else packet.scopeVersion=version;assert(!merge(packet).ok,'Cached old-scope edit rejected');}
+const raw=structuredClone(arc);raw.design.room.workshop.rows[first.runId].drawerChecks[uid][1].contentsKg=9;assert(!authorizeProjectChange('rep',arc,raw).ok);assert(!authorizeProjectChange('factory',arc,raw).ok);
+const rawBay=structuredClone(arc);rawBay.design.room.workshop.clientUsage.pack.bays[0].size[0]++;assert(!authorizeProjectChange('rep',arc,rawBay).ok);
+const rawAccepted=structuredClone(arc);rawAccepted.design.room.workshop.clientUsage.pack.accepted.reference='Forged';assert(!authorizeProjectChange('rep',arc,rawAccepted).ok);
+const rawMoved=structuredClone(arc);rawMoved.design.kitchen.units.find(u=>u.id===uid).runId='some-other-run';assert(!authorizeProjectChange('rep',arc,rawMoved).ok);
+const portable={type:'kitchen-catalog-records',version:1,...catalogRecordsFromWorkshop(arc.design.room.workshop)};assert.equal(catalogView('factory',portable,{id:'cat-id',version:1,subject:'member'}).access.scopeVersion,1);assert.equal(catalogView('reader',portable,{id:'cat-id',version:1,subject:'member'}).access.scopeVersion,1);
+assert.equal(JSON.stringify(arc),full,'No projection or failed edit mutates the legacy archive');
+console.log('Scoped drawer scope v2 preserves mixed-custody archive fields, closes generic protected writes and old drafts, projects only role-owned references, handles unknown customer mass, and produces technical-only results invariant to prices, inventory and private descriptions.');

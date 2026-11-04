@@ -1,0 +1,57 @@
+# Dependencies
+/node_modules/
+/.pnp
+.pnp.*
+# Keep authored Yarn tooling if the project adopts Yarn.
+/.yarn/*
+!/.yarn/patches/
+!/.yarn/plugins/
+!/.yarn/releases/
+!/.yarn/versions/
+
+# Generated builds and framework state
+/dist/
+/.next/
+/.vinext/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Test output
+/coverage/
+
+# Package-manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local environment and keys
+.env*
+.dev.vars*
+*.pem
+
+# Checkout-local tool state
+/.wrangler/
+/.sites-runtime/
+
+# Workspace scaffolding and publication archives
+/.agents/
+/.codex/
+/.superpowers/
+/outputs/
+/work/
+
+# Local verification transcripts (curated evidence lives under /docs)
+/tools/*.log
+
+# OS metadata
+.DS_Store
+
+# Build-time copy of the same shop domain used by the browser.
+/lib/generated-shop-domain.mjs
+/node_modules
+
+# Browser-only parser, built locally from the locked packages.
+/public/vendor/workshop-xlsx.mjs
+/public/vendor/workshop-xlsx.LICENSE.txt

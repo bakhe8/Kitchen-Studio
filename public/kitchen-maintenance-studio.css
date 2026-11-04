@@ -1,0 +1,213 @@
+/* Load after kitchen-delivery-studio.css. Only the maintenance workspace is
+   restyled; receipt geometry and the installation/delivery page stay intact. */
+.maintenance-studio.delivery-studio {
+  --dl-ink: var(--ks-ink);
+  --dl-muted: var(--ks-ink-muted);
+  --dl-line: var(--ks-line);
+  --dl-paper: var(--ks-canvas);
+  --dl-white: var(--ks-surface-1);
+  --dl-green: var(--ks-action);
+  --dl-soft: var(--ks-action-soft);
+  --dl-amber: var(--ks-attention);
+  --dl-red: var(--ks-danger);
+  --ms-copper: var(--ks-attention);
+  --ms-copper-soft: var(--ks-attention-soft);
+  --ms-blue-soft: var(--ks-action-soft);
+  --ms-closed: var(--ks-complete);
+  min-width: 0;
+  color: var(--dl-ink);
+  background: var(--dl-paper);
+}
+.maintenance-studio [hidden] { display: none !important; }
+.maintenance-studio :is(.ms-workspace,.ms-unit-head,.ms-ticket-list,.ms-ticket,.ms-timeline,.ms-records,.ms-handover,.ms-warranty,.ms-stage-form,.ms-preview,.ms-identity,.ms-drawing) { min-width: 0; max-width: 100%; }
+.maintenance-studio .dl-header { background: var(--ks-ink-strong); border-bottom-color: var(--ks-line-strong); }
+.maintenance-studio .dl-header :is(p,small) { color: var(--ks-on-dark-muted); }
+.maintenance-studio .dl-header button { background: var(--ks-ink-strong); border-color: var(--ks-line-strong); }
+.maintenance-studio .dl-header button:hover:not(:disabled) { background: var(--ks-action); border-color: var(--ks-line); }
+.maintenance-studio .dl-context { background: var(--ks-surface-1); }
+.maintenance-studio .dl-status { background: var(--ks-surface-1); color: var(--ks-ink-muted); }
+.maintenance-studio .dl-objects { background: var(--ks-surface-1); }
+.maintenance-studio .dl-unit { background: var(--ks-surface-1); }
+.maintenance-studio .dl-unit:is([aria-pressed="true"],[data-active="true"]) { border-color: var(--ks-action); background: var(--ks-surface-2); box-shadow: var(--ks-shadow-selected); }
+.maintenance-studio .dl-inspector { grid-template-columns: minmax(0,1fr); background: var(--ks-surface-1); }
+.maintenance-studio .dl-inspector > * { grid-column: 1; grid-row: auto; }
+.maintenance-studio .dl-main { background: var(--ks-surface-1); }
+.maintenance-studio .dl-canvas-wrap { background-color: var(--ks-surface-1); background-image: radial-gradient(var(--ks-surface-2) .7px,transparent .7px); }
+.maintenance-studio .dl-body-plane { fill: #eee7d7; stroke: #7d9294; }
+.maintenance-studio[data-mode="service-open"] .dl-body-plane { cursor: crosshair; touch-action: none; }
+.maintenance-studio:not([data-mode="service-open"]) .dl-body-plane { cursor: default; touch-action: auto; }
+.maintenance-studio .dl-dimension { color: var(--ks-ink); }
+.maintenance-studio .dl-dimension:is(:hover,[aria-pressed="true"]) .dl-dimension-hit { fill: var(--ks-surface-1); stroke: var(--ks-action); }
+.maintenance-studio .dl-dimension[data-noted="true"] .dl-dimension-hit { stroke: var(--ms-copper); }
+.maintenance-studio .dl-dimension[data-draft="true"] .dl-dimension-hit { fill: var(--ks-surface-1); stroke: var(--ks-attention); }
+.maintenance-studio .dl-dimension:focus-visible .dl-dimension-hit { fill: var(--ks-surface-1); stroke: var(--ks-action); }
+.maintenance-studio .dl-drawing-pin { color: var(--ks-ink-muted); }
+.maintenance-studio .dl-drawing-pin[data-resolved="true"] { color: var(--ks-complete); }
+.maintenance-studio .dl-drawing-pin:is([aria-pressed="true"],:focus-visible) .dl-pin-halo { stroke: var(--ks-action); }
+.maintenance-studio .dl-draft-pin circle { fill: var(--ks-surface-1); stroke: var(--ks-attention); }
+.maintenance-studio .dl-draft-pin line { stroke: var(--ks-attention); }
+.maintenance-studio .dl-hud { border-color: var(--ks-line); border-inline-start-color: var(--ms-copper); color: var(--ks-ink); background: var(--ks-surface-1); }
+.maintenance-studio .dl-check-list { background: var(--ks-surface-1); }
+.maintenance-studio .dl-check-list > button[aria-pressed="true"],.maintenance-studio .dl-drawing-check[aria-pressed="true"] { border-color: var(--ks-action); background: var(--ks-surface-1); }
+.maintenance-studio .dl-actions :is(.primary,[data-ma="save"],[data-ms="save"],[data-ms-action="save"],[data-maintenance-action="save"]) { border-color: var(--ks-action); background: var(--ks-action); color: var(--ks-on-dark); }
+.maintenance-studio .dl-warning { border-inline-start-color: var(--ks-attention); background: var(--ks-surface-1); color: var(--ks-attention); }
+
+.maintenance-studio .ms-unit-head { display: flex; flex: none; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 15px; border-bottom: 1px solid var(--dl-line); background: var(--ks-surface-1); }
+.maintenance-studio .ms-unit-head > * { min-width: 0; }
+.maintenance-studio .ms-unit-head h3 { color: var(--ks-ink); font-size: 16px; }
+.maintenance-studio .ms-unit-head :is(p,small) { color: var(--ks-ink-muted); font-size: 12px; }
+.maintenance-studio .ms-unit-head > :is(span,b,strong) { padding: 4px 8px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.6; }
+.maintenance-studio .ms-identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 0; padding: 10px 16px; border-bottom: 1px solid var(--dl-line); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; overflow-wrap: anywhere; }
+.maintenance-studio .ms-identity strong { color: var(--ks-ink); font-weight: 650; }
+.maintenance-studio .ms-drawing { margin: 0; padding: 0; }
+.maintenance-studio .ms-case-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 15px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.7; }
+.maintenance-studio .ms-case-legend > p { flex: 1 1 100%; }
+.maintenance-studio .ms-case-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.maintenance-studio .ms-case-legend i { display: inline-block; flex: none; width: 9px; height: 9px; border-radius: var(--ks-radius-circle); background: var(--ks-ink-strong); }
+.maintenance-studio .ms-case-legend .ms-legend-closed i { background: var(--ks-complete); }
+.maintenance-studio .ms-selected-ticket { display: grid; grid-template-columns: minmax(0,1fr); gap: 2px; min-width: 0; padding-top: 8px; border-top: 1px solid var(--ks-on-dark-muted); color: var(--ks-ink); overflow-wrap: anywhere; }
+.maintenance-studio .ms-selected-ticket strong { color: var(--ks-ink); font-size: 13px; }
+.maintenance-studio .ms-selected-ticket[data-status="closed"] { color: var(--ms-closed); }
+
+.maintenance-studio .ms-ticket-list { display: grid; flex: none; grid-template-columns: repeat(auto-fit,minmax(min(230px,100%),1fr)); gap: 9px; margin: 0; padding: 14px; border-block: 1px solid var(--dl-line); background: var(--ks-surface-1); list-style: none; }
+.maintenance-studio .ms-ticket-list > :is(header,h3,p,label,.ms-ticket-tools) { grid-column: 1/-1; }
+.maintenance-studio .ms-ticket-list > :is(header,.ms-ticket-tools) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.maintenance-studio .ms-ticket-list > p { color: var(--dl-muted); font-size: 12px; }
+.maintenance-studio .ms-ticket-list > header h3 { font-size: 14px; }
+.maintenance-studio .ms-ticket-list > header select { width: auto; min-width: 125px; max-width: 100%; }
+.maintenance-studio .ms-ticket { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 7px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--ks-on-dark-muted); border-inline-start: 3px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink); text-align: start; overflow-wrap: anywhere; }
+.maintenance-studio button.ms-ticket { display: grid; justify-items: start; width: 100%; min-height: 98px; text-align: start; font-size: 12px; font-weight: 400; }
+.maintenance-studio .ms-ticket > :is(header,footer) { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px; min-width: 0; }
+.maintenance-studio .ms-ticket :is(h4,strong,b) { color: var(--ks-ink); font-size: 13px; font-weight: 650; }
+.maintenance-studio .ms-ticket :is(p,small,span) { font-size: 12px; line-height: 1.7; }
+.maintenance-studio .ms-ticket > button { justify-content: start; width: 100%; text-align: start; }
+.maintenance-studio .ms-ticket:is([aria-pressed="true"],[data-active="true"],[data-selected="true"]) { border-color: var(--ks-action); border-inline-start-color: var(--ms-copper); background: var(--ks-surface-1); box-shadow: var(--ks-shadow-selected); }
+.maintenance-studio .ms-ticket[data-priority="urgent"] { border-inline-start-color: var(--ks-line-strong); }
+.maintenance-studio .ms-ticket[data-status="closed"] { border-inline-start-color: var(--ks-complete); background: var(--ks-surface-1); }
+.maintenance-studio .ms-ticket:is([data-status="repaired"],[data-status="reviewed"]) { border-inline-start-color: var(--ks-danger); }
+.maintenance-studio .ms-ticket:is([aria-pressed="true"],[data-active="true"])[data-status="closed"] { background: var(--ks-surface-1); }
+.maintenance-studio .ms-ticket[data-state="closed"] { border-inline-start-color: var(--ks-complete); background: var(--ks-surface-1); }
+.maintenance-studio .ms-ticket:is([data-state="repaired"],[data-state="reviewed"]) { border-inline-start-color: var(--ks-danger); }
+.maintenance-studio .ms-ticket[aria-pressed="true"][data-state="closed"] { background: var(--ks-surface-1); }
+.maintenance-studio :is(.ms-badge,.ms-ticket-status) { display: inline-flex; align-items: center; gap: 5px; width: fit-content; max-width: 100%; padding: 3px 7px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; }
+.maintenance-studio :is(.ms-badge,.ms-ticket-status)[data-status="closed"] { border-color: var(--ks-complete-soft); background: var(--ks-surface-1); color: var(--ks-complete); }
+.maintenance-studio :is(.ms-badge,.ms-ticket-status)[data-priority="urgent"] { border-color: var(--ks-line); background: var(--ks-surface-1); color: var(--ks-ink-muted); }
+.maintenance-studio .ms-case-detail { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 8px; min-width: 0; padding: 12px; border: 1px solid var(--ks-on-dark-muted); border-inline-start: 3px solid var(--ms-copper); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); overflow-wrap: anywhere; }
+.maintenance-studio .ms-case-detail > h3 { color: var(--ks-ink); font-size: 15px; }
+.maintenance-studio .ms-case-detail > p { color: var(--ks-ink-muted); font-size: 12px; }
+.maintenance-studio .ms-case-detail .ms-state { width: fit-content; max-width: 100%; padding: 4px 8px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; font-weight: 600; }
+.maintenance-studio .ms-empty-state { display: grid; gap: 8px; min-width: 0; padding: 14px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); }
+.maintenance-studio .ms-empty-state p { font-size: 12px; color: var(--ks-ink-muted); }
+
+.maintenance-studio .ms-timeline { display: grid; flex: none; gap: 9px; min-width: 0; margin: 0; padding: 14px; background: var(--ks-surface-1); list-style: none; }
+.maintenance-studio .ms-timeline > summary { min-height: 44px; padding-block: 9px; color: var(--ks-ink); font-size: 13px; font-weight: 650; cursor: pointer; }
+.maintenance-studio .ms-timeline > :is(article,li) { display: grid; grid-template-columns: minmax(0,1fr); gap: 5px; min-width: 0; padding: 11px 12px; border-inline-start: 2px solid var(--ks-line); background: var(--ks-surface-1); overflow-wrap: anywhere; }
+.maintenance-studio .ms-timeline :is(p,small,time) { font-size: 12px; line-height: 1.8; }
+.maintenance-studio .ms-timeline :is(small,time) { color: var(--ks-ink-muted); }
+.maintenance-studio .ms-timeline :is(b,strong,h4) { color: var(--ks-ink); font-size: 13px; }
+.maintenance-studio .ms-stage-form,.maintenance-studio .ms-stage-form form,.maintenance-studio .ms-stage-form fieldset { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 11px; min-width: 0; max-width: 100%; margin: 0; }
+.maintenance-studio .ms-stage-form > *,.maintenance-studio .ms-stage-form form > *,.maintenance-studio .ms-stage-form fieldset > * { grid-area: auto; min-width: 0; max-width: 100%; }
+.maintenance-studio .ms-stage-form > h3 { padding-block: 6px 10px; border-bottom: 1px solid var(--dl-line); color: var(--ks-ink); font-size: 15px; }
+.maintenance-studio .ms-stage-form fieldset { padding: 11px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); }
+.maintenance-studio .ms-stage-form legend { padding-inline: 6px; color: var(--ks-ink-muted); font-size: 12px; }
+.maintenance-studio .ms-stage-form label { font-size: 12px; }
+.maintenance-studio .ms-stage-form :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) { min-height: 48px; }
+.maintenance-studio .ms-stage-form textarea { min-height: 94px; }
+.maintenance-studio .ms-stage-form button[type="submit"] { min-height: 48px; border-color: var(--ks-action); background: var(--ks-action); color: var(--ks-on-dark); }
+.maintenance-studio .ms-stage-form button[type="submit"]:hover:not(:disabled) { border-color: var(--ks-action); background: var(--ks-action); }
+.maintenance-studio .ms-stage-form blockquote { margin: 0; padding: 12px; border-inline-start: 3px solid var(--ms-copper); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+.maintenance-studio .ms-stage-form .ms-date-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.maintenance-studio .ms-stage-form .ms-date-pair input { padding-inline: 7px; font-size: 12px; }
+.maintenance-studio .ms-preview { display: grid; gap: 7px; min-width: 0; margin: 0; padding: 11px 12px; border: 1px solid var(--ks-attention); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-attention); font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+.maintenance-studio .ms-preview p { color: inherit; }
+.maintenance-studio .ms-preview:is([data-state="clean"],[data-state="saved"]) { border-color: var(--ks-attention-soft); background: var(--ks-surface-1); color: var(--ks-attention); }
+.maintenance-studio .ms-preview:is([data-state="invalid"],[data-state="stale"]) { border-color: var(--ks-danger); background: var(--ks-surface-1); color: var(--ks-danger); }
+.maintenance-studio .ms-preview dl { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 7px; margin: 0; }
+.maintenance-studio .ms-preview dd { margin: 0; font-weight: 650; text-align: end; font-variant-numeric: tabular-nums; }
+
+.maintenance-studio .ms-records { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; gap: 13px; margin: 0; padding: 18px; border-top: 1px solid var(--ks-on-dark-muted); background: var(--ks-surface-1); }
+.maintenance-studio .ms-records > :is(header,h3,p) { grid-column: 1/-1; }
+.maintenance-studio .ms-records > p { color: var(--ks-ink-muted); font-size: 12px; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 11px; min-width: 0; padding: 15px 16px; border: 1px solid var(--ks-on-dark-muted); border-top: 3px solid var(--ks-line-strong); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); }
+.maintenance-studio .ms-warranty { border-top-color: var(--ms-copper); }
+.maintenance-studio :is(.ms-handover,.ms-warranty) > header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) h3 { color: var(--ks-ink); font-size: 15px; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) :is(p,small) { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) dl { display: grid; grid-template-columns: minmax(0,.65fr) minmax(0,1fr); gap: 8px 12px; min-width: 0; margin: 0; font-size: 12px; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) dl > div { display: grid; grid-template-columns: minmax(0,.65fr) minmax(0,1fr); grid-column: 1/-1; gap: 8px 12px; min-width: 0; padding-block: 7px; border-bottom: 1px solid var(--ks-on-dark-muted); }
+.maintenance-studio :is(.ms-handover,.ms-warranty) dt { color: var(--ks-ink-muted); }
+.maintenance-studio :is(.ms-handover,.ms-warranty) dd { min-width: 0; margin: 0; color: var(--ks-ink); font-weight: 550; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.maintenance-studio :is(.ms-handover,.ms-warranty) > button { justify-self: start; font-size: 12px; }
+.maintenance-studio :is(.ms-handover,.ms-warranty)[data-state="empty"] { border-top-color: var(--ks-line); background: var(--ks-surface-1); }
+.maintenance-studio .ms-warranty:is([data-state="expired"],[data-state="outside"]) { border-top-color: var(--ks-danger); }
+.maintenance-studio .ms-warranty[data-state="active"] { border-top-color: var(--ks-line-strong); }
+
+@container deliverystudio (max-width:1100px) {
+  .maintenance-studio .ms-workspace { grid-template-columns: minmax(0,1fr) 300px; grid-template-rows: auto var(--dl-work-height); grid-template-areas: "objects objects" "main inspector"; }
+  .maintenance-studio .dl-inspector { grid-template-columns: minmax(0,1fr); }
+  .maintenance-studio .ms-ticket-list { grid-template-columns: minmax(0,1fr); padding: 12px; }
+  .maintenance-studio .ms-records { gap: 11px; padding: 14px; }
+  .maintenance-studio :is(.ms-handover,.ms-warranty) { padding: 13px; }
+}
+@container deliverystudio (max-width:700px) {
+  .maintenance-studio .ms-workspace { grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto auto; grid-template-areas: "objects" "main" "inspector"; }
+  .maintenance-studio .ms-unit-head { padding: 11px 12px; }
+  .maintenance-studio .ms-identity { padding: 10px 12px; }
+  .maintenance-studio .ms-case-legend { margin-top: 8px; padding: 9px; }
+  .maintenance-studio .ms-records { grid-template-columns: minmax(0,1fr); padding: 13px 12px; }
+  .maintenance-studio .ms-ticket-list,.maintenance-studio .ms-timeline { padding: 12px; }
+  .maintenance-studio .ms-ticket { min-height: 100px; }
+  .maintenance-studio :is(.ms-handover,.ms-warranty) > button { width: 100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .maintenance-studio button,.maintenance-studio [tabindex] { transition: none; animation: none; }
+}
+
+/* The phone shell has a 50px header. The maintenance title already identifies
+   its stage, so omit that repeated subtitle and keep its chooser within 44px. */
+@media (max-width:650px) {
+  .k-workshop[data-ws-route="maintenance"] > .ws-route-head > .ws-route-chooser {
+    flex: 1 1 auto; min-width: 0; max-width: 100%;
+    height: 44px; min-height: 44px; max-height: 44px;
+    padding-block: 4px; gap: 6px;
+  }
+  .k-workshop[data-ws-route="maintenance"] .ws-route-chooser .ws-route-titles { display: block; flex: 1 1 auto; min-width: 0; }
+  .k-workshop[data-ws-route="maintenance"] .ws-route-titles > small { display: none; }
+  .k-workshop[data-ws-route="maintenance"] .ws-route-titles > strong {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+    max-height: 36px; overflow: hidden; white-space: normal; text-overflow: clip;
+    font-size: 14px; line-height: 18px; overflow-wrap: normal; word-break: normal;
+  }
+}
+@media (max-width:500px) {
+  .k-workshop[data-ws-route="maintenance"] .ws-route-chooser > .ws-route-symbol { display: none; }
+}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.maintenance-studio.maintenance-studio :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.maintenance-studio.maintenance-studio :is(button,a,summary){min-inline-size:var(--ks-target)}
+.maintenance-studio.maintenance-studio :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.maintenance-studio.maintenance-studio :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+.maintenance-studio.maintenance-studio :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+.maintenance-studio.maintenance-studio :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){.maintenance-studio.maintenance-studio :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.maintenance-studio.maintenance-studio :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}.maintenance-studio.maintenance-studio :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.maintenance-studio .dl-header{color:var(--ks-on-dark)}
+.maintenance-studio .dl-header button{color:var(--ks-on-dark)}
+.maintenance-studio.maintenance-studio .dl-header :focus-visible{outline-color:var(--ks-focus-ring-dark)}
+.maintenance-studio .ms-ticket:is([aria-pressed="true"],[data-active="true"],[data-selected="true"]){border-inline-start:4px double var(--ks-action);background:var(--ks-action-soft);text-decoration:underline;text-underline-offset:3px}
+.maintenance-studio .ms-ticket[data-status="closed"]{border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft)}
+.maintenance-studio .ms-ticket[data-state="closed"]{border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft)}
+.maintenance-studio .ms-ticket[data-priority="urgent"]{border-block-start:3px dashed var(--ks-attention)}
+.maintenance-studio :is(.ms-preview,.dl-warning){border-inline-start:3px dashed var(--ks-attention);background:var(--ks-attention-soft);color:var(--ks-attention)}
+.maintenance-studio .ms-preview:is([data-state="clean"],[data-state="saved"]){border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft);color:var(--ks-complete)}
+.maintenance-studio .ms-preview:is([data-state="invalid"],[data-state="stale"]){border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger)}
+.maintenance-studio .dl-dimension[data-draft="true"] .dl-dimension-hit{fill:var(--ks-attention-soft);stroke:var(--ks-attention)}
+.maintenance-studio .dl-dimension:is(:hover,[aria-pressed="true"]) .dl-dimension-hit{fill:var(--ks-action-soft);stroke:var(--ks-action)}
+.maintenance-studio .dl-drawing-pin[data-resolved="true"]{color:var(--ks-complete)}
+.maintenance-studio.maintenance-studio [aria-invalid="true"]{border:2px dashed var(--ks-danger);background:var(--ks-danger-soft)}
+.maintenance-studio .ms-empty-state{background:var(--ks-info-soft);color:var(--ks-info)}
+
+.maintenance-studio{font-family:var(--ks-font-ui)}

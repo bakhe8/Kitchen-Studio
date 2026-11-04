@@ -1,0 +1,38 @@
+/* Main-app print contract. Standalone customer/production exports keep their
+   self-contained styles, drawing palettes and beforeprint disclosure handling. */
+@media print {
+  body[data-project-mode]{background:#fff!important;color:#000!important}
+  body[data-project-mode] > .k-app{background:transparent!important;color:inherit!important}
+  body[data-project-mode] :is(.k-workshop,.ws-content,.ws-screen,.ws-card,.proposal-studio,.quote-studio,.delivery-studio,.production-studio){
+    position:static!important;inset:auto!important;width:auto!important;max-width:none!important;
+    height:auto!important;max-height:none!important;min-height:0!important;
+    overflow:visible!important;container-type:normal;box-shadow:none!important;
+    background:transparent!important;color:inherit!important;border-radius:0!important;
+  }
+  body[data-project-mode] :is(.pd-stage,.pd-canvas,.dl-canvas-wrap,.dl-hud,.qs-summary,.qs-summary>*,.kq-project-head,.dl-header,.ps-header){
+    box-shadow:none!important;background:transparent!important;color:inherit!important;
+  }
+  /* HTML presentation surfaces only: never apply fill/stroke/filter resets to
+     SVG. Material samples retain their product colors. */
+  body[data-project-mode] .k-workshop :is(section,article,header,aside,figure,figcaption,details,summary,div,p,li,th,td,small,strong,span,label,h2,h3,h4,blockquote):not(.qs-material){
+    background:transparent!important;color:inherit!important;box-shadow:none!important;text-shadow:none!important;
+  }
+  body[data-project-mode] :is(.qs-cost-row,.qs-object,.qs-unit,.dl-unit,.dl-observation,.dl-drawing-check,.ps-unit,.ps-piece){background:transparent!important;color:inherit!important;box-shadow:none!important}
+  body[data-project-mode] :is(.pd-layout,.qs-workspace,.dl-workspace,.ps-workspace){display:block!important}
+  body[data-project-mode] :is(.pd-mainarea,.pd-side,.pd-stage,.pd-canvas,.qs-objects,.qs-main,.qs-inspector,.qs-pieces,.qs-ledger,.dl-objects,.dl-main,.dl-inspector,.dl-canvas-wrap,.dl-events,.ps-main,.ps-objects,.ps-inspector,.ps-canvas-wrap,.ps-canvas,.wp-scroll,.kw-tbl){
+    height:auto!important;max-height:none!important;min-height:0!important;
+    overflow:visible!important;max-width:100%!important;scrollbar-gutter:auto;
+  }
+  body[data-project-mode] :is(.pd-stage,.pd-canvas,.dl-drawing,.ps-canvas,.kw-tbl,.qs-ledger,.dl-events,.ws-release-review){break-inside:avoid}
+  body[data-project-mode] :is(h2,h3,h4,summary,figcaption){break-after:avoid}
+  body[data-project-mode] tr{break-inside:avoid}
+  body[data-project-mode] thead{display:table-header-group}
+  /* Keep the revision/approval trace, receipt, observations and ledgers. The
+     ::details-content rule covers current engines; the child fallback covers
+     engines where closed details would otherwise suppress those descendants. */
+  body[data-project-mode] :is(.qs-ledger,.kq-shop,.ws-release-review,.dl-events,.ps-ledger,.ps-capability,.ps-machine-book)::details-content{display:contents!important;content-visibility:visible!important}
+  body[data-project-mode] :is(.qs-ledger,.kq-shop,.ws-release-review,.dl-events,.ps-ledger,.ps-capability,.ps-machine-book)>:not(summary){display:revert!important;content-visibility:visible!important}
+  body[data-project-mode] :is(.pd-stagebar,.pd-views,.pd-camera,.pd-gesture-note,.qs-toolbar,.qs-actions,.dl-history,.dl-downloads,.ps-history,.ps-viewbar,.kw-actions,.kq-downloads,.kq-download,.ws-nav,.ws-route-head,.ws-mode-switch,.ws-resize){display:none!important}
+  body[data-project-mode] .qs-material{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  body[data-project-mode] :is(.pd-canvas,.dl-drawing,.ps-canvas) svg{max-width:100%!important;height:auto!important;break-inside:avoid}
+}

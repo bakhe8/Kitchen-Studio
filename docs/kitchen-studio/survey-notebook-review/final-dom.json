@@ -1,0 +1,53 @@
+{
+  "closure": "قياس الركن مطابق",
+  "documentWidth": 1440,
+  "projectId": "K-75FFA8CB9DF3245A",
+  "projectName": "اختبار دفتر الموقع — تكامل",
+  "source": "رفع ميداني",
+  "status": "رفع ميداني موثّق",
+  "values": [
+    {
+      "field": "gapMm",
+      "value": "1500"
+    },
+    {
+      "field": "bottomMm",
+      "value": "1150"
+    },
+    {
+      "field": "widthMm",
+      "value": "1200"
+    },
+    {
+      "field": "heightMm",
+      "value": "900"
+    },
+    {
+      "field": "depthMm",
+      "value": "30"
+    }
+  ],
+  "viewport": [
+    1440,
+    1120
+  ],
+  "wall": "back",
+  "walls": [
+    {
+      "id": "back",
+      "text": "١الجدار الخلفي٤٬٢٠٠ مم · ٢ قياسموثّق"
+    },
+    {
+      "id": "right",
+      "text": "٢الجدار الأيمن٣٬٦٠٠ مم · ١ قياسمحفوظ"
+    },
+    {
+      "id": "front",
+      "text": "٣الجدار الأمامي٤٬٢٠٠ مم · ٠ قياسلم يُرفع"
+    },
+    {
+      "id": "left",
+      "text": "٤الجدار الأيسر٣٬٦٠٠ مم · ٠ قياسلم يُرفع"
+    }
+  ]
+}

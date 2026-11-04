@@ -1,0 +1,65 @@
+import assert from 'node:assert/strict';
+import {seedCatalog,cleanCatalog,buildFactoryQuote} from '../public/kitchen-workshop-factory.js';
+import {packedStock} from '../public/kitchen-workshop-factory-stock.js';
+import {factorySpecialTargets,reviewSpecial} from '../public/kitchen-workshop-factory-special.js';
+import {makeChainExample} from '../public/kitchen-chain-model.js';
+import {readWallOptions,applyWallOptions,buildUpperRows} from '../public/kitchen-chain-options.js';
+const c=cleanCatalog(seedCatalog());
+for(const i of c.items){i.price=10;i.stockUnits=100;}
+Object.assign(c.terms,{labor:200,installation:60,delivery:30,marginPct:10,taxPct:15});c.approved=true;
+const fresh=()=>{const d=makeChainExample();for(const s of Object.values(d.room.workshop.chains))s.source='field';d.room.workshop.catalog=structuredClone(c);return d;};
+const target=(d,kind)=>factorySpecialTargets(d).find(t=>t.kind===kind);
+const markup={reviewer:'م. الورشة',measurement:'رفع مؤكد 19',drawing:'DWG-5 r3',instructions:'تركيب ومراجعة حركة حسب DWG-5 r3',lines:[{sku:'AL-20',label:'عارضة',count:2,a:610,b:null,operation:'طرفان 45 درجة · DWG-5'}]};
+function mark(d,t,s=markup){
+ const sheet=reviewSpecial(t,s,d.room.workshop.catalog.items);assert.ok(sheet,t.id);
+ d.room.workshop.catalog.specials[t.id]=sheet;return sheet;
+}
+const d=fresh(),opts=readWallOptions(d,'back');opts.mode='two';opts.cornice={enabled:true,heightMm:45,projectionMm:65,returns:true,reviewed:true};
+const {doc:p}=buildUpperRows(applyWallOptions(d,'back',opts).doc,'back'),cat=p.room.workshop.catalog;
+cat.wallRates.cornice=999;
+let q=buildFactoryQuote(p);assert.ok(q.extras[0].cost>500);assert.equal(q.ready,false);
+const t=target(p,'cornice');mark(p,t);
+q=buildFactoryQuote(p);assert.equal(q.ready,true,q.issues.concat(q.releaseIssues).join(' / '));assert.equal(q.extras[0].cost,0);assert.equal(q.extras[0].inMaterials,true);assert.equal(q.pieces.filter(x=>x.unitId===t.id).length,1);
+const dirty=structuredClone(p);dirty.room.workshop.options.back.cornice.projectionMm+=10;assert.equal(buildFactoryQuote(dirty).ready,false);
+const variant=structuredClone(p);variant.room.workshop.catalog.items.find(i=>i.sku==='AL-20').thicknessMm+=1;assert.match(buildFactoryQuote(variant).issues.join(' '),/مواصفة/);
+const priced=structuredClone(p);priced.room.workshop.catalog.items[0].price=99;assert.equal(buildFactoryQuote(priced).ready,true);
+const small=buildFactoryQuote(dirty,{unitIds:[p.kitchen.units[0].id]});assert.equal(small.complete,true);assert.equal(small.total,null);assert.equal(small.coveredUnits,1);assert.equal(small.extras.length,0);assert.ok(small.materialValue>0);assert(small.pieces.every(x=>x.unitId===p.kitchen.units[0].id));
+for(const bad of [{unitIds:[]},{},{unitIds:['not-an-id']},{unitIds:['a','a']}])assert.equal(buildFactoryQuote(p,bad).ready,false);
+const stock=cat.items[0];stock.available=false;stock.stockUnits=999;
+assert.equal(buildFactoryQuote(p).ready,true);stock.stockUnits=0;assert.equal(buildFactoryQuote(p).ready,false);stock.available=true;
+const block={kind:'bar',stockLengthMm:6000,kerfMm:3,offcuts:[{ref:'ع1',count:1,lengthMm:1003,widthMm:0}]};
+const cut=packedStock(block,[{a:1000,b:null,count:1,unitId:'a',label:'قائم'},{a:6000,b:null,count:1,unitId:'b',label:'عارضة'}]);
+assert.equal(cut.qty,1);assert.equal(cut.loss,.003);assert.equal(cut.offcutUse,1.003);assert.equal(cut.net,7);assert.equal(cut.layout[0].source,'stock');assert.equal(cut.layout[1].source,'offcut');
+const twoD=packedStock({kind:'panel',stockLengthMm:2000,stockWidthMm:1000,kerfMm:3,offcuts:[{ref:'S1',count:1,lengthMm:600,widthMm:600}]},[{a:500,b:500,count:1,unitId:'u',label:'لوح'}]);assert.equal(twoD.qty,0);assert.ok(twoD.offcutUse>.25);assert.equal(twoD.leftovers.length,2);
+const coDoc=fresh(),qCorner={aMm:500,bMm:550,inside:'carousel',access:'both',sku:'SLIDE'};
+coDoc.room.workshop.chains.left={...coDoc.room.workshop.chains.right};
+coDoc.room.workshop.corners={'back+left':{a:'back',b:'left',tall:true,base:qCorner,upper:qCorner}};
+const cornerTarget=target(coDoc,'corner');
+mark(coDoc,cornerTarget,{...markup,lines:[...markup.lines,{sku:'SLIDE',count:1,label:'عتاد الركن',operation:'مثبت حسب المخطط'}]});
+const cq=buildFactoryQuote(coDoc);assert.equal(cq.ready,true,cq.issues.concat(cq.releaseIssues).join('/'));assert.equal(cq.pieces.filter(x=>x.sku==='SLIDE').length,1);assert.equal(cq.pieces.filter(x=>x.sku==='SLIDE')[0].count,1);
+const freezer=fresh();freezer.kitchen.runs=[{id:'coldrun',wall:'back',start:130,end:220,height:190,bottom:0,depth:65,tier:'base'}];freezer.kitchen.units=[{id:'fridge1',kind:'fridge',u:130,width:90,runId:'coldrun'}];
+const appliance=target(freezer,'unit'),fit={model:'F-101',manual:'F-install-101',required:{width:880,depth:650,height:1890},available:{width:900,depth:650,height:1910}};
+assert.ok(appliance.appliance);
+mark(freezer,appliance,{...markup,lines:[],fit,bay:true});
+let fq=buildFactoryQuote(freezer);assert.equal(fq.ready,true,fq.releaseIssues);assert.deepEqual(fq.customerBays,['fridge1']);assert.equal(fq.pieces.length,0);
+mark(freezer,appliance,{...markup,lines:[],fit:{...fit,required:{...fit.required,height:2000}},bay:true});assert.equal(buildFactoryQuote(freezer).complete,true);assert.equal(buildFactoryQuote(freezer).ready,false);
+console.log('Real per-instance sheets, scope, measured CAD before release, physical material revision, quoted vs ordered raw, and 1D/2D remnant accounting verified.');
+const {orderHandoffUnits,remainderStockRequirements}=await import('../public/kitchen-order-domain.js');
+const {approveSurface}=await import('../public/kitchen-surface-release.js');
+const fixture=structuredClone(docForSurface());
+function docForSurface(){
+ const arch=makeChainExample();
+ const u={id:'base-test',kind:'storage',runId:'receiptrun',u:130,width:90,interior:{shelves:0,dividers:0}};
+ arch.kitchen.runs=[{id:'receiptrun',tier:'base',start:130,end:220,height:80,depth:60,bottom:0,wall:'back'}];arch.kitchen.units=[u];
+ arch.room.workshop.catalog=structuredClone(c);arch.room.workshop.catalog.terms.worktop='include';
+ arch.room.workshop.rows={receiptrun:{catalogVersion:'1',units:[{family:'storage',id:u.id,startMm:1300,widthMm:900}],warnings:[]}};
+ return arch;
+}
+assert.ok(!orderHandoffUnits(fixture).some(u=>u.id.startsWith('surface:')));
+const surface=approveSurface(fixture,{reference:'Template-9',levelRecord:'Installed and levelled',inspector:'Inspector',date:'2026-10-31',cutouts:'SK-23'});assert.ok(surface.ok);
+const allIds=orderHandoffUnits(surface.doc).map(u=>u.id),onlyTop=allIds.find(u=>u.startsWith('surface:'));
+assert(onlyTop);assert.deepEqual(orderHandoffUnits(surface.doc,[onlyTop],'whole-filter').map(x=>x.id),[onlyTop]);
+const topStock=remainderStockRequirements(surface.doc,[onlyTop]);assert.equal(topStock.purchases.length,0);assert.deepEqual(topStock.surfaces,[onlyTop]);
+const returned=remainderStockRequirements(p,[t.id]);assert.equal(returned.purchases.length,1);assert.equal(returned.purchases[0].sku,'AL-20');
+assert( returned.purchases[0].qty<buildFactoryQuote(p).purchases.find(x=>x.sku==='AL-20').qty);
+assert(remainderStockRequirements(p,['made-up']).issues.length);console.log('Remainder excludes previous units, prices only actually issued corner/trim/ordinary raw, and keeps a verified post-install top as its own measurable handoff.');

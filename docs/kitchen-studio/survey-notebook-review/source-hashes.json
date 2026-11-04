@@ -1,0 +1,15 @@
+{
+  "public/kitchen-chain-ui.js": "3b4501865b1fd98c20f2b577b1d1b16923f0147cd6d2c8683c2f718eb312db82",
+  "public/kitchen-editor.js": "30c8cf4850b739bf5a9e46ab75dcfcdb550356f9e5d29d07759b5609b64a5378",
+  "public/kitchen-workshop-ui.js": "9e754fcc3e30a9a99aae3331da1d6f68f2532f756fc1650d78d25aa7b0724ca0",
+  "public/kitchen-workspace-entry.js": "dc9ce6a15a6dee4d4e6b9f66dedf5b5f12fb2d032ff4165c2bb8b9df051f2cad",
+  "public/kitchen-wall-ink-ui.js": "971f69ce6ea2fee1fbd508b17123cb5ff6a44bb0b10e284466e548e422ce25fe",
+  "public/kitchen-survey-notebook.js": "aed4d176015a02802e242d7bca4c26c7bd95d8039a8fce75f9cd50f42e707717",
+  "public/kitchen-survey-notebook-model.js": "101377f379e4976c6570888bb6d988a1fd3a19109d165f0ad35de496af14b94f",
+  "public/kitchen-survey-notebook.css": "f528d5c159a7ded22387bf8b5341dff1b5af550dc82f7c2961d9f160540e16d4",
+  "public/kitchen-survey-precision.js": "99d9b93b818fecfde5253a79fb49881559d75c87bf20d9c0480a32d285c7a6ad",
+  "public/index.html": "05d4b0c5af8a9c915b2f97cac9bd30eeedfa4a08b528248d14691fcf45bd9fa0",
+  "tools/check-kitchen-survey-notebook.mjs": "9a0f192b432547777547b140b25a65c741bb42a7cbf1aad140b16be2c9ea5e99",
+  "tools/check-kitchen-survey-precision.mjs": "010401b2577e1af55e38a0b31071f9ed50177d3d5a4f6e1ff75df2bd9d520e6b",
+  "tools/check-kitchen-survey-workspace.mjs": "671508166ed5304196d699403651fa67057b40e7443a5223ab888aae96a15ff2"
+}

@@ -1,0 +1,25 @@
+.pwr-track{position:relative;width:100%;height:49px;margin:.65rem 0;background:repeating-linear-gradient(135deg,var(--ks-surface-2) 0 6px,var(--ks-surface-inset) 6px 9px);border-radius:var(--ks-radius-surface);overflow:hidden}
+.k-workshop .pwr-track button{padding:2px;font:inherit;position:absolute;top:0;bottom:0;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);background:var(--ks-action);color:var(--ks-surface-1);font-size:12px;line-height:1.4;min-width:0;overflow:hidden}
+.k-workshop .pwr-track button:nth-child(2n){background:var(--ks-action)}.pwr-track b{font-size:12px;white-space:nowrap;max-width:95%;overflow:hidden;text-overflow:ellipsis}.k-workshop [data-pwr-id] summary{cursor:pointer}.k-workshop [data-pwr-plan] input[type=number],.k-workshop [data-pwr-edit] input[type=number]{width:9em}
+
+.pwr-track button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+
+/* Fine pointers retain measured starts, widths and empty wall intervals.
+   The existing unit details provide separate 44px summary targets. */
+.pwr-track{overflow:visible}
+.k-workshop .pwr-track button{min-inline-size:0;min-block-size:var(--ks-target);color:var(--ks-ink);background:var(--ks-surface-1);border:1px solid var(--ks-line-strong)}
+.k-workshop .pwr-track button:nth-child(2n){color:var(--ks-ink);background:var(--ks-surface-inset)}
+.k-workshop .pwr-track button:not(:disabled):hover{background:var(--ks-action-soft);border-color:var(--ks-action)}
+.k-workshop .pwr-track button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-workshop .pwr-track button:not(:disabled):active{transform:translateY(1px);box-shadow:none}
+@media(pointer:coarse){
+ /* Touch offers a wrapping action list rather than distorting fine geometry. */
+ .pwr-track{display:flex;flex-wrap:wrap;align-items:stretch;gap:var(--ks-space-1);height:auto;min-height:49px;padding:var(--ks-space-1);overflow:visible}
+ /* Outrank the later studio-family desktop preview height only for touch. */
+ .k-workshop .pwr-desk [data-pwr-result] .pwr-track{height:auto}
+ .k-workshop .pwr-track button{position:static;inset:auto!important;width:auto!important;flex:1 1 var(--ks-target);min-inline-size:var(--ks-target);min-block-size:var(--ks-target)}
+}
+@media(prefers-reduced-motion:reduce){
+ .k-workshop .pwr-track button{transition:none;animation:none}
+ .k-workshop .pwr-track button:not(:disabled):active{transform:none}
+}

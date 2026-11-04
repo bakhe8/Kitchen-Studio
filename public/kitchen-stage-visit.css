@@ -1,0 +1,334 @@
+/* The same outline editor is used inside and outside an existing project. */
+.poly-survey { container: perimeter / inline-size; }
+.poly-survey .poly-meta input, .poly-survey [data-poly-text] { inline-size: 100%; }
+.poly-survey :is([data-poly-view], [data-poly-tip]):empty { display: none; }
+@container perimeter (min-width: 660px) {
+  .poly-survey [data-poly-walk]:not([hidden]) {
+    display: grid;
+    grid-template-columns: minmax(285px, .94fr) minmax(0, 1.16fr);
+    grid-template-areas: "title sketch" "hint sketch" "legs sketch" "guard sketch" "add sketch" "closure sketch";
+    gap: 6px 16px;
+    align-content: start;
+  }
+  [data-poly-walk] > h3 { grid-area: title; }
+  [data-poly-walk] > p:first-of-type { grid-area: hint; }
+  [data-poly-walk] > .poly-walk-list { grid-area: legs; }
+  [data-poly-walk] > [data-poly-delete-guard] { grid-area: guard; }
+  [data-poly-walk] > [data-poly-add] { grid-area: add; justify-self: start; }
+  [data-poly-walk] > [data-poly-closure] { grid-area: closure; }
+  [data-poly-walk] > .poly-sketch {
+    grid-area: sketch;
+    align-self: stretch;
+    margin: 0;
+    display: grid;
+    align-items: center;
+    min-height: 170px;
+  }
+  .poly-survey .poly-sketch svg { height:100%; min-height:170px; }
+  .poly-survey .poly-sketch p { text-align: center; }
+}
+
+/* Keep wall orientation, drawing tools, paper and measuring actions distinct. */
+.sv {container:visit-wall / inline-size}
+.sv .sv-workbar {
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2px 8px;
+  padding:3px 7px;border-block-end:1px solid var(--sv-line);background:var(--ks-surface-1);
+}
+.sv .sv-workbar .sv-ink-tools {flex:1 1 auto;border:0;padding:0;background:transparent;gap:2px}
+.sv .sv-workbar .sv-ink-stagebar {min-height:44px;font-size:13px;flex:1 1 160px}
+.sv .sv-bar-caption {font-size:14px;padding-inline:6px}
+.sv .sv-workbar .sv-sheet-camera {gap:0;margin-inline-start:auto;padding-inline-start:6px;border-inline-start:1px solid var(--sv-line)}
+.sv .sv-sheet-camera button,.sv .sv-secondary button,.sv [data-chain-act="previous-wall"],.sv [data-chain-act="save"],.sv [data-chain-act="review"],.sv [data-ink-action="undo"] {
+  display:inline-grid;place-items:center;padding:0;min-inline-size:44px;min-block-size:44px;flex:none;
+}
+.sv .sv-sheet-camera button,.sv .sv-secondary button {background:transparent;border-color:transparent}
+.sv .sv-sheet-camera button:hover,.sv .sv-secondary button:hover,.sv .sv-secondary button[aria-expanded="true"] {background:var(--sv-pale);color:var(--sv-accent)}
+.sv .sv-workbar .sv-ink-tool,.sv .sv-workbar .sv-ink-more>summary {min-height:44px;padding-inline:9px}
+.sv .sv-workbar .sv-service-active {background:var(--ks-ink-strong);color:var(--ks-surface-1)}
+.sv .sv-statusline {padding:7px 11px;font-size:12px;font-weight:600;color:var(--sv-quiet)}
+.sv .sv-statusline .sv-dirty {color:var(--ks-attention)}
+.sv :is([data-ink-action="type"],[data-chain-act="pair"],[data-chain-act="next-wall"],.sv-ink-manual>summary) {display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.sv .sv-ink-note button {min-height:44px}
+.sv .sv-form .sv-pair-entry {margin:0}
+.sv .sv-form [data-chain-act="pair"] {text-decoration:none;padding-inline:9px}
+.sv .sv-form .sv-ink-manual>summary {padding-inline:8px;list-style:none}
+.sv .sv-ink-manual>summary::after {content:"";width:6px;height:6px;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:translateY(-2px) rotate(45deg)}
+.sv .sv-ink-manual[open]>summary::after {transform:translateY(2px) rotate(225deg)}
+.sv .sv-ink-manual>summary::-webkit-details-marker {display:none}
+.sv .sv-ends {border-inline-start:1px solid var(--sv-line);padding-inline-start:9px}
+.sv .sv-form .sv-secondary {margin-inline-start:auto;border:0;gap:1px}
+.sv .sv-footer-actions [data-chain-act="next-wall"] {margin-inline-start:auto;order:2}
+.sv .sv-footer-actions [data-chain-act="next-wall"] svg {order:2}
+.sv .sv-footer-actions [data-chain-act="review"] {order:1}
+@media (min-width:768px) {
+  .k-workshop[data-ws-route="survey"] .ws-content:has(.sv-walk-head) {padding:8px clamp(10px,1.4vw,20px)}
+  .ws-content .sv:has(.sv-walk-head) {gap:6px}
+  .sv .sv-walk-head {padding:0;min-height:60px}
+  .sv .sv-walk-head .sv-map-box {width:100px;max-block-size:69px}
+  .sv .sv-walk-head .sv-wall-meta {display:grid;grid-template-columns:auto auto;align-items:center;gap:1px 12px}
+  .sv .sv-wall-meta .sv-wall-index,.sv .sv-wall-meta .sv-wall-length {font-size:12px}
+  .sv .sv-wall-meta label {grid-column:1;grid-row:2}
+  .sv .sv-wall-meta .sv-wall-length {grid-column:2;grid-row:1}
+  .sv .sv-wall-meta .sv-datums {grid-column:2;grid-row:2}
+  .sv .sv-ink-canvas .survey-wall-sheet {height:clamp(270px,calc(100dvh - 295px),740px)}
+  .sv:has(.sv-workbar):not(:has(.sv-ink-manual[open])) .sv-work {grid-template-columns:minmax(0,1fr);gap:6px}
+  .sv:has(.sv-workbar):not(:has(.sv-ink-manual[open])) .sv-work>.sv-form {display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+  .sv .sv-form :is(.sv-proof,[data-local-options]:not(:empty)) {flex-basis:100%}
+  .sv .sv-ink-aside {border-inline-start:1px solid var(--sv-line)}
+  .sv .sv-ink-aside .sv-ink-note {padding:4px 11px}
+  .sv .sv-ink-aside .sv-ink-note span {line-height:1.45}
+}
+/* A narrow survey uses one continuous sheet; wide surveys dock the wall selector
+   with its readings so the drawing and a pending pencil stroke share one origin. */
+.sv .sv-paper-desk,.sv .sv-reading-tray {min-inline-size:0}
+.sv .sv-reading-tray>[data-browse-readings] {display:none}
+.sv .sv-reading-tray[data-overflow] {display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center}
+.sv .sv-reading-tray[data-overflow]>button {display:grid;place-items:center;min-block-size:44px;padding:0;border:0;background:transparent;color:var(--sv-accent)}
+.sv .sv-reading-tray[data-overflow]>button:disabled {opacity:.4}
+.sv .sv-reading-tray[data-overflow] .sv-readings {padding-inline:2px}
+.sv .sv-ink-canvas>.sv-heading {background:var(--ks-surface-1);padding:6px 10px}
+.sv .sv-ink-aside :is(.sv-ink-editor input,.sv-ink-editor button,.sv-ink-editor summary,.sv-readings button) {min-block-size:44px}
+.sv .sv-ink-aside .sv-reading-details {border:0;padding-inline:0;text-decoration:underline;text-underline-offset:3px;color:var(--sv-accent)}
+.sv .sv-ink-canvas .sv-ink-aside .sv-readings {flex-direction:row;max-block-size:none}
+.sv .sv-ink-canvas .sv-ink-aside .sv-ink-note {padding:4px 10px;align-items:center}
+.sv .sv-ink-canvas .sv-ink-aside .sv-ink-note span {flex:1 1 180px}
+.sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas {display:block}
+.sv .sv-ink-canvas .sv-ink-aside {border-inline-start:0;border-block-start:1px solid var(--sv-line)}
+.sv .sv-ink-aside .sv-ink-fields {grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+@container visit-wall (max-width:819px) {
+  .sv .sv-ink-canvas .survey-wall-sheet {height:clamp(230px,48dvh,560px)}
+  .sv .sv-ink-canvas .sv-ink-aside .sv-statusline {display:inline-block;padding-block:4px}
+}
+@container visit-wall (min-width:820px) {
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas {
+    display:grid;grid-template-columns:minmax(0,1fr) clamp(225px,26%,308px);
+    grid-template-rows:auto 1fr;grid-template-areas:"paper head" "paper readings";align-items:start;
+  }
+  .sv:not(:has(.sv-ink-manual[open])) .sv-paper-desk {grid-area:paper;border-inline-end:1px solid var(--sv-line)}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas>.sv-heading {grid-area:head}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas>.sv-walk-head {
+    display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:2px 5px;align-items:center;
+    padding:6px 9px 5px;margin:0;min-width:0;border:0;
+  }
+  .sv:not(:has(.sv-ink-manual[open])) .sv-walk-head .sv-wall-meta {display:contents}
+  .sv .sv-ink-canvas .sv-wall-meta .sv-wall-index {grid-area:1 / 1}
+  .sv .sv-ink-canvas .sv-wall-meta label {grid-area:2 / 1}
+  .sv .sv-ink-canvas .sv-wall-meta .sv-wall-length {grid-area:3 / 1}
+  .sv .sv-ink-canvas .sv-wall-meta .sv-datums {grid-area:4 / 1 / 5 / -1;line-height:1.35;font-size:12px}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-walk-head .sv-map-box {grid-area:1 / 2 / 4 / 3;width:74px;max-width:100%;max-height:none}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-aside {grid-area:readings;min-height:0;align-self:stretch;contain:size;overflow:auto;overscroll-behavior:contain}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas .sv-ink-aside .sv-readings {flex-direction:column;max-block-size:none;overflow:visible}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-aside .sv-ink-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sv:not(:has(.sv-ink-manual[open])) .sv-ink-canvas .survey-wall-sheet {height:clamp(300px,calc(100dvh - 244px),850px)}
+}
+
+/* Tools, measured geometry and the reading register share one visual key. */
+.sv{
+  --sv-ink:var(--ks-ink);--sv-accent:var(--ks-action);--sv-quiet:var(--ks-ink-muted);--sv-line:var(--ks-line);--sv-pale:var(--ks-action-soft);
+}
+.sv .sv-survey-card{border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface)}
+.sv .sv-paper-desk{background:var(--ks-surface-1)}
+.sv .sv-paper-desk .sv-elevation{
+  background-color:var(--ks-surface-1);
+  background-image:radial-gradient(color-mix(in srgb,var(--ks-line-strong) 35%,transparent) .7px,transparent .8px);background-size:15px 15px;
+}
+.sv .sv-workbar{background:var(--ks-ink-strong);color:var(--ks-surface-1);border-color:var(--ks-line-strong);border-start-start-radius:var(--ks-radius-control)}
+.sv .sv-workbar .sv-ink-tools{background:transparent}
+.sv .sv-workbar .sv-ink-tool,.sv .sv-workbar .sv-ink-more>summary,
+.sv .sv-workbar .sv-sheet-camera button{color:var(--ks-surface-1);background:transparent;border-color:transparent}
+.sv .sv-workbar :is(.sv-ink-tool,.sv-ink-more>summary,.sv-sheet-camera button):hover{background:var(--ks-ink-strong);color:var(--ks-surface-1)}
+.sv .sv-workbar .sv-ink-tool[aria-pressed=true],.sv .sv-workbar .sv-service-active{
+  color:var(--ks-action);border-color:var(--ks-action);background:var(--ks-action-soft);box-shadow:none;
+}
+.sv .sv-workbar .sv-sheet-camera{border-color:var(--ks-line-strong)}
+.sv .sv-workbar .sv-ink-stagebar{color:var(--ks-surface-1);line-height:1.5}
+.sv .sv-workbar :is(button,summary):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.sv .sv-workbar .sv-ink-more>div{background:var(--ks-surface-1);border-color:var(--sv-line);border-radius:var(--ks-radius-overlay)}
+.sv .sv-workbar .sv-ink-more>div :is(button,summary):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.sv .sv-workbar .sv-ink-more>div .sv-ink-tool:not([aria-pressed=true]){color:var(--sv-ink)}
+.sv .sv-workbar .sv-ink-more>div .sv-ink-tool:hover{color:var(--sv-accent);background:var(--sv-pale)}
+.sv .sv-walk-head .sv-wall-index,.sv .sv-walk-head .sv-wall-length,.sv .sv-walk-head .sv-datums{color:var(--sv-quiet)}
+.sv .sv-wall-meta select,.sv .sv-wall-meta .sv-wall-length b{color:var(--sv-ink)}
+.sv .sv-ink-canvas .sv-ink-aside{background:var(--ks-surface-1)}
+.sv .sv-statusline{display:flex;align-items:center;gap:6px;color:var(--sv-quiet);font-size:12px}
+.sv .sv-statusline [data-chain-state]{display:inline-flex;align-items:center;gap:7px}
+.sv .sv-statusline [data-chain-state]::before{content:"";width:7px;height:7px;border-radius:var(--ks-radius-control);border:1.5px solid var(--ks-line-strong)}
+.sv .sv-statusline .sv-dirty{color:var(--ks-attention)}
+.sv .sv-statusline .sv-dirty::before{border-color:var(--ks-attention);border-radius:var(--ks-radius-control);background:var(--ks-attention-soft);transform:rotate(45deg)}
+.sv .sv-readings{border-color:var(--sv-line)}
+.sv .sv-readings [data-chain-row]{gap:8px;border-radius:var(--ks-radius-control);border:1px solid var(--sv-line);color:var(--sv-ink);font-weight:650}
+.sv .sv-readings .sv-type-icon,.sv .sv-ink-title .sv-type-icon{flex:none;color:var(--ks-ink);width:22px;height:22px}
+.sv .sv-readings [data-chain-row] i{margin-inline-start:auto;background:var(--ks-surface-2);color:var(--ks-ink-strong);font-variant-numeric:tabular-nums}
+.sv .sv-readings [aria-pressed=true]{background:var(--sv-pale);border-color:var(--ks-action);box-shadow:none;color:var(--ks-action)}
+.sv .sv-readings [aria-pressed=true] i{background:var(--sv-accent);color:var(--ks-surface-1)}
+.sv .sv-readings small{font-size:12px;color:var(--ks-ink);font-variant-numeric:tabular-nums}
+.sv .sv-ink-editor{border-color:var(--sv-accent);background:var(--ks-surface-1);color:var(--sv-ink)}
+.sv .sv-ink-editor>.sv-ink-primary{border-color:var(--sv-accent);background:var(--sv-accent)}
+.sv .sv-ink-title{color:var(--sv-ink);font-size:16px;line-height:1.4}
+.sv .sv-ink-title small{color:var(--sv-quiet)}
+.sv .sv-ink-fields label,.sv .sv-ink-dimension{color:var(--sv-ink)}
+.sv .sv-ink-editor input{border-color:var(--ks-line-strong);color:var(--sv-ink);font-variant-numeric:tabular-nums}
+.sv .sv-ink-canvas .sv-ink-note{border-color:var(--sv-line);color:var(--sv-quiet)}
+.sv .sv-ink-canvas .sv-ink-note button{color:var(--sv-accent)}
+.sv .sv-footer{background:var(--ks-surface-1);border-color:var(--sv-line)}
+.sv .sv-form :is([data-chain-act=pair],.sv-ink-manual summary,.sv-secondary button){color:var(--sv-ink)}
+.sv .sv-ends button{color:var(--sv-quiet)}
+@media (forced-colors:active){
+  .sv [aria-pressed=true]{outline:3px solid var(--ks-focus-ring);outline-offset:-3px}
+}
+
+/* Keep the captured pixels and their marking surface coincident at every size. */
+.k-workshop[data-ws-route="photo"] .ws-screen { container: visit-photo / inline-size; }
+.pha-bench {
+  display: grid;
+  gap: 12px;
+  align-items: start;
+  margin-block: 12px;
+}
+.pha-bench > *, .pha-source > * { min-width: 0; }
+.pha-bench .ws-card { margin: 0; }
+.pha-source-picker {
+  padding-inline: 12px;
+  border-block: 1px solid var(--ks-line);
+}
+.pha-source-picker > summary {
+  min-height: 44px;
+  padding-block: 9px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.pha-inspector { display: grid; gap: 10px; }
+.pha-inspector label:has([data-pha-plane]) {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.pha-inspector small { display: block; margin-top: 6px; }
+.pha-bench .pha-image, [data-advanced-plane] > .pha-image {
+  width: min(100%, calc(clamp(240px, calc(100dvh - 23rem), 720px) * var(--pha-ratio)));
+  margin-inline: auto;
+  border-radius: var(--ks-radius-control);
+}
+.pha-source select {width:100%;min-width:0}
+.pha-files,.pha-workbar,.pha-actions {display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.pha-source .pha-file-control {
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:44px;padding:6px 12px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);
+  cursor:pointer;background:var(--ks-surface-1);color:var(--ks-ink-strong);font-weight:600;
+}
+.pha-file-control:focus-within {outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.pha-source .pha-file-control input[type="file"] {
+  position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;
+}
+.pha-source-picker>summary {align-items:center;overflow-wrap:anywhere}
+.pha-source-picker>summary .studio-icon,.pha-calibration>summary .studio-icon {vertical-align:middle;margin-inline-end:6px}
+.pha-source-picker>summary span {margin-inline:8px;color:var(--ks-ink);font-weight:400}
+.pha-source-picker>summary small {font-weight:600;color:var(--ks-ink-strong)}
+.pha-workbar {padding:3px 5px;border-bottom:1px solid var(--ks-line)}
+.pha-workbar button,.pha-actions button,.pha-bench [data-pha-save] {display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.pha-workbar [data-pha-tool],.pha-row [data-pha-select] {min-width:44px;min-height:44px}
+.k-workshop .pha-workbar [aria-pressed="true"] {background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-surface-1)}
+.pha-paper {padding:4px}
+.pha-paper [data-pha-prompt] {margin:5px 8px 7px;font-size:13px}
+.pha-calibration summary {cursor:pointer;min-height:44px;align-content:center;font-weight:650}
+.pha-calibration[open] summary {margin-block-end:4px;border-bottom:1px solid var(--ks-line)}
+.pha-calibration label {display:grid;gap:4px}
+.pha-calibration [data-pha-reset] {margin-block-start:7px}
+.pha-actions {justify-content:space-between;margin-block:8px}
+.pha-actions [data-pha-next] {margin-inline-start:auto}
+.pha-bench :is(button, select, input:not([type="checkbox"])) { min-height: 44px; }
+@container visit-photo (min-width: 790px) {
+  .pha-inspector [data-pha-list]:not(:has(form)) {max-block-size:clamp(210px,48dvh,480px);overflow:auto;overscroll-behavior:contain}
+  .pha-bench { grid-template-columns: minmax(0, 1fr) clamp(245px, 29%, 354px); }
+  .k-workshop[data-ws-route="photo"] .pha-source {
+    display: grid;
+    grid-template-columns: minmax(145px, 1fr) auto minmax(150px, 1fr);
+    align-items: end;
+    gap: 12px;
+  }
+  .k-workshop[data-ws-route="photo"] .pha-source:not(:has([data-pha-restore])) {
+    grid-template-columns: minmax(145px, 1fr) auto;
+  }
+}
+[data-advanced-plane]:not(:empty) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 8px 12px;
+  margin-block: 16px;
+}
+[data-advanced-plane] > :not(label, button) { grid-column: 1 / -1; }
+[data-advanced-plane] > label { display: grid; gap: 4px; align-content: end; }
+
+/* Retain the natural height of actions and readings. The measured wall takes
+   the remaining space, including after a notice or extra control appears. */
+@media screen and (min-width:768px) {
+  .k-workshop[data-ws-route=survey] .ws-content:has(.sv-walk-head) {padding:0;scrollbar-gutter:auto}
+  .k-workshop[data-ws-route=survey] .ws-screen:has(.sv-walk-head),
+  .k-workshop[data-ws-route=outline] .ws-screen:has(.poly-survey),
+  .k-workshop .ws-screen:has(.sv-walk-review) {height:100%}
+  .k-workshop[data-ws-route=survey] .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open],.sv-proof,[data-local-options]:not(:empty))) {
+    min-height:100%;height:100%;box-sizing:border-box;grid-template-rows:minmax(min-content,1fr) auto;
+  }
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-work {grid-template-rows:minmax(240px,1fr) auto;align-items:stretch}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-plate {grid-template-rows:minmax(0,1fr) auto;min-height:0}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-survey-card {display:grid;min-height:0}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-ink-canvas {align-items:stretch;min-height:0}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-paper-desk {display:flex;flex-direction:column;min-height:0}
+  .sv .sv-paper-desk .sv-workbar {flex:none}
+  .sv .sv-totals {align-items:center}
+  .sv .sv-totals details:not([open]) {width:auto;margin-inline-start:auto}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-elevation {flex:1;min-height:180px;position:relative}
+  .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-elevation .survey-wall-sheet {position:absolute;inset:0;display:block;width:100%;height:100%;max-height:none}
+  @container visit-wall (max-width:819px) {
+    .sv:has(.sv-walk-head):not(:has(.sv-ink-manual[open])) .sv-ink-canvas {display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(200px,1fr) auto}
+    .sv .sv-ink-aside {max-height:max(180px,31dvh);overflow:auto}
+  }
+  .k-workshop .sv-walk-review {min-height:100%;grid-template-rows:auto auto 1fr;align-content:start}
+  .k-workshop .sv-walk-review .site-wall-review {align-items:stretch}
+  .k-workshop .sv-walk-review .site-review-map .sv-wall-map {width:100%;max-height:100%}
+  .k-workshop .sv-walk-review .sv-review-list {align-content:start}
+  .poly-survey:has([data-poly-walk]:not([hidden])):not(:has([data-poly-subview]:not([hidden]))) {min-height:100%;display:flex;flex-direction:column}
+  .poly-survey [data-poly-walk]:not([hidden]) {flex:1 0 auto}
+  @container perimeter (min-width:660px) {
+    .poly-survey [data-poly-walk]:not([hidden]) {align-content:stretch;grid-template-rows:auto auto minmax(min-content,1fr) auto auto auto}
+    .poly-survey .poly-walk-list {align-content:start}
+  }
+}
+
+/* A photo stays contained in its measurement plane. Size both the photo and
+   the annotation overlay from the same aspect ratio so taps remain exact. */
+@media screen and (min-width:768px) {
+  .k-workshop[data-ws-route=photo] .ws-screen:has(.site-photo-map) {min-height:100%;display:flex;flex-direction:column}
+  .k-workshop[data-ws-route=photo] .ws-screen .pha-source:has(.site-photo-map) {
+    flex:1 0 220px;grid-template-columns:minmax(0,1fr) minmax(235px,33%);grid-template-rows:1fr auto auto 1fr;
+    align-items:center;
+  }
+  .pha-source:has(.site-photo-map)>label:first-of-type {align-self:end}
+  .k-workshop .pha-source .site-photo-map {min-height:0;position:relative}
+  .k-workshop .pha-source .site-photo-map .sv-wall-map {position:absolute;inset:0;margin:auto;width:100%;max-height:100%}
+  .k-workshop[data-ws-route=photo] .ws-screen:has(.pha-bench):not(:has([data-advanced-plane]:not(:empty))) {display:flex;flex-direction:column;min-height:100%}
+  @media (min-width:850px) {
+    .k-workshop[data-ws-route=photo] .ws-screen:has(.pha-bench):not(:has([data-advanced-plane]:not(:empty))) {height:100%}
+  }
+  @container visit-photo (min-width:790px) {
+    .k-workshop .pha-bench {flex:1 0 265px;min-height:0;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+    .pha-bench .pha-inspector {overflow:auto;min-height:0;align-content:start}
+    .pha-bench .pha-paper {display:flex;flex-direction:column}
+    .pha-bench .pha-film {container-type:size;flex:1 1 auto;min-height:155px;display:grid;place-items:center;background:var(--ks-surface-2)}
+    .pha-film .pha-image {width:min(100cqw,calc(100cqh * var(--pha-ratio)));margin:0}
+  }
+}
+
+/* A tape gap and its station share a row so the rep may enter either reading. */
+.sv .sv-ink-object .sv-tape-position{
+  margin:0;min-inline-size:0;width:100%;box-sizing:border-box;
+  padding:3px 7px 6px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);
+}
+.sv .sv-tape-position legend{padding-inline:4px;font-size:12px;font-weight:700;color:var(--ks-ink-strong)}
+.sv .sv-ink-object .sv-tape-position .sv-ink-fields{
+  display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end;gap:5px;
+}
+.sv .sv-tape-position .sv-ink-fields label{min-width:0;max-width:none}
+
+.sv .sv-object-save-footer small{color:var(--sv-quiet);margin-inline-end:auto}
+.sv .sv-object-save-footer .sv-primary{font-weight:700}

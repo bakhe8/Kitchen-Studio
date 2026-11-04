@@ -1,0 +1,54 @@
+[
+  {
+    "documentWidth": 1280,
+    "viewport": [
+      1280,
+      720
+    ],
+    "workspace": "\"main inspector\""
+  },
+  {
+    "documentWidth": 1440,
+    "viewport": [
+      1440,
+      1000
+    ],
+    "workspace": "\"main inspector\""
+  },
+  {
+    "documentWidth": 900,
+    "viewport": [
+      900,
+      900
+    ],
+    "workspace": "\"main inspector\""
+  },
+  {
+    "chooser": {
+      "bottom": 46.5,
+      "height": 44,
+      "left": 185.828125,
+      "right": 382,
+      "top": 2.5,
+      "width": 196.171875,
+      "x": 185.828125,
+      "y": 2.5
+    },
+    "documentWidth": 390,
+    "header": {
+      "bottom": 50,
+      "height": 50,
+      "left": 0,
+      "right": 390,
+      "top": 0,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "viewport": [
+      390,
+      844
+    ],
+    "workspace": "\"main\" \"inspector\""
+  }
+]

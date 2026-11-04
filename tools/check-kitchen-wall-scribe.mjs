@@ -1,0 +1,62 @@
+import {confirmFixtureFitout} from './fixture-kitchen-fitout.mjs';
+import assert from 'node:assert/strict';
+import {createKitchen} from '../public/kitchen-model.js';
+import {applyChain,newChainRow,readChainRange,attestChain} from '../public/kitchen-chain-model.js';
+import {planWorkshopRow} from '../public/kitchen-production-row.js';
+import {seedCatalog,cleanCatalog,buildFactoryQuote} from '../public/kitchen-workshop-factory.js';
+import {portableFactoryCatalog} from '../public/kitchen-factory-template.js';
+import {approveScribe,scribePiece,scribeDatum,scribeDXF,exactScribeScan} from '../public/kitchen-wall-scribe.js';
+import {cleanWorkshop,batchReleaseState} from '../public/kitchen-workshop-state.js';
+import {orderHandoffUnits,manufacturingKeys} from '../public/kitchen-order-domain.js';
+import {offlineDigest} from '../public/kitchen-workshop-revision.js';
+import {profileDatum} from '../public/kitchen-wall-profile.js';
+import {machiningSheet} from '../public/kitchen-machining.js';
+const room={width:500,length:500,height:280};let doc={room,kitchen:createKitchen(room,'empty')};
+const cat=seedCatalog();cat.approved=true;for(const i of cat.items){i.price=10;i.stockUnits=200;}
+Object.assign(cat.terms,{labor:0,installation:0,delivery:0,marginPct:0,taxPct:0});
+cat.scribePolicies={FJ:{name:'قفلة طرف نهائية',reference:'DWG-FJ',grain:'vertical',sku:'BODY-6',minimumBlankMm:45,minimumLipMm:15,maxStripMm:100,roughAllowanceMm:2,spacingMm:300,cutToleranceMm:.4,minGapMm:1,targetGapMm:2,maxGapMm:3,machine:'traceCut'}};
+cat.machining={strict:false,machines:[{id:'traceCut',name:'منشار تشذيب',datum:'وجه التركيب',skus:['BODY-6'],ops:['size','scribe'],maxLength:4000,maxWidth:2000,maxThickness:60,minTolerance:.1,clampMargin:0,maxAngle:45,minBendRadius:0}]};
+const catalog=cleanCatalog(cat);assert.ok(catalog);assert.deepEqual(portableFactoryCatalog(catalog).scribePolicies,catalog.scribePolicies);
+for(const wall of ['back','left','right']){
+ const mk=(k,id,n)=>({...newChainRow(k,id),gapMm:n});
+ const rows=wall==='back'?[mk('start','start',50),mk('stop','stop',4900),mk('corner','end',50)]:[mk('corner','end',5000)];
+ const next=applyChain(doc,wall,{source:'field',rows});assert(next.ok,next.reason);doc=next.doc;
+ doc.room.workshop.chains[wall]=attestChain(doc,wall,doc.room.workshop.chains[wall],{name:'فني الرفع',reference:'S-05'}).chain;
+}
+doc.room.workshop.catalog=catalog;
+const result=planWorkshopRow(doc,{...readChainRange(doc,'back'),tier:'base',wanted:{}});assert.ok(result.ok,result.reason);doc=result.doc;
+confirmFixtureFitout(doc);
+const sorted=doc.kitchen.units.toSorted((a,b)=>a.u-b.u),first=sorted[0],last=sorted.at(-1);
+const draft={unitId:first.id,against:'left',recipe:'FJ',kind:'end',side:'start',plinthHeightMm:0,insetMm:0,accuracyMm:.5,reference:'S-05-F1',reviewer:'الفني',linearVerified:true};
+const datum=scribeDatum(doc,'back',draft,catalog);assert(datum.ok,datum.reason);assert.equal(datum.nominal,50);
+const stations=[[0,2],[200,-4],[400,3],[600,1],[datum.span,0]];
+let v=approveScribe(doc,'back',{...draft,stations},catalog);assert(v.ok,v.reason);doc=v.doc;
+const rec=doc.room.workshop.options.back.scribes[0],part=v.part;
+assert.deepEqual(part.scribe.widths,[46,52,45,47,48]);
+assert.equal(part.a,datum.span);assert.equal(part.b,57.4);assert.equal(part.scribe.points[1][0],6);
+assert.deepEqual(cleanWorkshop(doc.room.workshop).options.back.scribes,[rec]);
+const dxf=scribeDXF(part);assert.match(dxf,/FINISHED_SCRIBE/);assert.match(dxf,/70\r\n1\r\n10/);
+assert.deepEqual(machiningSheet([part],{...catalog,machining:{...catalog.machining,strict:true}}).issues,[]);
+const q=buildFactoryQuote(doc),pieces=q.pieces.filter(x=>x.scribe);assert.deepEqual(pieces,[part]);assert(q.ready,[...q.issues,...q.releaseIssues].join('/'));
+assert(buildFactoryQuote(doc,{unitIds:[first.id]}).pieces.some(p=>p.scribe));assert(!buildFactoryQuote(doc,{unitIds:[last.id]}).pieces.some(p=>p.scribe));
+assert(orderHandoffUnits(doc).find(u=>u.id===first.id).checks.some(c=>c.key.startsWith('scribe-')&&c.nominal===52));
+assert((await batchReleaseState(doc,[first.id])).quote.pieces.some(p=>p.scribe));
+const mod=approveScribe(doc,'back',{...draft,stations:stations.map(([h,w],k)=>[h,k===2?4:w])},catalog);assert(mod.ok);assert.equal(mod.part.b,part.b);
+assert.notEqual(manufacturingKeys(mod.doc,buildFactoryQuote(mod.doc))[first.id],manufacturingKeys(doc,q)[first.id]);
+const moved=structuredClone(doc);moved.kitchen.units.find(x=>x.id===first.id).u+=1;
+assert.match(scribePiece(moved,'back',rec,catalog).reason,/تغيّر/);assert(buildFactoryQuote(moved,{unitIds:[first.id]}).issues.length);
+const deleted=structuredClone(doc);deleted.kitchen.units=deleted.kitchen.units.filter(x=>x.id!==first.id);assert(buildFactoryQuote(deleted).issues.length);
+for(const attrs of [{linearVerified:false},{accuracyMm:2},{stations:stations.slice(1)},{stations:stations.slice(0,-1)},{stations:[stations[0],stations.at(-1)]},{stations:[[0,50],...stations.slice(1)]},{against:'right'}]){
+ assert.equal(approveScribe(doc,'back',{...draft,stations,...attrs},catalog).ok,false);
+}
+const opposite={...draft,unitId:last.id,against:'right',side:'end'},end=scribeDatum(doc,'back',opposite,catalog);
+assert(end.ok,end.reason);assert(end.nominal>=50&&end.nominal<200);
+const mirrored=approveScribe(doc,'back',{...opposite,stations},catalog);assert(mirrored.ok,mirrored.reason);assert.equal(mirrored.part.scribe.points[0][0],0);
+const plinth=approveScribe(doc,'back',{...draft,kind:'plinth',plinthHeightMm:120,insetMm:50,stations:[[0,-2],[60,3],[120,0]]},catalog);assert(plinth.ok,plinth.reason);assert.equal(plinth.part.a,120);
+assert.match(approveScribe(doc,'back',{...draft,kind:'plinth',plinthHeightMm:120,insetMm:0,stations:[[0,0],[120,0]]},catalog).reason,/تتداخل/);
+const missing=structuredClone(doc);delete missing.room.workshop.chains.left.attestation;
+assert.equal(buildFactoryQuote(missing,{unitIds:[first.id]}).ready,false);
+const xyz=['unit=mm','axes=X:right,Y:up,Z:front','origin=rear-left-finished-floor','reference=survey','left 2 0 600','left -2 400 600','left 1 '+datum.span+' 600','left 8 200 615'].join('\n');
+const sid=offlineDigest(new TextEncoder().encode(xyz)),xdoc=structuredClone(doc);xdoc.room.workshop.wallProfiles={sources:{[sid]:xyz},bands:[{id:'edge',wall:'left',sourceId:sid,datum:profileDatum(doc.room,'left'),low:0,high:datum.span,pitchX:40,pitchY:400,tol:3,review:{boundMm:3,name:'Site',ref:'scan-8'}}]};
+const scan=exactScribeScan(xdoc,'back',{...draft,band:'edge'},catalog);assert(scan.ok,scan.reason);assert.deepEqual(scan.stations,[[0,2],[400,-2],[datum.span,1]]);
+console.log('Actual CAD wall and cabinet end, signed local edge observations, opposite hands and reduced plinth, true contour vs cut blank and two kerfs, accuracy envelope, scan off-line rejection, machine/stock/inspection/batch identity, stale move and missing station/field evidence verified.');

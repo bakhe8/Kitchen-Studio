@@ -1,0 +1,80 @@
+{
+  "projectId": "K-75FFA8CB9DF3245A",
+  "projectName": "اختبار دفتر الموقع — تكامل",
+  "unitCount": 13,
+  "recipeUnits": 7,
+  "selected": {
+    "id": "unit-3",
+    "manifestStartMm": 1700,
+    "manifestWidthMm": 700,
+    "cadStartMm": 1700,
+    "cadWidthMm": 700
+  },
+  "allRecipeUnitsMatchCad": true,
+  "proof": {
+    "projectId": "K-75FFA8CB9DF3245A",
+    "projectName": "اختبار دفتر الموقع — تكامل",
+    "wallLabel": "الجدار الخلفي",
+    "lengthMm": 4200,
+    "heightMm": 2800,
+    "readingCount": 2,
+    "closed": true,
+    "remainingMm": 0,
+    "valid": true,
+    "error": "",
+    "proofValid": true,
+    "status": "رفع ميداني موثّق",
+    "sourceLabel": "رفع ميداني"
+  },
+  "pairs": [
+    {
+      "id": "unit-2",
+      "manifestStartMm": 0,
+      "manifestWidthMm": 600,
+      "cadStartMm": 0,
+      "cadWidthMm": 600
+    },
+    {
+      "id": "unit-3",
+      "manifestStartMm": 1700,
+      "manifestWidthMm": 700,
+      "cadStartMm": 1700,
+      "cadWidthMm": 700
+    },
+    {
+      "id": "unit-4",
+      "manifestStartMm": 600,
+      "manifestWidthMm": 500,
+      "cadStartMm": 600,
+      "cadWidthMm": 500
+    },
+    {
+      "id": "unit-5",
+      "manifestStartMm": 1100,
+      "manifestWidthMm": 600,
+      "cadStartMm": 1100,
+      "cadWidthMm": 600
+    },
+    {
+      "id": "unit-6",
+      "manifestStartMm": 2400,
+      "manifestWidthMm": 600,
+      "cadStartMm": 2400,
+      "cadWidthMm": 600
+    },
+    {
+      "id": "unit-7",
+      "manifestStartMm": 3000,
+      "manifestWidthMm": 600,
+      "cadStartMm": 3000,
+      "cadWidthMm": 600
+    },
+    {
+      "id": "unit-8",
+      "manifestStartMm": 3600,
+      "manifestWidthMm": 600,
+      "cadStartMm": 3600,
+      "cadWidthMm": 600
+    }
+  ]
+}

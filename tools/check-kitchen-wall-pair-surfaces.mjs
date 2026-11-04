@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {kitchenGeometry} from '../public/kitchen-model.js';
+import {wallPairDatum} from '../public/kitchen-wall-pair.js';
+import {offlineDigest} from '../public/kitchen-workshop-revision.js';
+import {surfaceKey,approveSurface,surfaceReleaseIssues} from '../public/kitchen-surface-release.js';
+import {topDesignKey} from '../public/kitchen-surface-pattern.js';
+import {worktopUpstandTakeoff} from '../public/kitchen-worktop-upstand.js';
+import {scribeDatum} from '../public/kitchen-wall-scribe.js';
+
+const stock={sku:'STONE',kind:'panel',name:'حجر اختباري',stockLengthMm:3200,stockWidthMm:1600,thicknessMm:20};
+const cat={approved:true,items:[stock],terms:{worktop:'include'},upstandProfiles:[{id:'P',sku:'STONE',heightMm:100,reference:'QA'}],scribePolicies:{t:{sku:'STONE',maxStripMm:100}}};
+const run={id:'r',tier:'base',wall:'back',start:0,end:300,bottom:0,height:86,depth:60};
+const unit=(id,u)=>({id,kind:'storage',u,width:60,runId:'r'});
+const d={room:{width:300,length:300,height:280,workshop:{catalog:cat,upstand:{choice:{mode:'factory',profileId:'P'},walls:{}}}},kitchen:{runs:[run],units:[unit('left',0),unit('middle',120)],features:[]}};
+const g=kitchenGeometry(d.kitchen,d.room),[end,central]=g.worktops;
+const digest=v=>offlineDigest(new TextEncoder().encode(JSON.stringify(v)));
+const oldPattern=t=>digest([t.id,t.polygon,t.bottom,t.height,t.worktopFinish,t.worktopColor,t.holes.map(h=>[h.id,h.unitId,h.kind,h.polygon]),undefined,undefined,undefined]);
+const oldTemplate=digest(g.worktops.map(t=>[t.id,t.runId,t.bottom,t.height,t.depth,t.polygon.map(p=>[p.x,p.z]),t.holes.map(h=>[h.unitId,h.polygon.map(p=>[p.x,p.z])]),t.worktopFinish,t.worktopColor]));
+assert.equal(surfaceKey(d),oldTemplate);assert.equal(topDesignKey(d,end),oldPattern(end));
+const form={reference:'QA',levelRecord:'ثبتت الدواليب',inspector:'QA',date:'2026-11-01',cutouts:''};
+const signed=approveSurface(d,form);assert(signed.ok,signed.reason);
+const doc=signed.doc,w=doc.room.workshop;
+const pair=(wall,side,offset,heightMm)=>({datum:wallPairDatum(doc,wall),backMm:3000,frontMm:2980,depthMm:600,heightMm,anchor:{side,offsetMm:offset}});
+const checkScribe=(doc,unitId='left')=>scribeDatum(doc,'back',{recipe:'t',against:'left',side:'start',kind:'end',plinthHeightMm:0,insetMm:0,unitId},cat);
+const originalScribe=checkScribe(doc);assert(originalScribe.ok,originalScribe.reason);
+w.wallPairs={back:{base:pair('back','end',0,700)}}; // only start end moves in by 20 mm
+assert.notEqual(topDesignKey(doc,end),oldPattern(end));assert.equal(topDesignKey(doc,central),oldPattern(central));
+assert.notEqual(surfaceKey(doc),oldTemplate);assert.ok(surfaceReleaseIssues(doc).length);
+assert.match(checkScribe(doc).reason,/زاوية مائلة/);
+const unresolved={...w.wallPairs.back.base};delete unresolved.anchor;
+w.wallPairs={back:{base:unresolved}};const unconfirmed=checkScribe(doc);
+assert.ok(unconfirmed.ok,unconfirmed.reason);assert.notEqual(originalScribe.anchor,unconfirmed.anchor);
+w.wallPairs={back:{base:pair('back','start',0,700)}}; // opposite end only
+assert.equal(topDesignKey(doc,end),oldPattern(end));assert.equal(surfaceKey(doc),oldTemplate);
+assert.equal(checkScribe(doc).anchor,originalScribe.anchor);
+w.wallPairs={back:{upper:pair('back','end',0,1800)}};assert.equal(surfaceKey(doc),oldTemplate);
+w.wallPairs={front:{base:pair('front','end',0,700)}};assert.equal(surfaceKey(doc),oldTemplate);
+const strip=()=>worktopUpstandTakeoff(doc,cat,g);
+const blocked=()=>strip().releaseIssues.some(s=>s.includes('قالب زاوية'));
+w.wallPairs={back:{base:pair('back','end',0,950)}};assert(blocked());assert(!strip().pieces.some(s=>s.sku==='STONE'&&s.unitId==='upstand:left'));
+w.wallPairs={back:{base:pair('back','start',0,950)}};assert(!blocked());
+w.wallPairs={back:{base:pair('back','end',0,700)}};assert(!blocked(),'body-height observation is not itself a stone-height corner measurement');
+console.log('Existing global template and per-slab/scribe hashes retained off scope; shared physical wall end, elevation, room and tier scope; skew square stone joint blocked.');

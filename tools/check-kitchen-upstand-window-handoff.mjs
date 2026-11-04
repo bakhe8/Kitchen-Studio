@@ -1,0 +1,73 @@
+import assert from 'node:assert/strict';
+import {createKitchen,addRun,addUnit,addFeature} from '../public/kitchen-model.js';
+import {seedCatalog,getFactoryCatalog,buildFactoryQuote} from '../public/kitchen-workshop-factory.js';
+import {cleanIdea} from '../public/kitchen-ideas.js';
+import {approvalState} from '../public/kitchen-workshop-state.js';
+import {worktopUpstandTakeoff,setUpstandWindowChoice,setUpstandSeamChoice} from '../public/kitchen-worktop-upstand.js';
+import {kitchenWorkGuide,guideQuickAnswers,answerGuideQuestion} from '../public/kitchen-work-guide.js';
+import {orderHandoffUnits,manufacturingKeys} from '../public/kitchen-order-domain.js';
+
+const catalog=seedCatalog();catalog.approved=true;
+for(const p of catalog.items)p.price=10;
+catalog.items.push({...catalog.items.find(s=>s.kind==='panel'),sku:'STONE-20',name:'حجر ٢٠ مم',thicknessMm:20,stockLengthMm:3200,stockWidthMm:1600,price:400});
+catalog.upstandProfiles=[{id:'stone-100',sku:'STONE-20',reference:'QA-S',heightMm:100,minCutHeightMm:30}];
+const room={width:320,length:300,height:280,colors:{},name:'اختبار شباكي المجلى',workshop:{catalog,upstand:{choice:{mode:'factory',profileId:'stone-100'},walls:{}}}};
+const run={id:'base-a',wall:'back',tier:'base',start:10,end:250,height:86,depth:60,bottom:0,worktopThicknessMm:40};
+function made(q){assert(q.ok,q.reason);return q.kitchen;}
+let kitchen=made(addRun(createKitchen(room,'empty'),room,run));
+for(let j=0;j<4;j++)kitchen=made(addUnit(kitchen,room,{id:'unit-'+j,runId:run.id,kind:'storage',u:10+j*60,width:60}));
+for(const [id,u,bottom] of [['low',35,96],['flush',110,90]]){
+ kitchen=made(addFeature(kitchen,room,{id,wall:'back',kind:'window',u,width:60,bottom,height:90,depth:4,swing:'fixed'}));
+}
+room.workshop.rows={[run.id]:{catalogVersion:'1',warnings:[],units:kitchen.units.map(u=>({id:u.id,startMm:u.u*10,widthMm:u.width*10,family:'storage',locks:{width:false,position:false,usage:false,finish:false}}))}};
+const source=cleanIdea({room,kitchen});assert(source);
+const getDocTake=d=>worktopUpstandTakeoff(d,getFactoryCatalog(d));
+const guideTasks=async d=>{const r=await kitchenWorkGuide(d);return [...r.tasks,...r.later];};
+function select(doc,key,options){const res=setUpstandWindowChoice(doc,getFactoryCatalog(doc),key,options);assert(res.ok,res.reason);return res.doc;}
+const orig=getDocTake(source),first=orig.windows.find(w=>w.windowId==='low'),flush=orig.windows.find(w=>w.windowId==='flush');
+assert.equal(first.rawClearMm,60);assert.equal(flush.rawClearMm,0);
+let tasks=await guideTasks(source),q=tasks.find(t=>t.focus?.windowKey===first.key);
+assert(q);assert.equal(q.actor,'customer');assert.equal(q.focus.section,'stone');
+assert(guideQuickAnswers(source,q).some(o=>o.id==='gap'));
+const qs=buildFactoryQuote(source);assert(qs.fitoutPending.some(s=>s.includes('شباك')));
+const accept=answerGuideQuestion(source,q,'gap');assert(accept.ok,accept.reason);
+assert.equal(answerGuideQuestion(accept.doc,q,'gap').ok,false);
+assert(!getDocTake(source).windows.find(w=>w.key===first.key).choice);
+assert(!(await guideTasks(accept.doc)).some(t=>t.id===q.id));
+const draft=select(source,first.key,{kind:'step'});q=(await guideTasks(draft)).find(t=>t.focus?.windowKey===first.key);
+assert.equal(q.actor,'rep');assert.deepEqual(guideQuickAnswers(draft,q),[]);
+let doc=select(draft,first.key,{kind:'step',heightMm:50,clearanceMm:10,reference:'CHECK-01',operationChecked:true});
+assert.equal(getDocTake(doc).windows.find(w=>w.key===first.key).status,'resolved');
+let qr=buildFactoryQuote(doc);assert(qr.fitoutSummary.some(s=>s.includes('منخفض')&&s.includes('50 مم')));
+assert(qr.pieces.some(p=>p.family==='upstand'&&p.a===600&&p.b===50));
+doc=select(doc,flush.key,{kind:'gap',sill:{mode:'supplier'}});
+assert((await guideTasks(doc)).some(t=>t.id.startsWith('design.window-sill.')&&t.actor==='rep'));
+const sill={depthMm:120,lengthMm:520,insetStartMm:30,reference:'SILL-QA',verified:true};
+const supplier=select(doc,flush.key,{kind:'gap',sill:{...sill,mode:'supplier',material:'جرانيت',thicknessMm:20}});
+qr=buildFactoryQuote(supplier);
+assert.equal(qr.extras.filter(e=>e.kind==='windowSill').length,1);assert(!qr.pieces.some(p=>p.family==='windowSill'));
+assert.equal(qr.extras.find(e=>e.kind==='windowSill').readiness,'external');assert(qr.fitoutSummary.some(s=>s.includes('جلسة أفقية')&&s.includes('520 × 120')));
+const factory=select(doc,flush.key,{kind:'gap',sill:{...sill,mode:'factory',sku:'STONE-20'}});
+qr=buildFactoryQuote(factory);assert(!qr.extras.some(e=>e.kind==='windowSill'));
+const p=qr.pieces.find(p=>p.family==='windowSill');assert.deepEqual([p.a,p.b,p.count],[520,120,1]);assert(orderHandoffUnits(factory).find(u=>u.id===p.unitId));
+assert(manufacturingKeys(factory)[p.unitId]);assert(!buildFactoryQuote(factory,{unitIds:['unit-0']}).pieces.some(p=>p.family==='windowSill'));
+assert.deepEqual(cleanIdea(JSON.parse(JSON.stringify(factory))).room.workshop.upstand,factory.room.workshop.upstand);
+assert.notEqual((await approvalState(source)).keys.customer,(await approvalState(factory)).keys.customer);
+const moved=structuredClone(factory);moved.kitchen.features.find(f=>f.id==='low').bottom+=2;
+assert.equal(getDocTake(moved).windows.find(w=>w.key===first.key).status,'stale');
+assert(!(await guideTasks(moved)).find(t=>t.focus?.windowKey===first.key)?.canChooseGap);
+console.log('Guide, unconfirmed cases, revised approvals, factory cuts and distinct horizontal sill supplier/stock/receipt verified on two real CAD windows.');
+
+const long=structuredClone(source);
+long.kitchen.features=long.kitchen.features.filter(w=>w.id!=='flush');
+long.room.workshop.storeCatalog.items.find(i=>i.sku==='STONE-20').stockLengthMm=1000;
+const continuous=select(long,getDocTake(long).windows[0].key,{kind:'uniform',heightMm:50,clearanceMm:10,reference:'SAMPLE',operationChecked:true});
+const req=getDocTake(continuous).seamRequests.find(s=>s.wall==='back');assert(req);
+assert((await guideTasks(continuous)).some(t=>t.focus?.seamKey===req.key&&t.actor==='factory'));
+const joined=setUpstandSeamChoice(continuous,getFactoryCatalog(continuous),req.key,{stationsMm:[900,1700],reference:'FAB-J1'});
+assert(joined.ok,joined.reason);
+const joinedQuote=buildFactoryQuote(joined.doc);
+assert.deepEqual(joinedQuote.pieces.filter(p=>p.jointReference==='FAB-J1').map(p=>p.a),[800,800,800]);
+assert(joinedQuote.fitoutSummary.some(row=>row.includes('900، 1700 مم')));
+assert(!(await guideTasks(joined.doc)).some(t=>t.focus?.seamKey===req.key));
+console.log('A long visually continuous customer strip retains its exact workshop joints in the quote and clears its specific guidance task.');

@@ -1,0 +1,33 @@
+{
+  "projectId": "K-71756F7465537475",
+  "units": 5,
+  "measurementsGeometryRecipesAndFinishesUnchanged": true,
+  "bodyPrice": 125,
+  "delivery": 60,
+  "materials": 990,
+  "newPurchases": 990,
+  "total": 1200,
+  "valid": {
+    "structure": true,
+    "customer": true,
+    "release": false
+  },
+  "recordApprovals": {
+    "store": false,
+    "factory": true,
+    "pricing": false
+  },
+  "versions": [
+    {
+      "n": 1,
+      "total": 1180,
+      "reason": ""
+    },
+    {
+      "n": 2,
+      "total": 1200,
+      "reason": "اختبار ربط عرض العميل: تعديل النقل من ٤٠ إلى ٦٠ ر.س مع بقاء الوحدات والخامات."
+    }
+  ],
+  "csvAndReportMatch": true
+}

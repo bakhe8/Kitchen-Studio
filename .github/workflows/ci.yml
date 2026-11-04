@@ -1,0 +1,29 @@
+name: ci
+
+# Every check below also runs locally: npm run lint | typecheck | test | build | audit:prod
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+      # The lockfile pins every package by integrity hash; install scripts are not needed by any check or by the build.
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      # Known vulnerabilities in production dependencies. Informational until the open advisories are cleared.
+      - run: npm run audit:prod
+        continue-on-error: true

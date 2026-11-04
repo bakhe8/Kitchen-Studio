@@ -1,0 +1,248 @@
+/* Project oversight presentation. Stage evidence, approval authority and
+   save/history decisions remain in the project and receipt controllers. */
+.oversight-studio {
+  --os-ink: var(--ks-ink);
+  --os-muted: var(--ks-ink-muted);
+  --os-paper: var(--ks-canvas);
+  --os-surface: var(--ks-surface-1);
+  --os-line: var(--ks-line);
+  --os-blue: var(--ks-action);
+  --os-blue-soft: var(--ks-action-soft);
+  --os-green: var(--ks-complete);
+  --os-green-soft: var(--ks-complete-soft);
+  --os-amber: var(--ks-attention);
+  --os-amber-soft: var(--ks-attention-soft);
+  --os-red: var(--ks-danger);
+  --os-work-height: max(440px,calc(100dvh - 330px));
+  container: oversightstudio / inline-size;
+  display: block; min-width: 0; max-width: 100%; margin: 0; padding: 0;
+  background: var(--os-paper); color: var(--os-ink); direction: rtl;
+  font: 14px/1.7 system-ui,"Segoe UI",Tahoma,Arial,sans-serif;
+}
+.oversight-studio *, .oversight-studio *::before, .oversight-studio *::after { box-sizing: border-box; }
+.oversight-studio [hidden] { display: none !important; }
+.oversight-studio.oversight-studio :is(h2,h3,h4,p) { margin: 0; color: inherit; }
+.oversight-studio.oversight-studio :is(h3,h4) { font-size: 15px; font-weight: 650; line-height: 1.6; }
+.oversight-studio.oversight-studio small { display: block; color: var(--os-muted); font-size: 12px; line-height: 1.65; }
+.oversight-studio.oversight-studio button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; max-width: 100%; margin: 0; padding: 9px 12px;
+  border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--os-surface); color: var(--os-ink);
+  font: 600 13px/1.5 system-ui,"Segoe UI",Tahoma,Arial,sans-serif;
+  text-align: center; cursor: pointer; touch-action: manipulation;
+  transition: background-color var(--ks-duration-fast) var(--ks-ease),border-color var(--ks-duration-fast) var(--ks-ease),color var(--ks-duration-fast) var(--ks-ease);
+}
+.oversight-studio.oversight-studio button:hover:not(:disabled) { border-color: var(--ks-action); background: var(--ks-surface-1); }
+.oversight-studio.oversight-studio button:disabled { opacity: .5; cursor: default; }
+.oversight-studio.oversight-studio :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible { outline: 3px solid var(--ks-focus-ring); outline-offset: 2px; }
+.oversight-studio.oversight-studio label { display: grid; align-content: start; gap: 6px; min-width: 0; margin: 0; color: var(--os-ink); font-size: 12px; line-height: 1.65; }
+.oversight-studio.oversight-studio :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) { display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 48px; margin: 0; padding: 10px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--os-ink); font: 14px/1.5 system-ui,"Segoe UI",Tahoma,Arial,sans-serif; }
+.oversight-studio.oversight-studio textarea { min-height: 94px; resize: vertical; }
+.oversight-studio.oversight-studio :is(input[type="number"],input[inputmode="decimal"]) { direction: ltr; text-align: start; font-variant-numeric: tabular-nums; }
+.oversight-studio.oversight-studio :is(input[type="checkbox"],input[type="radio"]) { width: 19px; height: 19px; min-height: 19px; margin: 0; accent-color: var(--os-blue); }
+.oversight-studio.oversight-studio :is(input,select,textarea):disabled { background: var(--ks-surface-1); color: var(--ks-ink-muted); opacity: .85; }
+.oversight-studio.oversight-studio [aria-invalid="true"] { border-color: var(--os-red); background: var(--ks-surface-1); }
+.oversight-studio.oversight-studio a { color: var(--os-blue); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.oversight-studio :is(bdi,code) { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.oversight-studio .studio-icon { flex: none; width: 19px; height: 19px; }
+
+.oversight-studio .os-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; padding: 21px 23px; border-bottom: 1px solid var(--ks-line-strong); background: var(--ks-ink-strong); color: var(--ks-on-dark); }
+.oversight-studio .os-header > * { min-width: 0; }
+.oversight-studio .os-header h2 { margin-block: 3px; color: var(--ks-on-dark); font-size: 25px; font-weight: 650; line-height: 1.4; letter-spacing: -.3px; overflow-wrap: anywhere; }
+.oversight-studio .os-header :is(p,small,.os-kicker) { color: var(--ks-on-dark-muted); font-size: 12px; }
+.oversight-studio .os-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.oversight-studio .os-toolbar button { border-color: var(--ks-line-strong); background: var(--ks-ink-strong); color: var(--ks-on-dark); font-size: 12px; }
+.oversight-studio .os-toolbar button:hover:not(:disabled) { border-color: var(--ks-line); background: var(--ks-action); }
+.oversight-studio .os-toolbar :is(.primary,[data-os-action="save"],[data-owner-action="save"]) { border-color: var(--ks-on-dark-muted); background: var(--ks-surface-inset); color: var(--ks-action); }
+.oversight-studio .os-toolbar :is(.primary,[data-os-action="save"],[data-owner-action="save"]):hover:not(:disabled) { border-color: var(--ks-on-dark-muted); background: var(--ks-surface-1); }
+.oversight-studio .os-status { min-height: 38px; padding: 9px 18px; border-bottom: 1px solid var(--os-line); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+.oversight-studio .os-status:empty { min-height: 0; padding-block: 0; border: 0; }
+.oversight-studio .os-status:is([data-state="dirty"],[data-state="preview"],[data-state="saving"],[data-state="waiting"]),.oversight-studio:is([data-state="dirty"],[data-state="preview"],[data-state="saving"]) .os-status { background: var(--os-amber-soft); color: var(--os-amber); }
+.oversight-studio .os-status:is([data-state="invalid"],[data-state="error"],[data-state="stale"]),.oversight-studio:is([data-state="invalid"],[data-state="error"],[data-state="stale"]) .os-status { background: var(--ks-surface-1); color: var(--os-red); }
+.oversight-studio .os-context { display: flex; align-items: end; flex-wrap: wrap; gap: 11px 14px; min-width: 0; padding: 14px 18px; border-bottom: 1px solid var(--os-line); background: var(--ks-surface-1); }
+.oversight-studio .os-context > label { flex: 1 1 220px; }
+.oversight-studio .os-context > button { flex: 0 0 auto; min-height: 48px; }
+.oversight-studio .os-context > :is(p,small,.os-source) { flex: 1 1 100%; }
+.oversight-studio .os-source { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 14px; min-width: 0; padding: 10px 18px; border-bottom: 1px solid var(--os-line); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+.oversight-studio .os-source :is(strong,b) { color: var(--ks-ink); font-size: 12px; }
+.oversight-studio .os-context .os-source { padding: 9px 11px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); }
+.oversight-studio :is(.os-server-status,.os-receipt-note) { min-width: 0; margin: 0; padding: 10px 13px; border-inline-start: 3px solid var(--ks-line); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+.oversight-studio .os-server-status:is([data-state="unknown"],[data-state="waiting"]) { border-inline-start-color: var(--ks-attention); background: var(--ks-surface-1); color: var(--ks-attention); }
+.oversight-studio .os-server-status:is([data-state="error"],[data-state="stale"]) { border-inline-start-color: var(--ks-danger); background: var(--ks-surface-1); color: var(--ks-danger); }
+.oversight-studio > :is(.os-server-status,.os-receipt-note) { margin: 12px 18px; }
+
+.oversight-studio .os-stages { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 7px; min-width: 0; margin: 0; padding: 16px 18px; border-bottom: 1px solid var(--os-line); background: var(--ks-surface-1); }
+.oversight-studio button.os-stage { position: relative; display: grid; grid-template-columns: minmax(0,1fr); align-content: start; justify-items: start; gap: 6px; min-width: 0; min-height: 118px; padding: 11px 10px; border: 1px solid var(--ks-on-dark-muted); border-top: 3px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); text-align: start; font-weight: 400; overflow-wrap: anywhere; }
+.oversight-studio .os-stage > small { color: var(--ks-ink-muted); font-size: 12px; }
+.oversight-studio .os-stage > strong { color: var(--ks-ink); font-size: 14px; line-height: 1.5; font-weight: 650; }
+.oversight-studio .os-stage > span { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.7; }
+.oversight-studio .os-stage[data-state="ready"] { border-top-color: var(--ks-complete); }
+.oversight-studio .os-stage[data-state="ready"] > span { color: var(--ks-complete); }
+.oversight-studio .os-stage[data-state="attention"] { border-top-color: var(--ks-attention); background: var(--ks-surface-1); }
+.oversight-studio .os-stage[data-state="attention"] > span { color: var(--ks-attention); }
+.oversight-studio .os-stage[data-state="waiting"] { border-top-color: var(--ks-attention); background: var(--ks-surface-1); }
+.oversight-studio .os-stage[data-state="unknown"] { border-top-color: var(--ks-line); border-top-style: dashed; background: var(--ks-surface-1); }
+.oversight-studio .os-stage[aria-pressed="true"] { border-color: var(--ks-action); border-top-color: var(--ks-action); background: var(--ks-surface-1); box-shadow: var(--ks-shadow-selected); }
+.oversight-studio .os-stage[aria-pressed="true"] > strong { color: var(--ks-action); }
+.oversight-studio .os-stage[aria-pressed="true"] > span { color: var(--ks-action); }
+
+.oversight-studio .os-workspace { display: grid; grid-template-columns: minmax(0,1fr) 330px; grid-template-areas: "main inspector"; align-items: stretch; gap: 0; min-width: 0; min-height: 0; }
+.oversight-studio .os-workspace > * { min-width: 0; min-height: 0; }
+.oversight-studio .os-main { grid-area: main; display: flex; flex-direction: column; align-items: stretch; gap: 0; min-width: 0; min-height: 290px; max-height: var(--os-work-height); padding: 0; background: var(--ks-surface-1); overflow: auto; overscroll-behavior: contain; }
+.oversight-studio .os-stage-head { display: flex; flex: none; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px 12px; min-width: 0; margin: 0; padding: 17px 19px; border-bottom: 1px solid var(--os-line); background: var(--ks-surface-1); }
+.oversight-studio .os-stage-head h3 { color: var(--ks-ink); font-size: 19px; font-weight: 650; }
+.oversight-studio .os-stage-head > :is(p,small) { flex: 1 1 100%; color: var(--ks-ink-muted); font-size: 12px; line-height: 1.75; }
+.oversight-studio .os-stage-head > span,.oversight-studio .os-state { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; padding: 4px 8px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-ink-muted); font-size: 12px; font-weight: 550; overflow-wrap: anywhere; }
+.oversight-studio .os-stage-head[data-state="attention"] > span,.oversight-studio .os-state[data-state="attention"] { border-color: var(--ks-attention); background: var(--ks-surface-1); color: var(--ks-attention); }
+.oversight-studio .os-stage-head[data-state="unknown"] > span,.oversight-studio .os-state:is([data-state="unknown"],[data-state="waiting"]) { border-color: var(--ks-attention-soft); background: var(--ks-surface-1); color: var(--ks-attention); }
+.oversight-studio .os-blockers { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; gap: 8px; min-width: 0; margin: 0; padding: 14px; list-style: none; }
+.oversight-studio .os-blockers > :is(header,h3,p) { min-width: 0; padding-inline: 3px; }
+.oversight-studio .os-blockers > p { color: var(--os-muted); font-size: 12px; }
+.oversight-studio button.os-task { display: grid; grid-template-columns: minmax(0,1fr); align-content: start; justify-items: start; gap: 5px; width: 100%; min-width: 0; min-height: 101px; padding: 13px 14px; border: 1px solid var(--ks-on-dark-muted); border-inline-start: 3px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); text-align: start; font-weight: 400; overflow-wrap: anywhere; }
+.oversight-studio .os-task > small { color: var(--ks-ink-muted); font-size: 12px; }
+.oversight-studio .os-task > strong { color: var(--ks-ink); font-size: 15px; line-height: 1.65; font-weight: 650; }
+.oversight-studio .os-task > p { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; }
+.oversight-studio .os-task[aria-pressed="true"] { border-color: var(--ks-action); border-inline-start-color: var(--os-blue); background: var(--ks-surface-1); box-shadow: var(--ks-shadow-selected); }
+.oversight-studio .os-task[aria-pressed="true"] > strong { color: var(--ks-action); }
+.oversight-studio .os-task:is([data-state="waiting"],[data-state="unknown"]) { border-inline-start-color: var(--ks-attention); }
+.oversight-studio .os-empty { display: grid; align-content: center; justify-items: start; gap: 9px; min-width: 0; min-height: 180px; padding: 25px; color: var(--ks-ink-muted); font-size: 13px; line-height: 1.85; }
+.oversight-studio .os-empty :is(h3,strong) { color: var(--ks-ink); font-size: 17px; }
+.oversight-studio .os-inspector { grid-area: inspector; display: grid; grid-template-columns: minmax(0,1fr); grid-auto-rows: min-content; align-content: start; gap: 11px; min-width: 0; max-height: var(--os-work-height); padding: 17px 14px; border-inline-start: 1px solid var(--os-line); background: var(--ks-surface-1); overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.oversight-studio .os-inspector > * { grid-area: auto; min-width: 0; max-width: 100%; }
+.oversight-studio .os-action-context { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; min-width: 0; padding: 13px; border: 1px solid var(--ks-on-dark-muted); border-inline-start: 3px solid var(--ks-line-strong); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); overflow-wrap: anywhere; }
+.oversight-studio .os-action-context h3 { color: var(--ks-ink); font-size: 16px; }
+.oversight-studio .os-action-context :is(p,small) { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; }
+.oversight-studio .os-evidence { display: grid; gap: 8px; min-width: 0; padding: 12px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); }
+.oversight-studio .os-evidence :is(h3,h4) { color: var(--ks-ink-muted); font-size: 13px; }
+.oversight-studio .os-evidence dl { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 8px 10px; min-width: 0; margin: 0; font-size: 12px; }
+.oversight-studio .os-evidence dl > div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-column: 1/-1; gap: 8px 10px; min-width: 0; padding-block: 6px; border-bottom: 1px solid var(--ks-on-dark-muted); }
+.oversight-studio .os-evidence dt { color: var(--ks-ink-muted); }
+.oversight-studio .os-evidence dd { min-width: 0; margin: 0; color: var(--ks-ink); font-weight: 550; text-align: end; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.oversight-studio .os-evidence :is(p,small,li) { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+.oversight-studio .os-evidence :is(ul,ol) { margin: 0; padding-inline-start: 19px; }
+.oversight-studio .os-preview { display: grid; gap: 7px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--ks-attention); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); color: var(--ks-attention); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+.oversight-studio .os-preview p { color: inherit; }
+.oversight-studio .os-preview:is([data-state="ready"],[data-state="saved"]) { border-color: var(--ks-attention); background: var(--ks-surface-1); color: var(--ks-attention); }
+.oversight-studio .os-preview:is([data-state="invalid"],[data-state="stale"]) { border-color: var(--ks-danger); background: var(--ks-surface-1); color: var(--ks-danger); }
+.oversight-studio .os-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; min-width: 0; }
+.oversight-studio .os-actions button { flex: 1 1 135px; font-size: 12px; }
+.oversight-studio .os-actions :is(.primary,[type="submit"],[data-os-action="apply"],[data-owner-action="apply"]) { border-color: var(--ks-action); background: var(--ks-action); color: var(--ks-on-dark); }
+.oversight-studio .os-actions :is(.primary,[type="submit"]):hover:not(:disabled) { background: var(--ks-action); border-color: var(--ks-action); }
+.oversight-studio .os-local-history { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; padding: 11px 13px; border: 1px solid var(--ks-on-dark-muted); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); }
+.oversight-studio .os-local-history button { flex: 1 1 100px; font-size: 12px; }
+.oversight-studio .os-local-history > :is(p,small) { flex: 1 1 100%; color: var(--ks-ink-muted); font-size: 12px; }
+.oversight-studio .os-inspector form,.oversight-studio .os-inspector fieldset { display: grid; grid-template-columns: minmax(0,1fr); gap: 11px; min-width: 0; margin: 0; }
+.oversight-studio .os-inspector fieldset { padding: 11px; border: 1px solid var(--os-line); border-radius: var(--ks-radius-control); }
+.oversight-studio .os-inspector legend { padding-inline: 5px; color: var(--os-muted); font-size: 12px; }
+
+.oversight-studio .os-approvals { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: stretch; gap: 11px; min-width: 0; margin: 0; padding: 17px 18px; border-top: 1px solid var(--os-line); background: var(--ks-surface-1); }
+.oversight-studio .os-approvals > :is(header,h3,p) { grid-column: 1/-1; }
+.oversight-studio .os-approvals > p { color: var(--ks-ink-muted); font-size: 12px; }
+.oversight-studio .os-approval { display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto 1fr auto; align-content: start; gap: 7px; min-width: 0; padding: 14px; border: 1px solid var(--ks-on-dark-muted); border-top: 3px solid var(--ks-line); border-radius: var(--ks-radius-control); background: var(--ks-surface-1); overflow-wrap: anywhere; }
+.oversight-studio .os-approval > h3 { color: var(--ks-ink); font-size: 15px; }
+.oversight-studio .os-approval > :is(p,small) { color: var(--ks-ink-muted); font-size: 12px; line-height: 1.8; }
+.oversight-studio .os-approval > button { justify-self: start; max-width: 100%; font-size: 12px; }
+.oversight-studio .os-approval[data-state="ready"] { border-top-color: var(--ks-complete); }
+.oversight-studio .os-approval[data-state="attention"] { border-top-color: var(--ks-attention); background: var(--ks-surface-1); }
+.oversight-studio .os-approval[data-state="unknown"] { border-top-color: var(--ks-line); border-top-style: dashed; background: var(--ks-surface-1); }
+.oversight-studio .os-approval[data-state="waiting"] { border-top-color: var(--ks-attention); }
+
+/* Keep the selected stage and its actions in the first desktop viewport.
+   Only the overview cards are shortened; the stage head retains its full text. */
+@container oversightstudio (min-width:701px) {
+  .oversight-studio .os-header { gap: 12px; padding: 10px 18px; }
+  .oversight-studio .os-header > div:first-child { display: grid; gap: 1px; }
+  .oversight-studio .os-header h2 { margin: 0; font-size: 22px; line-height: 1.3; }
+  .oversight-studio .os-header :is(p,small,.os-kicker) { line-height: 17px; }
+  .oversight-studio .os-header > div:first-child > strong { display: block; font-size: 12px; line-height: 18px; font-weight: 550; }
+  .oversight-studio .os-status { min-height: 30px; padding-block: 5px; line-height: 19px; }
+  .oversight-studio .os-status:empty { min-height: 0; padding-block: 0; }
+  .oversight-studio .os-context { gap: 8px 13px; padding: 6px 16px; }
+  .oversight-studio .os-context > label { gap: 4px; line-height: 18px; }
+  .oversight-studio.oversight-studio .os-context select[data-os-context] { height: 44px; min-height: 44px; padding-block: 8px; }
+  .oversight-studio .os-source { gap: 3px 12px; padding: 6px 16px; line-height: 20px; }
+  .oversight-studio .os-local-history { gap: 5px 9px; padding: 7px 13px; }
+  .oversight-studio .os-local-history button { flex: 0 1 auto; min-height: 44px; padding-block: 8px; }
+  .oversight-studio .os-local-history > :is(p,small) { flex: 1 1 350px; line-height: 18px; }
+  .oversight-studio .os-stages { gap: 6px; padding: 8px 14px; }
+  .oversight-studio button.os-stage { grid-template-rows: 18px auto minmax(0,1fr); align-content: stretch; gap: 4px; height: 118px; min-height: 118px; max-height: 118px; padding: 8px 9px; }
+  .oversight-studio .os-stage > small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 18px; }
+  .oversight-studio .os-stage > strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 40px; overflow: hidden; line-height: 20px; }
+  .oversight-studio .os-stage > span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; min-height: 0; max-height: 48px; overflow: hidden; line-height: 16px; }
+  .oversight-studio .os-stage-head { gap: 5px 10px; padding: 12px 15px; }
+  .oversight-studio .os-inspector { padding-block: 12px; }
+}
+@container oversightstudio (max-width:1100px) {
+  .oversight-studio .os-stages { display: flex; align-items: stretch; gap: 7px; padding: 13px; overflow-x: auto; overscroll-behavior-inline: contain; scroll-padding-inline: 13px; }
+  .oversight-studio .os-stage { flex: 0 0 151px; width: 151px; min-height: 116px; }
+  .oversight-studio .os-workspace { grid-template-columns: minmax(0,1fr) 300px; }
+  .oversight-studio .os-stage-head { padding: 14px; }
+  .oversight-studio .os-inspector { grid-template-columns: minmax(0,1fr); padding: 14px 12px; }
+  .oversight-studio .os-inspector > * { grid-column: 1; grid-row: auto; }
+  .oversight-studio .os-approvals { gap: 9px; padding: 14px; }
+  .oversight-studio .os-approval { padding: 12px; }
+}
+@container oversightstudio (max-width:700px) {
+  .oversight-studio .os-header { gap: 12px; padding: 17px 14px; }
+  .oversight-studio .os-header h2 { font-size: 22px; }
+  .oversight-studio .os-toolbar { width: 100%; }
+  .oversight-studio .os-toolbar button { flex: 1 1 110px; }
+  .oversight-studio .os-context { padding: 12px; }
+  .oversight-studio .os-context > label { flex: 1 1 100%; }
+  .oversight-studio .os-context > button { flex: 1 1 120px; }
+  .oversight-studio :is(.os-status,.os-source) { padding-inline: 12px; }
+  .oversight-studio > :is(.os-server-status,.os-receipt-note) { margin-inline: 12px; }
+  .oversight-studio .os-stages { padding: 11px; scroll-padding-inline: 11px; }
+  .oversight-studio .os-stage { flex-basis: 145px; width: 145px; }
+  .oversight-studio .os-workspace { grid-template-columns: minmax(0,1fr); grid-template-areas: "main" "inspector"; }
+  .oversight-studio .os-main { min-height: 0; max-height: none; overflow: visible; }
+  .oversight-studio .os-stage-head { padding: 13px 12px; }
+  .oversight-studio .os-blockers { padding: 12px; }
+  .oversight-studio .os-inspector { max-height: none; padding: 15px 12px; border-inline-start: 0; border-top: 1px solid var(--os-line); overflow: visible; scrollbar-gutter: auto; }
+  .oversight-studio .os-approvals { grid-template-columns: minmax(0,1fr); padding: 14px 12px; }
+  .oversight-studio .os-approval { grid-template-rows: auto; padding: 13px; }
+  .oversight-studio .os-approval > button { width: 100%; }
+}
+@media (max-width:650px) {
+  .k-workshop[data-ws-route="oversight"] > .ws-route-head > .ws-route-chooser { flex: 1 1 auto; min-width: 0; max-width: 100%; height: 44px; min-height: 44px; max-height: 44px; padding-block: 4px; gap: 6px; }
+  .k-workshop[data-ws-route="oversight"] .ws-route-chooser .ws-route-titles { display: block; flex: 1 1 auto; min-width: 0; }
+  .k-workshop[data-ws-route="oversight"] .ws-route-titles > small { display: none; }
+  .k-workshop[data-ws-route="oversight"] .ws-route-titles > strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; max-height: 36px; overflow: hidden; white-space: normal; text-overflow: clip; font-size: 14px; line-height: 18px; overflow-wrap: normal; word-break: normal; }
+}
+@media (max-width:500px) {
+  .k-workshop[data-ws-route="oversight"] .ws-route-chooser > .ws-route-symbol { display: none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .oversight-studio.oversight-studio button,.oversight-studio [tabindex] { transition: none; animation: none; }
+}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.oversight-studio.oversight-studio :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.oversight-studio.oversight-studio :is(button,a,summary){min-inline-size:var(--ks-target)}
+.oversight-studio.oversight-studio :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.oversight-studio.oversight-studio :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+.oversight-studio.oversight-studio :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+.oversight-studio.oversight-studio :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){.oversight-studio.oversight-studio :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.oversight-studio.oversight-studio :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}.oversight-studio.oversight-studio :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.oversight-studio{font-family:var(--ks-font-ui)}
+.oversight-studio.oversight-studio :is(button,input,select,textarea){font-family:var(--ks-font-ui)}
+.oversight-studio .os-header{background:var(--ks-ink-strong);color:var(--ks-on-dark)}
+.oversight-studio .os-toolbar button{background:var(--ks-ink-strong);color:var(--ks-on-dark)}
+.oversight-studio.oversight-studio .os-header :focus-visible{outline-color:var(--ks-focus-ring-dark)}
+.oversight-studio .os-toolbar :is(.primary,[data-os-action="save"],[data-owner-action="save"]){background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-on-dark)}
+.oversight-studio .os-stage[data-state="ready"]{border-top-style:double;border-top-width:4px;border-top-color:var(--ks-complete)}
+.oversight-studio .os-stage[data-state="attention"]{border-top-style:dashed;background:var(--ks-attention-soft);border-top-color:var(--ks-attention)}
+.oversight-studio .os-stage[aria-pressed="true"],.oversight-studio .os-task[aria-pressed="true"]{border-inline-start:4px double var(--ks-action);background:var(--ks-action-soft);text-decoration:underline;text-underline-offset:3px}
+.oversight-studio .os-approval[data-state="ready"]{border-top:4px double var(--ks-complete)}
+.oversight-studio .os-approval[data-state="attention"]{border-top:3px dashed var(--ks-attention);background:var(--ks-attention-soft)}
+.oversight-studio .os-preview:is([data-state="ready"],[data-state="saved"]){border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft);color:var(--ks-complete)}
+.oversight-studio .os-preview:is([data-state="invalid"],[data-state="stale"]){border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger)}
+.oversight-studio .os-server-status:is([data-state="error"],[data-state="stale"]){border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger)}
+.oversight-studio .os-status:is([data-state="invalid"],[data-state="error"],[data-state="stale"]),.oversight-studio:is([data-state="invalid"],[data-state="error"],[data-state="stale"]) .os-status{border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger)}
+.oversight-studio .os-status:is([data-state="dirty"],[data-state="preview"],[data-state="saving"],[data-state="waiting"]),.oversight-studio:is([data-state="dirty"],[data-state="preview"],[data-state="saving"]) .os-status{border-inline-start:3px dashed var(--ks-attention)}
+.oversight-studio.oversight-studio [aria-invalid="true"]{border:2px dashed var(--ks-danger);background:var(--ks-danger-soft)}
+
+.oversight-studio.oversight-studio .os-toolbar button:hover:not(:disabled){background:var(--ks-action-hover);color:var(--ks-on-dark);border-color:var(--ks-focus-ring-dark)}

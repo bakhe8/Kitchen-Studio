@@ -1,0 +1,54 @@
+[
+  {
+    "path": "public/kitchen-whole-plan-ui.js",
+    "sha256": "a190a8dd89c5aac4899b999d93057c225beca4c918e47607817583aceac35dcb"
+  },
+  {
+    "path": "public/kitchen-proposal-change.js",
+    "sha256": "a3144f4a9caa7e6047413f6dd3efcde333c9a6797ccc8313ac831ea82cfe88f8"
+  },
+  {
+    "path": "public/kitchen-proposal-presentation.js",
+    "sha256": "da879da176764027b96604963be70d3da6428beadfe8a0e1c8c75fecb31f4b64"
+  },
+  {
+    "path": "public/kitchen-designer-studio.js",
+    "sha256": "f050643a2f80db266718951ce8fef22d4a39331e09e7c75400ba3c86a3a5080c"
+  },
+  {
+    "path": "public/kitchen-designer-studio.css",
+    "sha256": "b2ca32350e6da58ccf3ccae54c7374a2cb885e9e10655f27e74c8e2efd2ef19d"
+  },
+  {
+    "path": "public/kitchen-designer-precision.js",
+    "sha256": "872c05d70adf3c5a5a56edb92a0bff065bb0c63f236cac260ab8936e11fbb247"
+  },
+  {
+    "path": "public/kitchen-drawing-viewport.js",
+    "sha256": "77fc92e95b2513691f30583b195241ac524d20c6f6234569615d5d08f1b86559"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "5f2b822041b5b606d2eab04045ff3e9bef9fd3280923cc605898ddcf7d224861"
+  },
+  {
+    "path": "public/index.html",
+    "sha256": "7dc04d912f436dd57cf06b36f6e89b21984e18b4dc1e48125e8376d9b814672a"
+  },
+  {
+    "path": "tools/check-kitchen-designer-move.mjs",
+    "sha256": "5d3d31fcace1858d09f950bcc48739f17d127b575f7762ac6bb975efc9b648ed"
+  },
+  {
+    "path": "tools/check-kitchen-designer-studio.mjs",
+    "sha256": "b7c683bc290b2460ff551ab4f8171ec359db1c62635f301d32c8608c341c6117"
+  },
+  {
+    "path": "tools/check-kitchen-designer-precision.mjs",
+    "sha256": "b89617e7aef78988eba3bcabe4bd5a6979b95ced8d7a15a3a104d4d70be668d9"
+  },
+  {
+    "path": "tools/check-kitchen-designer-recovery.mjs",
+    "sha256": "569e24c7ad1e1968bcbdbc091f2a3923acdc7e20778607f1a5503869f9743db2"
+  }
+]

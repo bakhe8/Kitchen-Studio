@@ -1,0 +1,102 @@
+{
+  "recordedAtUtc": "2026-11-04T01:12:31.0928885Z",
+  "workspace": "C:/Users/Bakheet/Projects/Kitchen-Studio",
+  "verification": "228/228 full checks, 12 focused oversight groups, browser journey in REPORT.md",
+  "files": [
+    {
+      "path": "public/kitchen-owner-ui.js",
+      "sha256": "86ffbe25adb48015f21c519d146b824870f225f9cdf2519856853de56dca1f6c",
+      "bytes": 21598
+    },
+    {
+      "path": "public/kitchen-oversight-domain.js",
+      "sha256": "6816061d3b3ca42323fe00350df98d8e1304f4cc555030bf1753ba76f8a5f74e",
+      "bytes": 14544
+    },
+    {
+      "path": "public/kitchen-oversight-studio.css",
+      "sha256": "6ddabc1869dca444bb1ca22ffcdf9485184dc0cf9488b2780b1aa1e4cc89d640",
+      "bytes": 22990
+    },
+    {
+      "path": "public/kitchen-workshop-ui.js",
+      "sha256": "2d741eac77b9baa5ae350111e654f654675bc388b0569ca9a0fee1f1089746bb",
+      "bytes": 50055
+    },
+    {
+      "path": "public/kitchen-role-pages.js",
+      "sha256": "8c25d62dc0ce0d8da78f41889175654dedce5d95f2ce8591b701032d742a07e6",
+      "bytes": 2320
+    },
+    {
+      "path": "public/kitchen-gateways.js",
+      "sha256": "e6d7f8492032496157c26a226603c68793bbfa73e3a6d5a934be68f1a7b6b6c9",
+      "bytes": 4824
+    },
+    {
+      "path": "public/kitchen-gateways-ui.js",
+      "sha256": "97604613570db58411f875595e92fda80915e6998328e1cdf865b33d8371fe08",
+      "bytes": 7829
+    },
+    {
+      "path": "public/kitchen-workshop-sync-ui.js",
+      "sha256": "00de873c00d197d82085da548efb695e47f646e1a61038b59ff04db972b4d627",
+      "bytes": 23397
+    },
+    {
+      "path": "scripts/serve-oversight-review.mjs",
+      "sha256": "96835bd2583efd4864a312ace0cbb492855d4dae74f10a78c0954f43f4645361",
+      "bytes": 6836
+    },
+    {
+      "path": "tools/check-kitchen-oversight-domain.mjs",
+      "sha256": "4a5599625a5c0eb0454fbfcfb228d7661bb00dc2f2a938b34e1911383a97c5de",
+      "bytes": 8235
+    },
+    {
+      "path": "tools/check-kitchen-oversight-studio.mjs",
+      "sha256": "a486344732423516e3735d062b24ab7b1eacf408afbf7bb422fa45a22163a980",
+      "bytes": 33027
+    },
+    {
+      "path": "tools/check-kitchen-role-pages.mjs",
+      "sha256": "34fcc68b09b5bd110b593aa05887f07a1d0029160c17c25f377781fa45dd0c41",
+      "bytes": 2654
+    },
+    {
+      "path": "tools/check-kitchen-workshop-navigation.mjs",
+      "sha256": "1874d55c95dd090f6008389416edaf299e019ea39a75b85e288eb66491ce7279",
+      "bytes": 7427
+    },
+    {
+      "path": "tools/check-kitchen-gateways.mjs",
+      "sha256": "e0227d6cdca8f616dcc0b6fb78a776ee3dd436b10b5d1aec98974a6e2eeef960",
+      "bytes": 12526
+    },
+    {
+      "path": "tools/check-kitchen-approval-log.mjs",
+      "sha256": "15d48e6e87082fbfea5c2c02f0b9f0ed5d299a9300d94d1452fa6f0ed1e892b2",
+      "bytes": 7017
+    },
+    {
+      "path": "tools/check-kitchen-project-scope.mjs",
+      "sha256": "54c2b7504b3300a94ce1d19a5226697a3f0690a4a044d06d38109fbfb8080d22",
+      "bytes": 18235
+    },
+    {
+      "path": "docs/kitchen-studio/oversight-studio-integration.md",
+      "sha256": "0abdb6b35025baf6ec8cb82a0dec46b92fb44fadcc33978af2664cd117def7a5",
+      "bytes": 12097
+    },
+    {
+      "path": "docs/superpowers/plans/2026-11-04-oversight-studio.md",
+      "sha256": "a3b25fa52d30cbf3b651dd1460de25c0522574de51ec6bdd990835b193e19758",
+      "bytes": 1918
+    },
+    {
+      "path": "docs/kitchen-studio/oversight-studio-review/REPORT.md",
+      "sha256": "45e8eb9be9f4f3be61137bb077c3b39296d30857d8076eb9e1e102b15504999f",
+      "bytes": 11381
+    }
+  ]
+}

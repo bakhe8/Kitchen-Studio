@@ -1,0 +1,46 @@
+[
+  {
+    "chooser": {
+      "bottom": 46.5,
+      "height": 44,
+      "left": 187.765625,
+      "right": 382,
+      "top": 2.5,
+      "width": 194.234375,
+      "x": 187.765625,
+      "y": 2.5
+    },
+    "documentWidth": 390,
+    "header": {
+      "bottom": 50,
+      "height": 50,
+      "left": 0,
+      "right": 390,
+      "top": 0,
+      "width": 390,
+      "x": 0,
+      "y": 0
+    },
+    "viewport": [
+      390,
+      844
+    ],
+    "workspace": "\"objects\" \"main\" \"inspector\""
+  },
+  {
+    "documentWidth": 900,
+    "viewport": [
+      900,
+      900
+    ],
+    "workspace": "\"objects objects\" \"main inspector\""
+  },
+  {
+    "documentWidth": 1280,
+    "viewport": [
+      1280,
+      720
+    ],
+    "workspace": "\"objects main inspector\""
+  }
+]

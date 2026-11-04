@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {createShelfPlan,SHELF_LIMITS} from '../public/shelf-model.js';
+import {scopedCells,scopedDividers,commitDividerDrop,moveScopedDivider} from '../public/shelf-selection-model.js';
+import {groupPlacement} from '../public/shelf-group-insert.js';
+import {applyPlacement} from '../public/shelf-place.js';
+import {equalDistribution,distributionCapacity,snapPlacementAt,snapDividerAt} from '../public/shelf-layout-tools.js';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-6, a+' ≠ '+b);
+const cell=(p,key)=>scopedCells(p).find(c=>c.key===key);
+const cut=(p,key,y)=>{const c=cell(p,key),r=commitDividerDrop(p,{kind:'cell',key},'row',{x:c.x+c.w/2,y});assert(r.ok,r.reason);return r.plan;};
+const initial=createShelfPlan(),p=cut(initial,'0:1',126.5),ref=scopedDividers(p).find(d=>d.owner.key==='0:1'),target=cell(p,'1:1'),at=y=>({x:target.x+target.w/2,y});
+const acquire=snapPlacementAt(p,'row',at(128.7),{cmPerPx:.5});assert.equal(acquire.guide.reference,ref.id);near(acquire.p.y,126.5);near(acquire.rawP.y,128.7);
+assert(acquire.guide.from<=ref.x&&acquire.guide.to>=target.x+target.w);
+const hold=snapPlacementAt(p,'row',at(131),{cmPerPx:.5,lock:acquire.lock});assert.equal(hold.guide.reference,ref.id);near(hold.p.y,126.5);
+const released=snapPlacementAt(p,'row',at(133),{cmPerPx:.5,lock:hold.lock});assert.notEqual(released.guide?.reference,ref.id);
+const applied=applyPlacement(p,'row',hold.p);assert(applied.ok);near(applied.preview.cm,ref.cm);
+assert.equal(snapPlacementAt(p,'row',at(128),{enabled:false}).guide,null);
+assert.equal(snapPlacementAt(p,'row',at(128),{hit:{dividerId:ref.id}}).guide,null);
+const batchKeys=['1:1','2:2'],gb=snapPlacementAt(p,'row',at(128),{keys:batchKeys,cmPerPx:.5});
+const batch=groupPlacement(p,batchKeys,'row',gb.p,null,true);assert(batch.ok,batch.reason);near(batch.lines[0].cm,ref.cm);assert.notEqual(batch.lines[1].cm,ref.cm,'A group copies a local fraction, not a common absolute wall level.');near((batch.lines[1].cm-cell(p,'2:2').y)/cell(p,'2:2').h,(ref.cm-target.y)/target.h);
+const pair=cut(p,'1:1',141.5),moving=scopedDividers(pair).find(d=>d.owner.key==='1:1');
+const drag=snapDividerAt(pair,moving.id,128.7,{cmPerPx:.5});assert.equal(drag.guide.reference,ref.id);near(drag.cm,ref.cm);
+const actual=moveScopedDivider(pair,moving.id,drag.cm),parts=scopedDividers(actual);near(parts.find(d=>d.id===moving.id).cm,parts.find(d=>d.id===ref.id).cm);
+const heldMove=snapDividerAt(pair,moving.id,131,{cmPerPx:.5,lock:drag.lock});near(heldMove.cm,ref.cm);assert.notEqual(snapDividerAt(pair,moving.id,133,{cmPerPx:.5,lock:drag.lock}).guide?.reference,ref.id);
+const global=scopedDividers(p).find(d=>d.id==='cabinet:row:0');assert.notEqual(snapDividerAt(p,global.id,ref.cm,{cmPerPx:.5}).guide?.reference,ref.id,'No false alignment to a moving descendant.');
+const keys=['1:1','2:2'],prev=equalDistribution(initial,keys,'row',3),done=equalDistribution(initial,keys,'row',3,true);
+assert(prev.ok);assert.equal(prev.plan,initial);assert.equal(prev.changed,false);assert(done.ok&&done.changed);assert.equal(done.keys.length,6);assert.equal(done.boards,4);assert.deepEqual(prev.lines,done.lines);
+for(const k of keys){const old=cell(initial,k),children=scopedCells(done.plan).filter(c=>c.parentKey===k),ideal=(old.h-2*SHELF_LIMITS.divider)/3;assert.equal(children.length,3);for(const c of children){near(c.h,ideal);near(c.w,old.w);}near(children.reduce((a,c)=>a+c.h,0)+2*SHELF_LIMITS.divider,old.h);assert.equal(children[0].content,old.content);}
+assert.deepEqual(cell(done.plan,'0:0'),cell(initial,'0:0'),'Unselected bay must be untouched.');
+const columns=equalDistribution(initial,['1:0'],'col',3,true);assert(columns.ok);assert.equal(columns.lines.length,2);for(const c of scopedCells(columns.plan).filter(c=>c.parentKey==='1:0'))near(c.w,(cell(initial,'1:0').w-2*SHELF_LIMITS.divider)/3);
+assert.equal(equalDistribution(initial,keys,'row',1,true).plan,initial);assert.equal(distributionCapacity(initial,['0:0'],'row'),3);
+for(const bad of [equalDistribution(initial,['0:0','1:2'],'row',4,true),equalDistribution(initial,['old'],'col',3,true),equalDistribution(initial,['1:1','1:1'],'row',2,true)]){assert(!bad.ok);assert.equal(bad.plan,initial);assert.deepEqual(bad.lines,[]);}
+console.log('PASS: real parallel alignments with capture/release, legal scoped placement and movement, relative group cuts, no self-moving reference, equal clear openings accounting for wood and atomic count/identity checks.');

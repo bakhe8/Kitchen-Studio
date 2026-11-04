@@ -1,0 +1,412 @@
+/* The tool rail occupies a physical RIGHT gutter, even in the Arabic RTL UI.
+   The canvas keeps the same drawing area when a LEFT overlay opens. At ~1905 px
+   the rail is ~131 px wide and ~28 px from the edge of the viewport. */
+.shelf-planner {
+  --dock-width: clamp(128px, 6.9vw, 148px);
+  --dock-fold-width: 44px;
+  --dock-current-width: var(--dock-width);
+  --dock-right: max(clamp(9px, 1.45vw, 30px), env(safe-area-inset-right, 0px));
+  --dock-gap: clamp(9px, .85vw, 16px);
+  --dock-top: max(clamp(76px, 9.25vh, 100px), env(safe-area-inset-top, 0px));
+  --desk-air: max(clamp(12px, 1.35vw, 24px), env(safe-area-inset-left, 0px));
+  --desk-left: max(var(--desk-air), calc((100% - 1560px) / 2));
+  --desk-right: max(calc(var(--dock-right) + var(--dock-current-width) + var(--dock-gap)), calc((100% - 1560px) / 2));
+  --dock-tile: 56px;
+  --overlay-left: max(clamp(8px, 1.15vw, 22px), env(safe-area-inset-left, 0px));
+  --overlay-top: var(--dock-top);
+  --overlay-bottom: max(10px, env(safe-area-inset-bottom, 0px));
+  --overlay-room: calc(100vw - var(--overlay-left) - var(--dock-right) - var(--dock-current-width) - var(--dock-gap));
+  --overlay-width: min(338px, var(--overlay-room));
+  --dock-paper: var(--ks-surface-1);
+  --dock-border: var(--ks-line);
+  --dock-forest: var(--ks-action);
+}
+.shelf-planner:has(#shelf-dock[data-folded="true"]) {
+  --dock-current-width: var(--dock-fold-width);
+}
+.sp-visually-hidden {
+  position: absolute !important;
+  width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; border: 0 !important;
+  overflow: hidden !important; clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+/* Physical margins also align the brand and workspace heading with the board. */
+.shelf-planner .sp-topbar-inner,
+#shelf-workspace.sp-workspace {
+  width: auto; max-width: none; min-width: 0;
+  margin: 0 var(--desk-right) 0 var(--desk-left);
+}
+.shelf-planner .sp-topbar-inner { min-height: 61px; padding-block: 8px; }
+#shelf-workspace.sp-workspace { padding: clamp(12px, 1.4vw, 24px) 0 20px; }
+.sp-workspace-head {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 1px 16px; margin-block-end: clamp(10px, 1vw, 17px);
+}
+.sp-workspace-head .sp-kicker { margin: 0 !important; }
+.sp-workspace-head h1 {
+  color: var(--sp-ink); font-size: clamp(23px, 1.9vw, 34px);
+  font-weight: 700; letter-spacing: -.55px; line-height: 1.45;
+}
+.sp-workspace-layout {
+  direction: ltr;
+  display: grid; grid-template-areas: "stage"; grid-template-columns: minmax(0, 1fr);
+  align-items: start; gap: clamp(10px, 1vw, 18px); min-width: 0;
+}
+.sp-workspace-layout > .sp-stage-card {
+  direction: rtl; grid-area: stage; min-width: 0; width: 100%;
+}
+/* Changing pointer modes may change the badge and show/hide the axis toggle.
+   Keep them on a single reserved line so opening Select or Measure cannot
+   move the camera surface down, even on a narrow display. */
+#shelf-workspace .sp-stage-heading { display:grid; grid-template-columns:max-content minmax(0,1fr); align-items:center; padding: 12px 18px 9px; gap: 3px 12px; }
+#shelf-workspace .sp-stage-mode {
+  min-width:0; max-width:100%; height:39px; white-space:nowrap; flex-wrap:nowrap;
+  justify-content:safe flex-end; align-items:center; gap:6px;
+  overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scrollbar-width:thin;
+}
+#shelf-workspace .sp-stage-mode > * { flex:0 0 auto; }
+#shelf-workspace #shelf-picked-part,
+#shelf-workspace .sp-active-tool { overflow-wrap: anywhere; }
+#shelf-workspace .sp-stage-readout { padding-block: 8px 10px; }
+/* Remove the old multi-toolbar height allowance without altering scene units. */
+#shelf-workspace #shelf-scene .shc-board {
+  max-height: clamp(260px, calc(100vh - 190px), 910px);
+  max-height: clamp(260px, calc(100dvh - 190px), 910px);
+}
+
+#shelf-dock.sp-dock {
+  position: fixed; top: var(--dock-top); right: var(--dock-right); left: auto;
+  z-index: 48; direction: rtl; isolation: isolate;
+  display: flex; flex-direction: column;
+  width: var(--dock-current-width); min-width: 0;
+  max-height: calc(100vh - var(--dock-top) - max(10px, env(safe-area-inset-bottom, 0px)));
+  max-height: calc(100dvh - var(--dock-top) - max(10px, env(safe-area-inset-bottom, 0px)));
+  margin: 0; padding: 0; overflow: hidden;
+  border: 1px solid var(--dock-border); border-radius: var(--ks-radius-group);
+  background: var(--dock-paper); color: var(--sp-ink);
+  box-shadow: var(--ks-shadow-surface);
+}
+/* Preview and design intentionally share one uninterrupted rail. */
+.shelf-planner[data-planner-mode="preview"] #shelf-dock:not([hidden]) { display: flex !important; }
+#shelf-dock .sp-dock-head {
+  display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between;
+  gap: 4px; min-height: 36px; padding: 4px 8px 4px 5px;
+  border-bottom: 1px solid var(--ks-line);
+  background: var(--ks-surface-2); color: var(--ks-ink-strong);
+}
+#shelf-dock .sp-dock-head h2 { font-size: 13px; line-height: 1.5; font-weight: 700; }
+#shelf-dock-fold, #shelf-inspector-close {
+  display: inline-grid; place-items: center; flex: 0 0 auto;
+  min-width: 29px; min-height: 29px; margin: 0; padding: 4px;
+  border: 1px solid var(--ks-line); border-radius: var(--ks-radius-surface);
+  color: var(--ks-action); background: var(--ks-surface-1); line-height: 1; cursor: pointer;
+}
+#shelf-dock-fold > svg { width: 15px; height: 15px; transform: rotate(-90deg); }
+#shelf-dock[data-folded="true"] .sp-dock-head {
+  display: grid; justify-content: stretch; padding: 0; border: 0;
+}
+#shelf-dock[data-folded="true"] .sp-dock-head h2 { display: none; }
+#shelf-dock[data-folded="true"] #shelf-dock-fold {
+  display: flex; flex-direction: column; gap: 3px; align-items: center; justify-content: center;
+  width: 100%; min-height: 51px; padding: 5px 2px; border: 0; border-radius: var(--ks-radius-group); color: var(--ks-ink-strong);
+}
+#shelf-dock[data-folded="true"] #shelf-dock-fold > svg { transform: rotate(90deg); }
+/* The visible tab says what opens; its existing full accessible label is kept. */
+#shelf-dock[data-folded="true"] #shelf-dock-fold::after { content: "الأدوات"; font-size: 10px; line-height: 1.5; font-weight: 650; }
+#shelf-dock-grid.sp-dock-grid {
+  direction: rtl; display: grid; grid-auto-flow: row;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--dock-tile), auto); align-content: start;
+  gap: 4px; min-height: 0; min-width: 0; margin: 0; padding: 6px;
+  overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: var(--ks-ink-muted) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+#shelf-dock[data-folded="true"] #shelf-dock-grid,
+#shelf-dock-grid[hidden] { display: none !important; }
+#shelf-dock-grid > .sp-dock-button {
+  --tile-ink: var(--ks-ink); --tile-wash: var(--ks-surface-2); --tile-line: var(--ks-line-strong);
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 100%; min-width: 0; min-height: var(--dock-tile); margin: 0;
+  gap: 3px; padding: 4px 2px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-control);
+  color: var(--ks-ink-strong); background: var(--ks-surface-1); text-align: center; text-decoration: none;
+  font: 600 11px/1.42 var(--sp-font); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#shelf-dock-grid > .sp-dock-button[data-dock-group="measure"] {
+  --tile-ink: var(--ks-ink); --tile-wash: var(--ks-surface-2); --tile-line: var(--ks-line-strong);
+}
+#shelf-dock-grid > .sp-dock-button[data-dock-group="content"],
+#shelf-dock-grid > .sp-dock-button[data-dock-group="appearance"] {
+  --tile-ink: var(--ks-ink); --tile-wash: var(--ks-surface-2); --tile-line: var(--ks-line-strong);
+}
+#shelf-dock-grid > .sp-dock-button[data-dock-group="document"] {
+  --tile-ink: var(--ks-ink); --tile-wash: var(--ks-surface-2); --tile-line: var(--ks-line-strong);
+}
+#shelf-dock-grid > :is([data-tool="delete"], #shelf-reset) {
+  --tile-ink: var(--ks-danger); --tile-wash: var(--ks-danger-soft); --tile-line: var(--ks-danger);
+  color: var(--ks-danger);
+}
+#shelf-dock-grid > .sp-dock-button > svg {
+  display: block; flex: 0 0 auto; width: 19px; height: 19px;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round; color: var(--tile-ink);
+  pointer-events: none;
+}
+#shelf-dock-grid .sp-dock-label {
+  display: block; min-width: 0; max-width: 100%;
+  white-space: normal; overflow-wrap: anywhere; font-size: inherit; line-height: inherit;
+}
+#shelf-axis-switch #shelf-axis-text { font-size: inherit; }
+@media (hover: hover) {
+  #shelf-dock-grid > .sp-dock-button:hover:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--tile-ink); border-color: var(--tile-line); background: var(--tile-wash);
+  }
+  #shelf-dock-fold:hover, #shelf-inspector-close:hover { background: var(--ks-surface-inset); border-color: var(--ks-line-strong); }
+}
+#shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]) {
+  background: var(--dock-forest); color: var(--ks-surface-1); border-color: var(--ks-action);
+  box-shadow: none; font-weight: 700;
+}
+#shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]) > svg { color: var(--ks-action); stroke-width: 1.9; }
+#shelf-dock-grid > .sp-dock-button[data-tool="delete"][aria-pressed="true"] { background: var(--ks-danger); border-color: var(--ks-danger); color: var(--ks-surface-1); }
+#shelf-dock-grid > .sp-dock-button:is(:disabled,[aria-disabled="true"]) {
+  opacity: 1; color: var(--ks-ink-muted); border-color: var(--ks-line); background: var(--ks-surface-2); box-shadow: none; cursor: not-allowed;
+}
+#shelf-dock-grid > .sp-dock-button:is(:disabled,[aria-disabled="true"]) > svg { color: var(--ks-ink-muted); }
+#shelf-dock :is(button,a):focus-visible, #shelf-inspector :is(button,input,select,summary):focus-visible {
+  outline: 3px solid var(--ks-focus-ring); outline-offset: 2px; z-index: 1;
+}
+
+/* All auxiliary surfaces attach to the physical LEFT edge, independently
+   of the main grid, page direction and camera. They scroll internally. */
+#shelf-inspector.sp-inspector {
+  direction:rtl; position:fixed; left:var(--overlay-left); right:auto; top:var(--overlay-top); bottom:auto;
+  z-index:44; box-sizing:border-box; width:var(--overlay-width); min-width:0; padding:0; margin:0;
+  max-height:calc(100vh - var(--overlay-top) - var(--overlay-bottom));
+  max-height:calc(100dvh - var(--overlay-top) - var(--overlay-bottom));
+  overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin;
+  border: 1px solid var(--dock-border); border-radius: var(--ks-radius-surface);
+  background: var(--dock-paper); box-shadow: var(--ks-shadow-overlay);
+}
+/* Keep content/confirm buttons in view while the body of a long inspector
+   scrolls. No backdrop: both the unobscured drawing and right rail work. */
+#shelf-merge-prompt.sp-merge {
+  position:fixed; left:var(--overlay-left); right:auto; top:auto; bottom:var(--overlay-bottom);
+  z-index:57; box-sizing:border-box; width:var(--overlay-width); min-width:0; margin:0; padding:12px;
+  max-height: min(44vh,280px); max-height:min(44dvh,280px); overflow:auto; overscroll-behavior:contain;
+  border:1px solid var(--ks-attention); border-right:4px solid var(--ks-attention); border-radius:var(--ks-radius-group);
+  box-shadow:var(--ks-shadow-surface); background:var(--ks-attention-soft);
+}
+#shelf-merge-prompt > div { flex-wrap:wrap; }
+#shelf-merge-prompt button { min-height:34px; }
+#shelf-inspector[hidden], #shelf-inspector [hidden] { display: none !important; }
+#shelf-inspector .sp-inspector-head {
+  position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center;
+  gap: 8px; min-height: 43px; padding: 6px 11px 6px 7px;
+  color: var(--ks-ink-strong); background: var(--ks-surface-2); border-bottom: 1px solid var(--ks-line);
+}
+#shelf-inspector-title { margin: 0; font-size: 15px; font-weight: 700; line-height: 1.45; }
+#shelf-inspector-close { min-width: 31px; min-height: 31px; font: 22px/1 Arial, sans-serif; }
+#shelf-inspector .sp-inspector-panel { min-width: 0; padding: 0 12px; }
+#shelf-inspector .sp-inspector-section { min-width: 0; padding: 11px 0; }
+#shelf-inspector .sp-inspector-section + .sp-inspector-section { border-top: 1px solid var(--sp-line); }
+#shelf-inspector .sp-inspector-section > h3 { font-size: 13px; line-height: 1.6; margin: 0 0 7px; color: var(--ks-action); }
+#shelf-inspector .sp-field-note { color: var(--ks-ink); font-size: 12px; line-height: 1.75; margin: 7px 0 !important; }
+#shelf-inspector :is(.sp-contents,.sp-finish-grid,.sp-wall-colors,.sp-fields,.sp-presets) { min-width: 0; }
+#shelf-inspector .sp-contents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#shelf-inspector :is(input,select,button) { max-width: 100%; }
+#shelf-inspector :is(select,input[type="file"]) { width: 100%; min-width: 0; }
+#shelf-inspector .sp-space-choices { display: flex; flex-wrap: wrap; gap: 4px; }
+#shelf-inspector .sp-space-choices > button { min-width: 0; }
+#shelf-inspector .sp-measure-readings { display: grid; gap: 0; margin: 0 0 9px; }
+#shelf-inspector .sp-measure-readings > div { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--ks-line); }
+#shelf-inspector .sp-measure-readings dt, #shelf-inspector .sp-measure-readings dd { margin: 0; font-size: 12px; line-height: 1.6; }
+#shelf-inspector .sp-measure-readings dd { color: var(--ks-action); font-weight: 650; font-variant-numeric: tabular-nums; }
+#shelf-inspector .sp-dims-switch { margin-inline-start: 0; }
+#shelf-inspector .sp-ruler-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 5px 8px; }
+#shelf-inspector .sp-ruler-tools output { font-size: 12px; }
+
+@media (max-width: 920px) {
+  .shelf-planner { --dock-width: 122px; --desk-air: max(10px, env(safe-area-inset-left, 0px)); --dock-top: max(70px, env(safe-area-inset-top, 0px)); }
+  #shelf-inspector.sp-inspector {
+    max-height:min(68vh,calc(100vh - var(--overlay-top) - var(--overlay-bottom)));
+    max-height:min(68dvh,calc(100dvh - var(--overlay-top) - var(--overlay-bottom)));
+  }
+}
+@media (max-width: 640px) {
+  .shelf-planner {
+    --dock-width: clamp(106px, 29vw, 123px); --dock-fold-width: 42px;
+    --dock-right: max(6px, env(safe-area-inset-right, 0px)); --dock-gap: 6px;
+    --desk-air: max(7px, env(safe-area-inset-left, 0px));
+    --dock-top: max(62px, env(safe-area-inset-top, 0px)); --dock-tile: 48px;
+    --overlay-left:max(6px,env(safe-area-inset-left,0px));
+    --overlay-width:min(77vw,300px,var(--overlay-room));
+  }
+  .shelf-planner .sp-topbar-inner { gap: 6px; min-height: 48px; padding-block: 5px; }
+  .shelf-planner .sp-brand { flex-shrink: 1; min-width: 0; gap: 5px; }
+  .shelf-planner .sp-brand-mark { width: 28px; height: 30px; flex-shrink: 0; }
+  .shelf-planner .sp-brand-mark > svg { width: 18px; height: 18px; }
+  .shelf-planner .sp-brand strong { font-size: 14px; }
+  .shelf-planner .sp-topbar .sp-save-status { font-size: 9px; max-width: 44%; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  #shelf-workspace.sp-workspace { padding-top: 8px; }
+  .sp-workspace-head { display: block; margin-block-end: 7px; }
+  .sp-workspace-head .sp-kicker { font-size: 9px; }
+  .sp-workspace-head h1 { font-size: clamp(19px, 5.4vw, 25px); line-height: 1.5; }
+  #shelf-workspace .sp-stage-heading { grid-template-columns:minmax(0,1fr); padding:7px 8px; gap:2px 5px; }
+  #shelf-workspace .sp-stage-heading h2 { font-size: 15px; }
+  #shelf-workspace .sp-stage-heading .sp-overline { display: none; }
+  #shelf-workspace .sp-stage-mode { max-width:100%; height:37px; justify-content:flex-start; }
+  #shelf-workspace .sp-stage-readout { align-items: flex-start; gap: 4px; padding: 6px 8px; }
+  #shelf-workspace .sp-stage-readout .sp-unit { padding-inline-start: 5px; }
+  #shelf-workspace .sp-tool-hint { padding: 6px 8px; font-size: 11px; }
+  #shelf-workspace #shelf-scene .shc-board { min-height: 148px; max-height: min(64dvh, 600px); }
+  #shelf-workspace .sp-stage-card { border-radius: var(--ks-radius-surface); }
+  #shelf-dock.sp-dock { border-radius: var(--ks-radius-group); }
+  #shelf-dock .sp-dock-head { padding: 3px 5px; min-height: 33px; }
+  #shelf-dock .sp-dock-head h2 { font-size: 12px; }
+  #shelf-dock-grid.sp-dock-grid { gap: 3px; padding: 4px; }
+  #shelf-dock-grid > .sp-dock-button { padding: 3px 1px; gap: 2px; font: 600 10.5px/1.35 var(--sp-font); }
+  #shelf-dock-grid > .sp-dock-button > svg { width: 17px; height: 17px; }
+  #shelf-inspector .sp-inspector-head { padding: 4px 6px; min-height: 39px; }
+  #shelf-inspector.sp-inspector { max-height:min(57vh,calc(100vh - var(--overlay-top) - var(--overlay-bottom))); max-height:min(57dvh,calc(100dvh - var(--overlay-top) - var(--overlay-bottom))); }
+  #shelf-inspector-close { min-width: 34px; min-height: 34px; }
+  #shelf-inspector .sp-inspector-panel { padding: 0 8px; }
+  #shelf-inspector .sp-inspector-section { padding-block: 8px; }
+  #shelf-inspector :is(.sp-presets,.sp-finish-grid,.sp-wall-colors,.sp-fields) { gap: 4px; }
+  #shelf-inspector .sp-wall-colors button { flex-direction: column; gap: 2px; }
+  #shelf-inspector .sp-cell-picker-label select, #shelf-inspector .sp-scope-picker select { max-width: 100%; }
+  #shelf-inspector .sp-measure-readings > div { flex-wrap: wrap; gap: 1px 6px; }
+}
+@media (max-height: 590px) {
+  .shelf-planner { --dock-top: max(8px, env(safe-area-inset-top, 0px)); --dock-tile: 46px; }
+  #shelf-dock-grid.sp-dock-grid { gap: 3px; padding-block: 4px; }
+  #shelf-dock-grid > .sp-dock-button { gap: 2px; padding-block: 3px; }
+  #shelf-dock-grid > .sp-dock-button > svg { width: 16px; height: 16px; }
+  #shelf-workspace #shelf-scene .shc-board { min-height: 125px; max-height: max(150px, 62dvh); }
+}
+@media (forced-colors: active) {
+  #shelf-dock, #shelf-inspector, #shelf-dock-grid > .sp-dock-button { border: 1px solid CanvasText; }
+  #shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]) { outline: 2px solid Highlight; outline-offset: 2px; }
+  #shelf-dock-grid > .sp-dock-button:disabled { color: GrayText; border-color: GrayText; }
+}
+#shelf-workspace .sp-group-summary:not([hidden]) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 5px 8px;
+  border-inline-start: 3px solid var(--ks-line-strong);
+  border-radius: var(--ks-radius-group);
+  background: var(--ks-surface-2);
+  color: var(--ks-action);
+  font-size: 11px;
+  line-height: 1.65;
+}
+#shelf-group-readout { flex: 1 1 85px; min-width: 0; overflow-wrap: anywhere; font-weight: 600; }
+#shelf-group-clear { min-height: 28px; max-width: 100%; padding: 2px 7px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-group); background: var(--ks-surface-1); color: var(--ks-ink); font: inherit; line-height: 1.65; }
+#shelf-group-clear:hover { background: var(--ks-surface-inset); }
+@media (max-width: 420px) {
+  #shelf-workspace .sp-group-summary:not([hidden]) { margin: 0; padding: 3px 4px; font-size: 10px; }
+}
+
+.sp-stage-mode:has(#shelf-group-summary:not([hidden])) { flex-wrap: wrap; }
+.sp-group-dimensions #shelf-group-dimension-note { padding-inline-start: 8px; border-inline-start: 2px solid var(--ks-line-strong); color: var(--ks-ink); }
+/* Drawing tools keep their physical right rail. Document commands and
+   properties have separate, keyboard-accessible places in the header. */
+.shelf-planner .sp-topbar-inner { column-gap: clamp(9px, 1.6vw, 24px); }
+.sp-header-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-inline-end: auto; min-width: 0; }
+.sp-header-actions .sp-header-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 36px; padding: 5px 10px; border: 1px solid var(--ks-line); border-radius: var(--ks-radius-group);
+  background: var(--ks-surface-2); color: var(--ks-action); cursor: pointer; font: 600 12px/1.65 var(--sp-font);
+  white-space: nowrap; list-style: none;
+}
+.sp-header-actions .sp-header-action > svg { width: 15px; height: 15px; }
+.sp-header-actions summary.sp-header-action::-webkit-details-marker { display:none; }
+.sp-header-actions .sp-header-action:hover:not(:disabled) { background: var(--ks-surface-inset); border-color: var(--ks-line-strong); }
+.sp-header-actions #shelf-properties-toggle[aria-expanded="true"], #shelf-file-menu[open] > summary {
+  border-color: var(--ks-line-strong); color: var(--ks-action); background: var(--ks-surface-inset);
+}
+#shelf-file-menu { position: relative; }
+#shelf-file-menu[open] { z-index: var(--ks-z-popover); }
+#shelf-file-menu:not([open]) .sp-file-items { display: none; }
+#shelf-file-menu summary > svg:last-child { width: 11px; height: 11px; }
+#shelf-file-menu[open] summary > svg:last-child { transform: rotate(180deg); }
+.sp-file-items {
+  position:fixed; left:var(--overlay-left); right:auto; top:var(--overlay-top); bottom:auto; display:grid; gap:2px;
+  z-index:var(--ks-z-popover); box-sizing:border-box; width:min(215px,var(--overlay-room));
+  max-height:calc(100vh - var(--overlay-top) - var(--overlay-bottom)); max-height:calc(100dvh - var(--overlay-top) - var(--overlay-bottom));
+  overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; padding:5px; border:1px solid var(--ks-line);
+  border-radius: var(--ks-radius-overlay); background: var(--ks-surface-1); box-shadow: var(--ks-shadow-overlay);
+}
+.sp-file-items .sp-file-head { position:sticky; top:-5px; z-index:1; display:flex; align-items:center; justify-content:space-between; padding:3px 5px 5px; gap:6px; background:var(--ks-surface-1); border-bottom:1px solid var(--ks-line); color:var(--ks-action); font-size:12px; }
+#shelf-file-close { display:grid; place-items:center; flex:none; width:32px; height:32px; padding:0; border:1px solid var(--ks-line); border-radius:var(--ks-radius-group); color:var(--ks-action); background:var(--ks-surface-2); font:21px/1 Arial,sans-serif; cursor:pointer; }
+#shelf-file-close:focus-visible { outline:3px solid var(--ks-focus-ring); outline-offset:2px; }
+#shelf-file-menu .sp-file-item {
+  display: flex; align-items: center; justify-content: flex-start; gap: 9px; width: 100%; min-height: 35px;
+  padding: 6px 8px; background: transparent; border: 1px solid transparent; border-radius: var(--ks-radius-group);
+  color: var(--ks-action); text-decoration: none; text-align: start; font: 500 12px/1.65 var(--sp-font);
+}
+#shelf-file-menu .sp-file-item > svg { width: 16px; height: 16px; }
+#shelf-file-menu .sp-file-item:hover:not(:disabled) { border-color: var(--ks-line); background: var(--ks-surface-2); }
+#shelf-file-menu #shelf-reset { border-top: 1px solid var(--ks-line); color: var(--ks-ink); }
+#shelf-file-menu [aria-pressed="true"] { background: var(--ks-action-soft); color:var(--ks-action); }
+#shelf-file-menu .sp-file-item:disabled, #shelf-properties-toggle:disabled { opacity:.48; cursor:not-allowed; }
+#shelf-workspace .sp-stage-heading #shelf-axis-switch { display: none; }
+.shelf-planner[data-active-tool="point-insert"][data-planner-mode="design"] #shelf-workspace .sp-stage-heading #shelf-axis-switch:not([hidden]) {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; max-width: 100%;
+  padding: 4px 8px; font: 500 11px/1.6 var(--sp-font); border: 1px solid var(--ks-line-strong);
+  border-radius: var(--ks-radius-surface); background: var(--ks-surface-2); color: var(--ks-ink); cursor: pointer;
+}
+#shelf-inspector #shelf-property-tabs:not([hidden]) {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3px;
+  padding:3px; margin:8px 10px 0; border:1px solid var(--ks-line); border-radius:var(--ks-radius-surface); background:var(--ks-surface-2);
+}
+#shelf-property-tabs .sp-property-tab {
+  display:flex; align-items:center; justify-content:center; gap:4px; min-width:0; min-height:33px;
+  padding:3px 2px; border:1px solid transparent; border-radius:var(--ks-radius-group); color:var(--ks-ink); background:transparent;
+  font:600 11px/1.6 var(--sp-font); cursor:pointer;
+}
+#shelf-property-tabs .sp-property-tab > svg { width:13px; height:13px; }
+#shelf-property-tabs .sp-property-tab[aria-selected="true"] { border-color:var(--ks-action); background:var(--ks-action); color:var(--ks-surface-1); }
+#shelf-property-tabs .sp-property-tab:hover:not([aria-selected="true"]) { background:var(--ks-surface-inset); color:var(--ks-action); }
+@media (max-width:640px) {
+  .shelf-planner .sp-topbar-inner { position:relative; display: grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"brand actions" "save actions"; row-gap:0; column-gap:5px; }
+  .shelf-planner .sp-topbar-inner > .sp-brand { grid-area: brand; }
+  .sp-header-actions { grid-area: actions; justify-self:end; justify-content:flex-end; gap:4px; margin:0; }
+  .shelf-planner .sp-topbar #shelf-save-status { grid-area:save; max-width:100%; padding:0; text-align:start; font-size:8px; line-height:1.45; }
+  .sp-header-actions .sp-header-action { padding:4px 7px; min-height:31px; gap:3px; font-size:10px; }
+  .sp-header-actions .sp-header-action > svg:first-child { display:none; }
+  #shelf-file-menu { position:static; }
+  #shelf-inspector #shelf-property-tabs:not([hidden]) { margin:5px 6px 0; gap:1px; }
+  #shelf-property-tabs .sp-property-tab { font-size:10px; }
+  #shelf-property-tabs .sp-property-tab > svg { display:none; }
+  .shelf-planner[data-active-tool="point-insert"][data-planner-mode="design"] #shelf-workspace .sp-stage-heading #shelf-axis-switch:not([hidden]) { font-size:10px; gap:4px; min-height:30px; padding:3px 6px; }
+}
+@media (max-width:380px) {
+  .shelf-planner:has(#shelf-dock[data-folded="false"]) .sp-topbar-inner { grid-template-areas:"brand save" "actions actions"; row-gap:3px; }
+  .shelf-planner:has(#shelf-dock[data-folded="false"]) .sp-header-actions { justify-self:start; }
+  .shelf-planner .sp-brand small { font-size:8px; }
+}
+
+/* Measured Workshop: local spatial interaction contracts. */
+#shelf-inspector.sp-inspector{border-inline-start:3px solid var(--ks-action);z-index:var(--ks-z-popover)}
+#shelf-dock.sp-dock{z-index:var(--ks-z-sticky)}
+#shelf-file-menu[open],.sp-file-items{z-index:var(--ks-z-popover)}
+#shelf-merge-prompt.sp-merge{z-index:var(--ks-z-popover);border-inline-start:4px solid var(--ks-attention);background:var(--ks-attention-soft)}
+#shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]){border-style:double;border-width:3px;border-color:var(--ks-action);background:var(--ks-action);color:var(--ks-surface-1);font-weight:700}
+#shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]) > svg{color:var(--ks-surface-1)}
+#shelf-dock-grid > .sp-dock-button[data-tool="delete"][aria-pressed="true"]{background:var(--ks-danger);border-color:var(--ks-danger)}
+#shelf-dock :is(button,a):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+#shelf-dock-grid > .sp-dock-button:is([aria-pressed="true"],[aria-expanded="true"]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+#shelf-inspector :is(button,input,select,summary):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+#shelf-inspector :is(button,input:not([type=checkbox]):not([type=radio]),select,summary),#shelf-file-menu :is(button,a,summary),#shelf-dock :is(button,a),#shelf-merge-prompt button,#shelf-group-clear{min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+#shelf-workspace .sp-stage-mode{height:auto;min-block-size:var(--ks-target)}
+#shelf-property-tabs .sp-property-tab[aria-selected="true"]{background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-surface-1);text-decoration:underline;text-underline-offset:4px}
+#shelf-property-tabs .sp-property-tab[aria-selected="true"]:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.shelf-planner{--dock-fold-width:calc(var(--ks-target) + 2px)}
+#shelf-dock-grid.sp-dock-grid{padding:5px}

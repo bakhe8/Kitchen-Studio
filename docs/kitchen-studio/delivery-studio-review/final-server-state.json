@@ -1,0 +1,216 @@
+{
+  "seed": {
+    "testOnly": true,
+    "origin": "http://127.0.0.1:8766",
+    "projectId": "457483b2-05bf-4e6b-a985-6bcd653253fe",
+    "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+    "revision": 1,
+    "packedUnitId": "unit-2",
+    "qcUnitId": "unit-3",
+    "unitIds": [
+      "unit-2",
+      "unit-3",
+      "unit-4",
+      "unit-5",
+      "unit-6"
+    ],
+    "browserUrl": "http://127.0.0.1:8766/index.html?panel=workshop&step=tracking"
+  },
+  "events": [
+    {
+      "unit": "unit-2",
+      "seq": 1,
+      "action": "plan",
+      "state": "planned",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "unit": {
+          "id": "unit-2",
+          "name": "خزانة تخزين",
+          "checks": [
+            {
+              "key": "width",
+              "label": "عرض الجسم",
+              "nominal": 550,
+              "unit": "مم"
+            },
+            {
+              "key": "height",
+              "label": "ارتفاع الجسم",
+              "nominal": 860,
+              "unit": "مم"
+            },
+            {
+              "key": "depth",
+              "label": "عمق الجسم",
+              "nominal": 600,
+              "unit": "مم"
+            }
+          ],
+          "partCount": 24
+        },
+        "tolerances": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "reference": "SYNTHETIC-QA-TOLERANCES"
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 2,
+      "action": "qc",
+      "state": "passed",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-factory",
+      "data": {
+        "checks": {
+          "width": {
+            "actual": 550,
+            "delta": 0,
+            "ok": true
+          },
+          "height": {
+            "actual": 860,
+            "delta": 0,
+            "ok": true
+          },
+          "depth": {
+            "actual": 600,
+            "delta": 0,
+            "ok": true
+          }
+        },
+        "passed": true,
+        "note": "Synthetic fixture measurements at nominal values."
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 3,
+      "action": "pack",
+      "state": "packed",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-factory",
+      "data": {
+        "note": "Synthetic fixture packaging; no real shipment.",
+        "siteRevision": 1,
+        "label": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373/unit-2"
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 4,
+      "action": "observe",
+      "state": "packed",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "observation": {
+          "id": "392546d4-5124-414a-a133-e26d37ca718f",
+          "text": "فحص تسليم تجريبي: تثبيت الحافة وإعادة التحقق من الاستواء.",
+          "severity": "blocking",
+          "anchor": {
+            "kind": "front",
+            "x": 0.504596039955027,
+            "y": 0.5027536550649205
+          }
+        }
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 5,
+      "action": "resolve",
+      "state": "packed",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "observationId": "392546d4-5124-414a-a133-e26d37ca718f",
+        "note": "أُعيد التثبيت، ثم أُعيد الفحص وكانت النتيجة مطابقة — اختبار."
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 6,
+      "action": "install",
+      "state": "installed",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "note": "محضر INS-FINAL التجريبي: التركيب والفحص مكتملان.",
+        "siteRevision": 1,
+        "location": "موقع تجريبي · الجدار الخلفي"
+      }
+    },
+    {
+      "unit": "unit-2",
+      "seq": 7,
+      "action": "accept",
+      "state": "accepted",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "note": "HAND-FINAL: محضر استلام تجريبي بعد المعاينة وإغلاق الملاحظات المانعة.",
+        "customer": "عميل تجريبي — اعتماد اختبار"
+      }
+    },
+    {
+      "unit": "unit-3",
+      "seq": 1,
+      "action": "plan",
+      "state": "planned",
+      "receipt": "full:6d470a615b1963dad3fe03335ad464f259791538cdc9dd08a7f74ea9989ad373",
+      "revision": 1,
+      "actor": "delivery-review-owner",
+      "data": {
+        "unit": {
+          "id": "unit-3",
+          "name": "خزانة تخزين",
+          "checks": [
+            {
+              "key": "width",
+              "label": "عرض الجسم",
+              "nominal": 550,
+              "unit": "مم"
+            },
+            {
+              "key": "height",
+              "label": "ارتفاع الجسم",
+              "nominal": 860,
+              "unit": "مم"
+            },
+            {
+              "key": "depth",
+              "label": "عمق الجسم",
+              "nominal": 600,
+              "unit": "مم"
+            }
+          ],
+          "partCount": 24
+        },
+        "tolerances": {
+          "width": 1,
+          "height": 1,
+          "depth": 1
+        },
+        "reference": "SYNTHETIC-QA-TOLERANCES"
+      }
+    }
+  ],
+  "versions": [
+    {
+      "revision": 1,
+      "digest": "751445503b7d91ca4659605bb1ac62d1f559a6e17eac5563c6fe488b94b5a128"
+    }
+  ]
+}

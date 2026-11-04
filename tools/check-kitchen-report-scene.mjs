@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {customerSceneOverview} from '../public/kitchen-report-scene.js';
+import {makeVisitExample} from './fixture-kitchen-visit-example.mjs';
+import {proposeWholeKitchen} from '../public/kitchen-whole-plan.js';
+import {addFreeRun,addUnit} from '../public/kitchen-model.js';
+
+const source=makeVisitExample();
+assert.equal(customerSceneOverview(source),'');
+const {candidates}=await proposeWholeKitchen(source);
+const doc=candidates[0].doc,before=JSON.stringify(doc);
+const svg=customerSceneOverview(doc),viewBox=svg.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number);
+assert.equal(viewBox.length,4);assert(viewBox.every(Number.isFinite));assert(viewBox[2]>0&&viewBox[3]>0);
+assert(svg.includes('<polygon')&&svg.includes('data-kitchen-3d=""'));
+assert(!svg.includes('data-kitchen-3d-id=')&&!svg.includes('FACE-6-W')&&!svg.includes('AL-20')&&!svg.includes('NaN'));
+for(const link of svg.matchAll(/\bhref="([^"]+)"/g))assert(link[1].startsWith('#')||link[1].startsWith('data:image/'));
+assert.equal(customerSceneOverview(doc),svg);assert.equal(JSON.stringify(doc),before);
+assert.equal(customerSceneOverview(doc,{wallIds:[]}),'');
+
+const cabinet=doc.kitchen.units.find(u=>u.kind==='drawers');
+const changed=structuredClone(doc);
+changed.room.workshop.finishes={frontSku:'FACE-6-G'};
+assert.notEqual(customerSceneOverview(changed),svg,'published factory fronts change the visual');
+assert(!customerSceneOverview(doc,{label:'hello"><script>alert(1)</script>'}).includes('<script>'));
+assert(cabinet);
+const added=addFreeRun(doc.kitchen,doc.room,{id:'island-test',x:180,z:190,length:95,angle:37,depth:42});assert(added.ok,added.reason);
+const island=addUnit(added.kitchen,doc.room,{id:'island-unit',runId:'island-test',kind:'storage',u:0,width:60});assert(island.ok,island.reason);
+const withIsland={...doc,kitchen:island.kitchen};
+assert.notEqual(customerSceneOverview(withIsland),svg,'whole design includes free runs');
+assert.equal(customerSceneOverview(withIsland,{wallIds:['back']}),customerSceneOverview(doc,{wallIds:['back']}),'the island must not enter a wall-only proposal');
+console.log('Static scoped 3D illustration follows installed cabinet solids and factory finishes, including angled islands. Portable textures, no editor IDs, deterministic output, escaped alt, empty scope and source immutability pass.');

@@ -1,0 +1,26 @@
+.ksup .ksup-inner{overflow:auto;overscroll-behavior:contain}.ksup .ksup-kicker{margin:.25rem 0;color:var(--ks-ink);font-size:11px;font-weight:700}.ksup h2{margin:3px 0;font-size:19px}.ksup :is(p,label){font-size:12px;line-height:1.65}.ksup .ksup-grid{display:grid;gap:7px}.ksup article{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:8px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);padding:6px;background:var(--ks-surface-2)}.ksup article>svg{width:76px;background:var(--ks-surface-2);border-radius:var(--ks-radius-control)}.ksup article h3{margin:0;font-size:14px}.ksup article p,.ksup .ksup-help,.ksup .ksup-fine{margin:2px 0;color:var(--ks-ink-muted)}.ksup .ksup-number{font-size:11px;color:var(--ks-ink-muted);letter-spacing:.04em}.ksup-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.ksup a{color:var(--ks-ink);text-decoration:underline;text-underline-offset:2px;font-size:11px}.ksup button,.ksup select,.ksup input{font:inherit}.ksup form{margin:9px 0;border-block:1px solid var(--ks-line);padding:8px 0}.ksup label{display:grid;gap:3px;margin:4px 0;color:var(--ks-ink)}.ksup input,.ksup select{min-width:0;width:100%;padding:4px 6px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-2);min-height:var(--ks-target);color:var(--ks-ink)}.ksup input{direction:ltr}.ksup-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ksup .ksup-result{font-size:12px;line-height:1.55;background:var(--ks-surface-2);border-inline-start:3px solid var(--ks-line);margin:7px 0;padding:5px 7px}.ksup .ksup-result[data-valid=false]{background:var(--ks-surface-2);border-color:var(--ks-line);color:var(--ks-ink)}.ksup button.ksup-submit{width:100%;background:var(--ks-action);color:var(--ks-surface-1);border-color:var(--ks-action)}.ksup .ksup-submit:disabled{background:var(--ks-action);color:var(--ks-ink);border-color:var(--ks-action)}.ksup .ksup-fine{font-size:11px}.ksup :focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+
+/* Supplier drawer is a floating palette below modal dialogs. */
+.ksup.pro-drawer{z-index:var(--ks-z-popover);background:var(--ks-surface-1);color:var(--ks-ink);border:var(--ks-border);border-radius:var(--ks-radius-overlay);box-shadow:var(--ks-shadow-overlay)}
+.ksup.pro-drawer .pr-head{background:var(--ks-ink-strong);color:var(--ks-surface-1);border-block-end:2px solid var(--ks-metal)}
+.ksup.pro-drawer .pr-head button{color:var(--ks-surface-1);border-color:var(--ks-line-strong);border-radius:var(--ks-radius-control);background:transparent}
+.ksup :is(button,input,select){border:var(--ks-border);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-ink)}
+.ksup :is(button,input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea,summary){min-block-size:var(--ks-target);box-sizing:border-box}
+.ksup :is(button,a,summary){min-inline-size:var(--ks-target)}
+.ksup a{display:inline-flex;align-items:center;min-block-size:var(--ks-target)}
+.ksup :is(button,a,summary):not(:disabled):not([aria-disabled="true"]){transition:background-color var(--ks-duration-fast) var(--ks-ease),border-color var(--ks-duration-fast) var(--ks-ease),transform var(--ks-duration-fast) var(--ks-ease)}
+.ksup :is(button,a,summary):where(:not(:disabled):not([aria-disabled="true"])):hover{background:var(--ks-action-soft);border-color:var(--ks-action)}
+.ksup :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}
+.ksup .ksup-result{background:var(--ks-complete-soft);color:var(--ks-complete);border-inline-start:3px solid var(--ks-complete)}
+.ksup .ksup-result:empty{display:none}
+.ksup .ksup-result[data-valid=false]{background:var(--ks-danger-soft);color:var(--ks-danger);border-color:var(--ks-danger);border-inline-start:3px double var(--ks-danger)}
+.ksup button.ksup-submit{background:var(--ks-action);color:var(--ks-surface-1);border-color:var(--ks-action)}
+.ksup button.ksup-submit:not(:disabled):hover{background:var(--ks-action-hover);color:var(--ks-surface-1)}
+.ksup :is(button,input,select,textarea,summary,a):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.ksup button.ksup-submit:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.ksup.pro-drawer .pr-head button:focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.ksup button:disabled,.ksup .ksup-submit:disabled{background:var(--ks-surface-inset);color:var(--ks-ink-muted);border-color:var(--ks-line);cursor:not-allowed;box-shadow:none;transform:none}
+@media(pointer:coarse){.ksup :is(button,a,input,select){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.ksup :is(button,a,summary){transition:none!important;transform:none!important}}
+
+.ksup.pro-drawer .pr-head button:hover{background:var(--ks-action-pressed);color:var(--ks-surface-1)}

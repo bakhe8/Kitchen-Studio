@@ -1,0 +1,185 @@
+- link "انتقل إلى مساحة التصميم":
+  - /url: "#kitchen-workspace"
+- main:
+  - button "بوابات العمل"
+  - paragraph: استوديو المطابخ
+  - heading "اختبار مراجعة التصنيع — تشغيل مشترك وإفراج الورشة" [level=1]
+  - navigation "أدوات الاستوديو":
+    - button "أدوات الورشة والتصنيع":
+  - option "الصفّان" [selected]
+  - option "السفلي"
+  - option "العلوي"
+  - dialog "الورشة والتصنيع":
+    - button "اختيار المرحلة":
+      - generic: المصنع · القص والإنتاج
+      - strong: الورشة والتصنيع
+    - button "دليل المشروع":
+      - generic: دليل المشروع
+    - button "الرجوع للرسم":
+    - generic: الورشة والتصنيع · مراجعة مترابطة
+    - heading "اختبار مراجعة التصنيع — تشغيل مشترك وإفراج الورشة" [level=2]
+    - paragraph: الوحدة ← القطعة ← الخامة ← التشغيل
+    - button "تراجع":
+      - text: تراجع
+    - button "إعادة" [disabled]:
+      - text: إعادة
+    - button "إلغاء المعاينة" [disabled]
+    - button "حفظ عمليات التصنيع" [disabled]:
+      - text: حفظ عمليات التصنيع
+    - generic: قطع التصنيع
+    - strong: ١٢٧
+    - generic: بنود التشغيل
+    - strong: ٤
+    - generic: خام دون مسار تشغيل
+    - strong: ٤٠
+    - generic: غير مشروط في إعدادات المصنع الحالية
+    - generic: سجل المصنع
+    - strong: معتمد
+    - generic: إطلاق النسخة معتمد
+    - status: اختر وحدة ثم قطعة لمراجعة خامتها ومقاسها وتشغيلها.
+    - complementary:
+      - heading "وحدات أمر التصنيع" [level=3]
+      - button "U1 ٢٤ قطعة · ٦ خامات" [pressed]:
+        - generic: U1
+        - generic: ٢٤ قطعة · ٦ خامات
+      - button "U2 ٢٤ قطعة · ٦ خامات":
+        - generic: U2
+        - generic: ٢٤ قطعة · ٦ خامات
+      - button "U3 ٢٤ قطعة · ٦ خامات":
+        - generic: U3
+        - generic: ٢٤ قطعة · ٦ خامات
+      - button "U4 ٢٤ قطعة · ٦ خامات":
+        - generic: U4
+        - generic: ٢٤ قطعة · ٦ خامات
+      - button "U5 ٣١ قطعة · ٦ خامات":
+        - generic: U5
+        - generic: ٣١ قطعة · ٦ خامات
+    - main:
+      - group "عرض التصنيع":
+        - button "التجميع والوحدة"
+        - button "توزيع الخام"
+        - button "تشغيل القطعة" [active] [pressed]
+      - img "جانب جسم · BODY-6 · ٨٢٠ × ٥٦٠ مم. غلاف القص المستطيل؛ وجه التشغيل ومرجع التثبيت من الوصفة. علامة العملية مرتبطة بإحداثيات الوصفة؛ تحقق القدرة مستقل.":
+        - generic: ٨٢٠ مم
+        - generic: ٥٦٠ مم
+        - generic: "0"
+        - generic "1 · ثقب دائري · X ٦٠ / Y ٣٥ مم · QA-CNC-DRILL-01 · QA fixture A — panel start corner":
+          - generic: "1"
+      - generic: جانب جسم
+      - generic: ٢ قطعة · BODY-6
+      - button "مصدر القطعة"
+      - button "الخامة"
+      - paragraph: جانب جسم · BODY-6 · ٨٢٠ × ٥٦٠ مم. غلاف القص المستطيل؛ وجه التشغيل ومرجع التثبيت من الوصفة. علامة العملية مرتبطة بإحداثيات الوصفة؛ تحقق القدرة مستقل.
+      - text: قطع الوحدة
+      - searchbox "قطع الوحدة"
+      - button "قائم جسم AL-20 · ٤ قطعة ٨٦٠ مم":
+        - generic: قائم جسم
+        - generic: AL-20 · ٤ قطعة
+        - generic: ٨٦٠ مم
+      - button "عارضة جسم AL-20 · ٤ قطعة ٥١٠ مم":
+        - generic: عارضة جسم
+        - generic: AL-20 · ٤ قطعة
+        - generic: ٥١٠ مم
+      - button "رابط عمق AL-20 · ٤ قطعة ٥٦٠ مم":
+        - generic: رابط عمق
+        - generic: AL-20 · ٤ قطعة
+        - generic: ٥٦٠ مم
+      - button "جانب جسم BODY-6 · ٢ قطعة ٨٢٠ × ٥٦٠ مم" [pressed]:
+        - generic: جانب جسم
+        - generic: BODY-6 · ٢ قطعة
+        - generic: ٨٢٠ × ٥٦٠ مم
+      - button "قاعدة جسم BODY-6 · ١ قطعة ٥١٠ × ٥٦٠ مم":
+        - generic: قاعدة جسم
+        - generic: BODY-6 · ١ قطعة
+        - generic: ٥١٠ × ٥٦٠ مم
+      - button "رف داخلي BODY-6 · ١ قطعة ٥١٠ × ٥٦٠ مم":
+        - generic: رف داخلي
+        - generic: BODY-6 · ١ قطعة
+        - generic: ٥١٠ × ٥٦٠ مم
+      - button "حشوة واجهة FACE-6-W · ١ قطعة ٨٢٠ × ٥١٠ مم":
+        - generic: حشوة واجهة
+        - generic: FACE-6-W · ١ قطعة
+        - generic: ٨٢٠ × ٥١٠ مم
+      - button "حافة رأسية EDGE · ٢ قطعة ٨٥٦ مم":
+        - generic: حافة رأسية
+        - generic: EDGE · ٢ قطعة
+        - generic: ٨٥٦ مم
+      - button "حافة أفقية EDGE · ٢ قطعة ٥٤٦ مم":
+        - generic: حافة أفقية
+        - generic: EDGE · ٢ قطعة
+        - generic: ٥٤٦ مم
+      - button "يد PULL · ١ قطعة —":
+        - generic: يد
+        - generic: PULL · ١ قطعة
+        - generic: —
+      - button "مفصلة HINGE · ٢ قطعة —":
+        - generic: مفصلة
+        - generic: HINGE · ٢ قطعة
+        - generic: —
+    - complementary:
+      - generic: U1 / جانب جسم
+      - heading "تعليمات تشغيل القطعة" [level=3]
+      - paragraph: لوح جسم ٦ مم · BODY-6
+      - paragraph: ٨٢٠ × ٥٦٠ مم · سماكة ٦ مم · العدد ٢
+      - text: عملية الوصفة
+      - combobox "عملية الوصفة":
+        - option "١ · ثقب دائري" [selected]
+        - option "+ إضافة عملية"
+      - text: نوع العملية
+      - combobox "نوع العملية":
+        - option "تشذيب حافة على مسار مرفوع"
+        - option "قص لوح مستطيل إلى المقاس"
+        - option "ثقب دائري" [selected]
+        - option "تفريز جيب مستطيل"
+        - option "قص طرف بزاوية"
+        - option "ثني على خط"
+      - text: الماكينة / التنفيذ
+      - combobox "الماكينة / التنفيذ":
+        - option "ماكينة اختبار CNC-1" [selected]
+        - option "مورد خارجي"
+      - text: مرجع المخطط ووجه القطعة
+      - textbox "مرجع المخطط ووجه القطعة": QA-CNC-DRILL-01
+      - text: السماحة ± مم
+      - textbox "السماحة ± مم": "0.3"
+      - text: مرجع X
+      - combobox "مرجع X":
+        - option "من أول الطول" [selected]
+        - option "من آخر الطول"
+      - text: مسافة X · مم
+      - textbox "مسافة X · مم": "60"
+      - text: مرجع Y
+      - combobox "مرجع Y":
+        - option "من أول العرض" [selected]
+        - option "من آخر العرض"
+      - text: مسافة Y · مم
+      - textbox "مسافة Y · مم": "35"
+      - text: عمق التشغيل · مم
+      - textbox "عمق التشغيل · مم": "5"
+      - text: قطر الثقب · مم
+      - textbox "قطر الثقب · مم": "7"
+      - text: دقائق التشغيل لكل قطعة
+      - textbox "دقائق التشغيل لكل قطعة": "2"
+      - paragraph: تعديل عملية الوصفة يسري على جميع القطع التي تستخدمها. الأسهم تعدّل 1 مم، ومع Shift تعدّل 10. اسحب علامة الثقب أو الجيب لمعاينة موضعه.
+      - alert
+      - paragraph: حفظ العملية يحدّث سجل المصنع ويعيد تقييم اعتمادات النسخة.
+      - generic "قدرة ماكينة اختبار CNC-1"
+      - button "مصدر الوصفة":
+        - text: مصدر الوصفة
+      - button "فتح الخامة":
+        - text: فتح الخامة
+      - button "تعريفات الماكينات":
+        - text: تعريفات الماكينات
+      - button "الوحدة في المصمم":
+        - text: الوحدة في المصمم
+    - heading "مراجعة اعتماد الورشة" [level=3]
+    - paragraph: اجتازت النسخة المحفوظة متطلبات الإطلاق الحالية. راجعها باسم مسؤول الورشة قبل اعتمادها.
+    - paragraph: المصنع يعتمد سجل وصفاته، والمالك يثبت مراجعة الورشة ويطلق النسخة. تسجيل الجودة والتغليف والتركيب يتبع إيصال أمر التنفيذ.
+    - button "اعتماد سجل المصنع الحالي" [disabled]:
+      - text: اعتماد سجل المصنع الحالي
+    - button "مراجعة وإطلاق النسخة":
+      - text: مراجعة وإطلاق النسخة
+    - button "أوامر التنفيذ الصادرة":
+      - text: أوامر التنفيذ الصادرة
+    - button "الحصر والتسعير":
+      - text: الحصر والتسعير
+    - generic "قوائم القص والتشغيل والتصدير كاملة"

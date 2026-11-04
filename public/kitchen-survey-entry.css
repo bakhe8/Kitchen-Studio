@@ -1,0 +1,105 @@
+/* The survey's horizontal station line follows the measured wall, even in RTL. */
+.sv {
+  --sv-ink: var(--ks-ink);
+  --sv-accent: var(--ks-action);
+  --sv-quiet: var(--ks-ink-muted);
+  --sv-line: var(--ks-line);
+  --sv-pale: var(--ks-action-soft);
+  direction: rtl;
+  color: var(--sv-ink);
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+}
+.sv *, .sv *::after {box-sizing: border-box;}
+.sv > *, .sv-fields > * {min-width: 0;}
+.sv button, .sv summary {touch-action: manipulation;}
+.sv button {min-height: 44px; padding: 5px 12px; line-height: 1.45; border: 1px solid var(--sv-line); border-radius: var(--ks-radius-control); color: var(--sv-ink); background: var(--ks-surface-1);}
+.sv :is(button,input,select,summary):focus-visible {outline: 3px solid var(--ks-focus-ring); outline-offset: 2px;}
+.sv summary {min-height: 44px; padding: 9px 1px; cursor: pointer; color: var(--sv-quiet); font-weight: 600;}
+.sv .sv-heading {display: flex; justify-content: space-between; align-items: end; gap: 12px;}
+.sv-heading label {display: flex; gap: 8px; align-items: center; min-width: 0; flex: 1; font-weight: 650;}
+.sv-heading select {min-width: 0; width: min(100%,220px); min-height: 44px; background-color: var(--ks-surface-1);}
+.sv-heading > div {line-height: 1.45; text-align: end; white-space: nowrap;}
+.sv-heading small, .sv-heading b {display: block;}
+.sv-heading small {color: var(--sv-quiet); font-size: 11px;}
+.sv-survey-card, .sv-editor, .sv-proof {background: var(--ks-surface-1); border: 1px solid var(--sv-line); border-radius: var(--ks-radius-surface);}
+.sv-cardbar, .sv-editor header {display: flex; justify-content: space-between; align-items: center; gap: 8px;}
+.sv-cardbar {padding: 8px 12px 0;}
+.sv-cardbar span {font-size: 11.5px; color: var(--sv-quiet);}
+.sv-cardbar span.sv-dirty {color: var(--ks-attention);}
+.sv-elevation {background: var(--ks-surface-1); margin: 7px 8px 0; border-radius: var(--ks-radius-control); overflow: hidden;}
+.sv-elevation svg {display: block; width: 100%; height: auto; max-height: 114px; direction: ltr;}
+.sv-wall {fill: var(--ks-surface-2); stroke: var(--ks-line-strong); stroke-width: 1.6;}
+.sv-grid {fill: none; stroke: var(--ks-line); stroke-dasharray: 4 4;}
+.sv-symbol {color: var(--ks-ink); fill: var(--ks-surface-1); stroke: currentColor; stroke-width: 1.6; cursor: pointer;}
+.sv-symbol .sv-door {fill: #e5d7bc;}
+.sv-symbol .sv-window {fill: #cde3de;}
+.sv-symbol .sv-obstacle {fill: #dfdad1;}
+.sv-symbol.sv-on {color: var(--ks-action); stroke-width: 3;}
+.sv-symbol.sv-on rect, .sv-symbol.sv-on circle:not(.sv-hit) {fill: var(--ks-action-soft);}
+.sv-hit {fill: transparent; stroke: none; pointer-events: all;}
+.sv-label {font: 13px system-ui,sans-serif; fill: var(--ks-ink-muted);}
+.sv-readings {display: flex; overflow-x: auto; overscroll-behavior-inline: contain; gap: 5px; padding: 8px; scrollbar-width: thin;}
+.sv-readings button {display: flex; align-items: center; flex: none; gap: 6px; text-align: start; font-size: 12px; padding: 5px 8px; border-radius: var(--ks-radius-control);}
+.sv-readings button[aria-pressed="true"] {border-color: var(--ks-action); background: var(--sv-pale); color: var(--ks-action);}
+.sv-readings i {display: grid; place-items: center; width: 18px; height: 18px; border-radius: var(--ks-radius-control); background: var(--ks-surface-2); font-size: 11px; font-style: normal;}
+.sv-readings small {display: block; font-size: 10.5px; color: var(--sv-quiet); white-space: nowrap; font-weight: 500;}
+.sv .sv-readings p {margin: 0; padding: 3px 4px; color: var(--sv-quiet);}
+.sv-context, .sv-kinds, .sv-secondary, .sv-more, .sv-tools {display: flex; align-items: center; gap: 5px; flex-wrap: wrap;}
+.sv-context button {font-size: 13px; font-weight: 650; padding-inline: 10px;}
+.sv-context button[aria-expanded="true"], .sv-secondary button[aria-expanded="true"] {color: var(--sv-accent); border-color: var(--ks-line-strong); background: var(--sv-pale);}
+.sv-kinds, .sv-more {padding: 5px; background: var(--sv-pale); border-radius: var(--ks-radius-control);}
+.sv-editor, .sv-proof {padding: 9px 12px; scroll-margin-block: 10px 78px;}
+.sv .sv-editor h3, .sv .sv-proof h3 {margin: 0; font-size: 16px; color: var(--sv-ink);}
+.sv-editor header {margin-block-end: 6px;}
+.sv-editor header button, .sv-secondary button, .sv-tools button {color: var(--sv-accent); border-color: transparent; background: transparent;}
+.sv-fields {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: end; gap: 7px 10px;}
+.sv-fields label {display: flex; flex-direction: column; gap: 3px; font-size: 12px; line-height: 1.5;}
+.sv .sv-fields input, .sv .sv-fields select, .sv .sv-heading select {min-height: 44px; border-radius: var(--ks-radius-control); border: 1px solid var(--ks-line); font-size: 16px;}
+.sv-fields select, .sv-fields input {min-width: 0; width: 100%;}
+.sv-input {position: relative;}
+.sv .sv-input input {text-align: start; padding-inline-start: 10px; padding-inline-end: 32px;}
+.sv-input small {position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--sv-quiet); pointer-events: none;}
+.sv-editor details {border-top: 1px solid var(--sv-line); margin-block-start: 10px;}
+.sv-editor .sv-tools {margin-block-start: 4px;}
+.sv button.sv-remove {color: var(--ks-danger); margin-inline-start: auto;}
+.sv-totals {display: flex; flex-wrap: wrap; gap: 2px 13px; align-items: baseline; padding-inline: 2px; font-size: 12.5px; color: var(--sv-quiet);}
+.sv-totals span b {color: var(--sv-ink); margin-inline-start: 3px; white-space: nowrap;}
+.sv-totals details {width: 100%;}
+.sv-totals summary {padding-block: 6px; min-height: var(--ks-target); display: list-item;}
+.sv-totals p, .sv .sv-guard p {margin: 3px 0;}
+.sv-secondary {border-top: 1px solid var(--sv-line); justify-content: space-between;}
+.sv-more button, .sv-kinds button, .sv-secondary button, .sv-tools button {font-size: 12.5px;}
+.sv-proof .sv-fields {margin-block: 9px;}
+.sv-footer {position: sticky; z-index: 2; bottom: 0; padding: 8px 0 max(6px,env(safe-area-inset-bottom)); background: var(--ks-surface-1); border-top: 1px solid var(--ks-line);}
+.sv-footer-actions {display: flex; gap: 6px;}
+.sv-footer-actions button {flex: 1; min-width: 0; font-size: 13px;}
+.sv .sv-primary {background: var(--sv-accent); color: var(--ks-surface-1); border-color: var(--sv-accent);}
+.sv .sv-error {color: var(--ks-danger);}
+.sv .sv-guard {border-radius: var(--ks-radius-control); background: var(--ks-attention-soft); padding: 8px 10px; color: var(--ks-attention); margin-block-end: 7px; font-size: 13px;}
+.sv-guard > div {display: flex; flex-wrap: wrap; gap: 5px; margin-block-start: 5px;}
+.sv-guard button {font-size: 12px; padding-inline: 8px;}
+.sv [data-chain-notice] {font-size: 12px; margin: 0 0 4px;}
+@media (max-width: 450px) {
+  .sv {gap: 7px;}
+  .sv-heading label {gap: 6px;}
+  .sv-context {gap: 4px;}
+  .sv-context button {font-size: 12px; padding-inline: 7px;}
+  .sv-editor, .sv-proof {padding: 8px 10px;}
+  .sv-fields {gap: 7px;}
+}
+@media (max-width: 330px) {
+  .sv-footer-actions button {font-size: 12px; padding-inline: 4px;}
+}
+
+/* Field density: principal controls retain generous hit areas. Native checkboxes
+   keep their glyph size; their enclosing label supplies the pointer target. */
+.sv :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.sv :is(button,summary){min-inline-size:var(--ks-target)}
+.sv :is(button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(pointer:coarse){.sv :is(button,summary){min-inline-size:var(--ks-target);min-block-size:var(--ks-target)}}
+
+.sv .sv-error:not(:empty),.sv .sv-ink-error:not(:empty){border-inline-start:4px solid var(--ks-danger);padding-inline-start:var(--ks-space-2);text-decoration:underline dotted}
+.sv .sv-guard{border-inline-start:4px solid var(--ks-attention)}
+.sv [aria-pressed=true]{border-inline-start-width:3px;text-decoration:underline;text-underline-offset:3px}

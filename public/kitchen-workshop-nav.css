@@ -1,0 +1,365 @@
+/* Stationary shell for the visit. The canvas and the field forms scroll
+   independently of the way back to the drawing or the stage selector. */
+.k-workshop {
+  --ws-ink: var(--ks-ink);
+  --ws-quiet: var(--ks-ink-muted);
+  --ws-line: var(--ks-line);
+  --ws-paper: var(--ks-canvas);
+  --ws-tint: var(--ks-action-soft);
+  --ws-head-h: 62px;
+  font-family:var(--studio-font,Tahoma,Arial,sans-serif);
+  color:var(--ws-ink);
+  inset: 76px auto 16px max(16px, env(safe-area-inset-left));
+  width: min(530px, calc(100vw - 32px));
+  max-height: none;
+  background: var(--ks-surface-1);
+  border: 1px solid var(--ks-on-dark-muted);
+  border-radius: var(--ks-radius-surface);
+  box-shadow: var(--ks-shadow-surface);
+  isolation: isolate;
+}
+.k-workshop[data-ws-route="whole"] {
+  inset-inline: 0;
+  margin-inline: auto;
+  width: min(1240px, calc(100vw - 44px));
+}
+.ws-route-head {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 4;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--ws-head-h);
+  padding: 0 14px;
+  border-bottom: 1px solid var(--ws-line);
+  color: var(--ws-ink);
+  background: var(--ws-paper);
+}
+.ws-route-head button,.ws-route-picker button,.ws-route-picker summary {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ws-route-head button:focus-visible,.ws-route-picker :is(button,summary):focus-visible {
+  outline: 3px solid var(--ks-focus-ring);
+  outline-offset: 2px;
+}
+.ws-route-icon,.ws-route-chooser,.ws-stage-destination {
+  border: 0;
+  background: transparent;
+}
+.ws-route-icon { width: 42px;height: 44px;display: grid;place-items: center;border-radius: var(--ks-radius-control);padding: 0; }
+.ws-route-icon svg { width: 20px;height: 20px; }
+.ws-dismiss { margin-inline-start: auto; }
+.ws-route-icon:hover,.ws-route-chooser:hover,.ws-route-chooser[aria-expanded="true"] { background:var(--ws-tint); }
+.ws-route-chooser { display: flex;align-items: center;gap: 10px;min-width: 0;min-height: 46px;padding: 4px 8px;border-radius: var(--ks-radius-control);text-align: start; }
+.ws-route-chooser>svg { width: 17px;height: 17px;flex: none;color: var(--ws-quiet); }
+.ws-route-chooser[aria-expanded="true"]>svg { transform: rotate(180deg); }
+.ws-route-symbol { border: 1px solid var(--ks-on-dark-muted);background: var(--ks-surface-1);width: 36px;height: 36px;display: grid;place-items: center;border-radius: var(--ks-radius-group);flex: none; }
+.ws-route-symbol svg { width: 20px;height: 20px; }
+.ws-route-titles { display: grid;min-width: 0;line-height: 1.4; }
+.ws-route-titles>small { color: var(--ws-quiet);font-size: 11px;font-weight: 600; }
+.ws-route-titles>strong { font-size: 16px;font-weight: 720; }
+.ws-route-picker {
+  box-sizing: border-box;
+  z-index: 3;
+  position: absolute;
+  inset-block: var(--ws-head-h) auto;
+  inset-inline-start: 0;
+  width: min(365px, 100%);
+  max-height: calc(100% - var(--ws-head-h));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+  border: 1px solid var(--ws-line);
+  border-block-start: 0;
+  border-start-start-radius: 0;
+  border-end-end-radius: var(--ks-radius-surface);
+  border-end-start-radius: var(--ks-radius-surface);
+  background: var(--ws-paper);
+  box-shadow: var(--ks-shadow-overlay);
+}
+.ws-picker-title {font-weight: 650;color:var(--ws-quiet);margin: 0 0 7px;font-size: 13px; }
+.ws-stage-list { display: grid;gap: 2px; }
+.ws-stage-row { position: relative;border-radius: var(--ks-radius-group);border: 1px solid transparent; }
+.ws-stage-row[data-current-group] { border-color: var(--ks-on-dark-muted); background: var(--ks-surface-1); }
+.ws-stage-destination { display:flex;align-items:center;gap:10px;min-width:0;width:calc(100% - 46px);min-height:48px;padding:7px 9px;text-align:start;font-weight:720!important;border-radius:var(--ks-radius-control); }
+.ws-stage-destination:hover,.ws-stage-destination[aria-current] { color:var(--ks-action); }
+.ws-stage-number { width:27px;height:27px;display:grid;place-items:center;border-radius:var(--ks-radius-circle);color:var(--ks-ink);background:var(--ks-surface-1);font-size:14px;line-height:1; }
+.ws-stage-row[data-current-group] .ws-stage-number { background:var(--ks-action);color:var(--ks-surface-1); }
+.ws-route-tools>summary { position:absolute;inset-block-start:1px;inset-inline-end:1px;width:44px;height:44px;display:grid;place-items:center;border-radius:var(--ks-radius-control);color:var(--ws-quiet); }
+.ws-route-picker summary { list-style:none; }
+.ws-route-picker summary::-webkit-details-marker { display:none; }
+.ws-route-tools>summary:hover,.ws-office>summary:hover { background:var(--ws-tint); }
+.ws-route-tools>summary svg,.ws-office>summary svg { width:18px;height:18px; }
+.ws-route-tools[open]>summary svg,.ws-office[open]>summary svg:last-child { transform:rotate(180deg); }
+.ws-tool-links { display:grid;padding:1px 6px 7px;gap:1px; }
+.ws-tool-links button,.ws-route-technical>summary { display:flex;align-items:center;min-height:41px;padding:5px 15px;border:0;border-radius:var(--ks-radius-control);background:transparent;text-align:start; }
+.ws-tool-links button:hover,.ws-route-technical>summary:hover { background:var(--ks-surface-1); }
+.ws-tool-links button[aria-current] { color:var(--ks-action);font-weight:700;background:var(--ks-surface-1); }
+.ws-tool-links button[aria-current]::before { content:"";display:inline-block;width:6px;height:6px;border-radius:var(--ks-radius-control);background:var(--ks-action);margin-inline-end:8px; }
+.ws-route-technical>summary { color:var(--ws-quiet);font-size:13px; }
+.ws-route-technical>summary::after { content:"+";margin-inline-start:auto;padding-inline-start:8px;font-size:17px; }
+.ws-route-technical[open]>summary::after { content:"−"; }
+.ws-route-technical>div { display:grid;margin-inline-start:9px;border-inline-start:1px solid var(--ws-line); }
+.ws-office { margin-top:10px;padding-block-start:8px;border-block-start:1px solid var(--ws-line); }
+.ws-office>summary { display:flex;align-items:center;gap:9px;min-height:44px;border-radius:var(--ks-radius-control);padding:0 10px;color:var(--ks-ink); }
+.ws-office>summary svg:last-child { margin-inline-start:auto; }
+.ws-content { min-width:0;scrollbar-gutter:stable; }
+.ws-screen { min-width:0; }
+.k-workshop[data-ws-route="whole"] .ws-content {padding:0;scrollbar-gutter:auto;}
+.k-workshop:not([data-ws-route="whole"]) .ws-content {padding:13px 18px 22px;}
+.k-workshop .ws-notice:not(:empty) {padding:7px 16px;border-block-start:1px solid var(--ws-line);color:var(--ks-ink);background:var(--ks-surface-1);font-size:13px;}
+@media (min-width:701px) {
+  .k-app:has(.k-workshop:not([hidden])) .k-titlebar:has(.studio-commands:not([hidden])) { z-index:130; }
+}
+@media (max-width:700px) {
+  .k-workshop,.k-workshop[data-ws-route="whole"] {
+    --ws-head-h: calc(50px + env(safe-area-inset-top, 0px));
+    inset:0;
+    width:100%;
+    height:100%;
+    height:100dvh;
+    max-height:100dvh;
+    border:0;
+    border-radius:0;
+    padding-block-end:env(safe-area-inset-bottom,0px);
+    box-sizing:border-box;
+  }
+  .ws-route-head {padding:env(safe-area-inset-top,0px) max(8px,env(safe-area-inset-right,0px)) 0 max(8px,env(safe-area-inset-left,0px));gap:3px;}
+  .ws-route-icon { width:44px; }
+  .ws-route-chooser {min-height:44px;gap:7px;}
+  .ws-route-symbol { width:30px;height:30px;border-radius:var(--ks-radius-structural); }
+  .ws-route-symbol svg {width:17px;height:17px;}
+  .ws-route-titles>small { font-size:10px; }
+  .ws-route-titles>strong { font-size:15px; }
+  .ws-route-picker {width:min(365px,100%);padding:10px;}
+  .ws-content {scrollbar-gutter:auto;}
+  .k-workshop:not([data-ws-route="whole"]) .ws-content {padding:10px 12px 18px;}
+  .ws-tool-links button,.ws-route-technical>summary {min-height:44px;}
+  body:has(.k-workshop:not([hidden])) { overflow:hidden; }
+}
+.ws-route-scrim { position:absolute;z-index:2;inset:var(--ws-head-h) 0 0;width:100%;border:0;cursor:default;background:var(--ks-ink-strong); }
+
+/* The current question travels with the drawing; the full guide replaces an
+   editor only when opened through the guarded workshop navigation. */
+.k-app .k-docbar>.studio-guide,.ws-route-head>.ws-guide-chip {
+  display:grid; align-content:center; justify-items:start; gap:0;
+  text-align:start; line-height:1.45; min-height:44px; border-radius:var(--ks-radius-control);
+}
+.k-app .k-docbar>.studio-guide {
+  width:clamp(135px,24vw,320px); color:var(--ks-ink); background:var(--ks-surface-1); border:1px solid var(--ks-on-dark-muted);
+}
+.k-app .k-docbar>.studio-guide:hover {background:var(--ks-surface-1);}
+.k-app .k-docbar>.studio-guide small,.ws-guide-chip small {font-size:10px; font-weight:600; opacity:.83;}
+.k-app .k-docbar>.studio-guide span,.ws-guide-chip span {
+  min-width:0; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px;
+}
+.ws-route-head>.ws-guide-chip {
+  margin-inline-start:auto; min-width:86px; max-width:min(340px,45%); padding:2px 10px;
+  border:1px solid var(--ks-on-dark-muted); background:var(--ks-surface-1); color:var(--ks-ink);
+}
+.ws-guide-chip[hidden]{display:none!important}
+.ws-guide-chip:not([hidden])+.ws-dismiss { margin-inline-start:0; }
+.ws-guide-destination {margin-bottom:5px; border-bottom:1px solid var(--ws-line);}
+.ws-guide-destination button {width:100%; text-align:start; padding:6px 10px; min-height:44px; background:none; border:none; font-weight:700;}
+.ws-guide-destination [aria-current]{color:var(--ks-action);}
+.project-guide {color:var(--ws-ink); padding-block:4px 15px;}
+.project-guide .pg-current {padding:10px 2px 16px;}
+.project-guide .pg-current .pg-kicker {margin:0; color:var(--ks-ink); font-weight:700; font-size:13px;}
+.project-guide .pg-current .pg-meta {margin:5px 0 1em; color:var(--ws-quiet); font-size:13px;}
+.project-guide .pg-current h2 {font-size:clamp(19px,2vw,25px); margin:0 0 7px; line-height:1.65;}
+.project-guide .pg-why {color:var(--ks-ink); margin:0 0 14px;}
+.pg-actions {display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.project-guide .pg-answer,.project-guide .pg-detail,.project-guide [data-guide-retry] {border-radius:var(--ks-radius-control); min-height:44px; font:inherit; font-weight:650; padding:7px 16px; cursor:pointer;}
+.project-guide .pg-answer {color:var(--ks-surface-1); background:var(--ks-action); border:1px solid var(--ks-action);}
+.project-guide .pg-detail,.project-guide [data-guide-retry] {background:var(--ks-surface-1); color:var(--ws-ink); border:1px solid var(--ks-line);}
+.pg-rest {margin-top:8px; border-top:1px solid var(--ws-line);}
+.pg-rest summary {cursor:pointer; padding:12px 0; color:var(--ks-ink); font-weight:650;}
+.pg-rest ul {list-style:none;padding:0;margin:0;}
+.pg-rest li+li {border-top:1px solid var(--ws-line);}
+.pg-rest li button {display:block;width:100%;min-height:44px;text-align:start;padding:8px 2px;border:0;background:none;color:var(--ws-ink);font:inherit;cursor:pointer;}
+.pg-rest li small,.pg-rest li span {display:block;}
+.pg-rest li small {color:var(--ws-quiet);}
+.k-workshop .ws-notice :is([data-guide-stay],[data-guide-discard]) {min-height:40px;font:inherit; cursor:pointer; border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ws-ink);}
+
+/* The open editor owns stage navigation. Closing it immediately restores
+   the drawing shortcuts, including when focus returns to the launch button. */
+.k-app:has(> .k-workshop:not([hidden])) .k-docbar > :is(.studio-guide,.studio-visit,.ws-entry) {
+  display:none;
+}
+.ws-route-head > .ws-dismiss {
+  width:auto; min-width:44px; display:inline-flex; align-items:center; justify-content:center;
+  gap:6px; padding-inline:10px; white-space:nowrap;
+}
+
+@media (min-width:768px) {
+  .k-app:has(> .k-workshop:not([hidden])) {
+    --ws-bar-height:66px;
+    --ws-bar-pad:clamp(12px,3vw,44px);
+    --ws-project-width:clamp(160px,26vw,270px);
+    --ws-stage-start:calc(var(--ws-bar-pad) + var(--ws-project-width) + 12px);
+  }
+  .k-app:has(> .k-workshop:not([hidden])) > .k-titlebar {
+    height:var(--ws-bar-height); min-height:var(--ws-bar-height);
+    padding-inline:var(--ws-bar-pad);
+  }
+  .k-app:has(> .k-workshop:not([hidden])) .k-studio-brand {
+    max-width:var(--ws-project-width);
+  }
+  .k-app:has(> .k-workshop:not([hidden])) .k-studio-brand > div {
+    min-width:0;
+  }
+  .k-app > .k-workshop:not([hidden]) {
+    overflow:visible;
+  }
+  .k-workshop > .ws-route-head {
+    position:fixed;
+    inset-block-start:0;
+    inset-inline:var(--ws-stage-start) calc(var(--ws-bar-pad) + 56px);
+    height:var(--ws-bar-height);
+    padding:0; border:0; background:none;
+  }
+  .ws-route-head > .ws-route-chooser {
+    border-inline-start:1px solid var(--ws-line); border-radius:var(--ks-radius-route-corner);
+    padding-inline-start:12px;
+  }
+  .ws-route-head .ws-route-titles > :is(small,strong) {
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .ws-route-head > .ws-guide-chip {min-width:auto; flex:none; max-width:none; white-space:nowrap;}
+  .ws-route-head > .ws-guide-chip span {font-size:13px;}
+  .k-workshop > .ws-route-picker {
+    position:fixed;
+    inset-block:var(--ws-bar-height) auto;
+    inset-inline:var(--ws-stage-start) auto;
+    max-height:calc(100dvh - var(--ws-bar-height) - 12px);
+  }
+  .k-workshop:has([data-ws-back]:not([hidden])) > .ws-route-picker {
+    inset-inline-start:calc(var(--ws-stage-start) + 50px);
+  }
+  .k-workshop > .ws-route-scrim {
+    position:fixed; inset:var(--ws-bar-height) 0 0;
+  }
+  /* Let the project menu float above the active editor without covering
+     its navigation row with a second opaque header. */
+  .k-app:has(> .k-workshop:not([hidden])) .k-titlebar:has(.studio-commands:not([hidden])) {
+    z-index:auto;
+  }
+  .k-app:has(> .k-workshop:not([hidden])) .k-titlebar:has(.studio-commands:not([hidden])) .k-docbar {
+    z-index:130;
+  }
+}
+
+.finish-desk [data-finish-drawing]{background:var(--ks-surface-1);border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);margin-block:8px}
+.finish-desk [data-finish-drawing] svg{display:block;width:100%;max-height:240px;touch-action:pan-y;user-select:none}
+.finish-desk [data-sheet-unit].finish-pickable,.finish-desk [data-sheet-unit].finish-picked{cursor:pointer}
+.finish-desk rect.finish-picked{stroke:var(--ks-line-strong);stroke-width:3;vector-effect:non-scaling-stroke}
+.finish-desk .finish-kinds{display:flex;gap:5px;flex-wrap:wrap;margin-block:8px}
+.finish-kinds button{min-height:42px;border:1px solid var(--ks-line);background:var(--ks-surface-1);color:var(--ks-ink);border-radius:var(--ks-radius-control);padding:5px 11px;font:inherit}
+.finish-kinds button[aria-pressed=true]{color:var(--ks-surface-1);background:var(--ks-action);border-color:var(--ks-action)}
+.finish-desk [data-finish-sample]{display:flex;gap:8px;align-items:center}
+.finish-desk .finish-chip{width:28px;height:24px;display:inline-block;border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-control)}
+
+/* Select a cabinet on the elevation while comparing the eligible finish samples. */
+@media (min-width:768px){
+ .k-workshop[data-ws-route="finish"]:has(.finish-desk){inset-inline:0;margin-inline:auto;width:min(1120px,calc(100vw - 28px))}
+ .finish-desk:has([data-finish-drawing]) .finish-workspace{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(230px,1fr);align-items:start;gap:18px}
+ .finish-workspace .finish-overview,.finish-workspace .finish-options{min-width:0}
+ .finish-workspace [data-finish-drawing] svg{max-height:clamp(300px,49dvh,520px)}
+ .finish-workspace .finish-options :is(button,select){min-height:44px}
+}
+
+/* Keep a steady header above every work surface, with the current task as
+   the only text action beside the stage chooser. */
+.studio-icon{display:inline-block;inline-size:20px;block-size:20px;vertical-align:middle;flex:none;pointer-events:none}
+.ws-route-head>.ws-guide-chip{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding-inline:11px}
+.ws-route-head .ws-guide-copy{display:grid;min-width:0;text-align:start;line-height:1.35}
+.ws-guide-copy :is(small,b){display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ws-guide-copy [data-guide-label]{font-size:12px;font-weight:650;opacity:1}
+.ws-guide-copy [data-guide-question]{font-size:14px;font-weight:600}
+.ws-route-head>.ws-dismiss{inline-size:44px;min-inline-size:44px;padding:0;border:1px solid var(--ws-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-1)}
+.ws-route-head>.ws-dismiss:is(:hover,:focus-visible){background:var(--ws-tint)}
+.k-app .k-docbar>.studio-guide{display:grid;grid-template-columns:20px minmax(0,1fr);column-gap:8px;row-gap:0}
+.k-app .k-docbar>.studio-guide .studio-icon{grid-row:span 2;align-self:center}
+.k-app .k-docbar>.studio-guide :is(small,span){grid-column:2}
+.ws-route-picker .ws-guide-jump{display:flex;align-items:center;gap:10px}
+/* The number and label identify the stage. Its tools have their own touch target. */
+.ws-route-picker{color:var(--ws-ink);background:var(--ks-surface-1);box-shadow:var(--ks-shadow-overlay)}
+.ws-route-picker .ws-picker-title{font-size:16px;font-weight:700;color:var(--ws-ink);margin:0 8px 8px}
+.ws-route-picker .ws-stage-list{gap:3px}
+.ws-route-picker .ws-stage-row{border-radius:var(--ks-radius-control)}
+.ws-route-picker .ws-stage-row[data-current-group]{border-color:var(--ks-line);background:var(--ks-surface-1)}
+.ws-route-picker .ws-stage-destination{width:calc(100% - 83px);gap:9px;min-height:48px;font-size:15px;color:var(--ws-ink)}
+.ws-route-picker .ws-stage-destination:only-child{width:100%}
+.ws-route-picker .ws-stage-number{width:25px;height:25px;border-radius:var(--ks-radius-control);color:var(--ws-quiet);background:var(--ks-surface-1);font-size:14px;font-weight:700}
+.ws-route-picker [data-current-group] .ws-stage-number{background:var(--ks-action);color:var(--ks-surface-1)}
+.ws-route-picker .ws-stage-destination .studio-icon{color:var(--ks-ink)}
+.ws-current-stage{font-size:12px;color:var(--ks-ink);font-weight:600}
+.ws-route-picker .ws-route-tools>summary{display:flex;justify-content:center;align-items:center;gap:4px;width:80px;inset-block-start:2px;border-inline-start:1px solid var(--ws-line);border-radius:var(--ks-radius-control);font-size:14px}
+.ws-route-picker .ws-route-tools>summary svg{width:15px}
+.ws-route-picker .ws-guide-destination{margin:8px 0 0;padding-top:4px;border:0;border-block-start:1px solid var(--ws-line)}
+.ws-route-picker .ws-office{margin-top:0;padding:0;border:0}
+.ws-route-picker .ws-guide-jump,.ws-route-picker .ws-office>summary{font-size:15px;color:var(--ws-ink)}
+.ws-route-picker .ws-tool-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px 8px 8px}
+.ws-route-picker .ws-tool-links button{align-items:center;min-height:44px;border:1px solid var(--ws-line);border-radius:var(--ks-radius-control);padding:5px 8px;font-size:14px;line-height:1.45;background:var(--ks-surface-1)}
+.ws-route-picker .ws-tool-links button:is(:hover,:focus-visible){background:var(--ws-tint)}
+.ws-route-picker .ws-route-technical{grid-column:1/-1}
+.ws-route-picker .ws-route-technical>summary{min-height:44px;font-size:14px}
+.ws-route-picker .ws-route-technical>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:0;border:0}
+.ws-route-picker .ws-tool-links button[aria-current]::before{display:none}
+.ws-route-picker .ws-tool-links button[aria-current]{border-color:var(--ks-action);background:var(--ks-surface-1);color:var(--ks-action)}
+@media(min-width:768px){
+ .k-app:has(> .k-workshop:not([hidden])){--ws-bar-height:56px;--ws-bar-pad:clamp(12px,1.8vw,30px);--ws-project-width:clamp(188px,29vw,370px)}
+ .k-app:has(> .k-workshop:not([hidden]))>.k-titlebar{padding-block:3px}
+ .k-workshop>.ws-route-head{gap:6px;color:var(--ks-on-dark)}
+ .ws-route-head>.ws-route-chooser{border-color:var(--ks-line-strong)}
+ .ws-route-head>.ws-route-chooser>svg,.k-workshop .ws-route-titles>small{color:var(--ks-on-dark-muted)}
+ .k-workshop .ws-route-titles>small{font-size:12px}
+ .ws-route-head>.ws-route-chooser:is(:hover,[aria-expanded=true]),.ws-route-head>[data-ws-back]:hover{background:var(--ks-action)}
+ .ws-route-head>.ws-route-icon{color:var(--ks-on-dark);flex:none}
+ .ws-route-head>.ws-dismiss,.ws-route-head>.ws-guide-chip{border:1px solid var(--ks-line-strong);background:var(--ks-ink-strong);color:var(--ks-on-dark)}
+ .ws-route-head>.ws-dismiss:is(:hover,:focus-visible),.ws-route-head>.ws-guide-chip:is(:hover,:focus-visible){background:var(--ks-action)}
+ .ws-route-head>.ws-guide-chip{flex:0 1 auto;justify-content:flex-start;gap:8px;max-width:clamp(170px,32vw,390px);min-width:95px;text-align:start}
+ .ws-guide-chip>.studio-icon{color:var(--ks-on-dark-muted)}
+ .ws-guide-chip .ws-guide-copy{width:auto}
+ .ws-guide-chip .ws-guide-copy small{color:var(--ks-on-dark-muted);line-height:1.12}
+ .ws-guide-chip .ws-guide-copy:has([data-guide-question][hidden]) small{font-size:14px;color:var(--ks-on-dark)}
+ .ws-guide-copy [data-guide-question]{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:normal;line-height:1.22}
+ .ws-route-head button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+ .k-workshop .ws-route-titles>strong{font-size:16px}
+ .k-workshop .ws-route-symbol{width:33px;height:33px;border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-structural);background:var(--ks-ink-strong);color:var(--ks-on-dark-muted)}
+ .k-workshop>.ws-route-picker{width:min(410px,calc(100vw - var(--ws-stage-start) - 16px));padding:13px}
+ .k-app .k-titlebar .k-studio-brand h1{font-size:clamp(16px,1.45vw,21px)}
+}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.k-workshop.k-workshop :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.k-workshop.k-workshop :is(button,a,summary){min-inline-size:var(--ks-target)}
+.k-workshop.k-workshop :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.k-workshop.k-workshop :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+.k-workshop.k-workshop :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+.k-workshop.k-workshop :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){.k-workshop.k-workshop :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.k-workshop.k-workshop :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}.k-workshop.k-workshop :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.ws-route-picker .ws-tool-links button[aria-current],.ws-stage-destination[aria-current],.ws-guide-destination [aria-current]{color:var(--ks-action);background:var(--ks-action-soft);border-inline-start:4px double var(--ks-action);text-decoration:underline;text-underline-offset:3px}
+.ws-stage-row[data-current-group]{border-inline-start:4px double var(--ks-action)}
+.ws-route-head > .ws-route-chooser{border-radius:var(--ks-radius-route-corner)}
+.ws-route-icon{min-width:var(--ks-target)}
+.k-app:has(> .k-workshop:not([hidden])) .k-titlebar:has(.studio-commands:not([hidden])) .k-docbar{z-index:var(--ks-z-popover)}
+
+/* Shared focus owns a stronger [tabindex] specificity branch. Actual dark
+   surfaces therefore need equally explicit ownership across feature files. */
+@media(min-width:768px){
+ .k-workshop.k-workshop > .ws-route-head :is(button,a,summary):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+}
+.k-workshop.k-workshop .ws-head :is(button,a,summary):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.k-workshop.k-workshop .sv:not(.sv-notebook) .sv-workbar :is(button,summary):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+/* Overflow contents and notebook bars use light surfaces, even when reached
+   through a dark toolbar. Native light inputs retain the shared normal ring. */
+.k-workshop.k-workshop .sv:not(.sv-notebook) .sv-workbar .sv-ink-more>div :is(button,summary):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}

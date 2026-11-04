@@ -1,0 +1,15 @@
+/* Touch may still scroll anywhere except the small draggable source buttons. */
+.shelf-planner :is(button[data-drag-divider],button[data-drag-content]){touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:grab}
+.shelf-planner :is(button[data-drag-divider],button[data-drag-content]):disabled{cursor:not-allowed}
+.shelf-planner .sp-palette-origin-active{outline:3px solid var(--ks-action);outline-offset:2px;cursor:grabbing}
+.sp-palette-is-dragging,.sp-palette-is-dragging *{cursor:grabbing!important;user-select:none!important;-webkit-user-select:none!important}
+.sp-palette-ghost{position:fixed;top:0;left:0;z-index:2147483646;display:inline-flex;align-items:center;gap:7px;max-width:calc(100vw - 8px);padding:6px 11px;background:var(--ks-ink-strong);color:var(--ks-surface-1);border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-overlay);box-shadow:var(--ks-shadow-overlay);pointer-events:none!important;user-select:none;font:600 12px/1.7 var(--sp-font,Tahoma,sans-serif);white-space:nowrap;will-change:transform}
+.sp-palette-ghost *{pointer-events:none!important}.sp-palette-ghost svg{display:block;flex:none;width:20px;height:20px;fill:none;stroke:var(--ks-line);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.sp-palette-ghost[data-kind=content] svg{width:24px;stroke:var(--ks-line)}
+.sp-palette-ghost{max-width:min(230px,calc(100vw - 8px));white-space:normal;line-height:1.5}.sp-palette-ghost-copy{display:grid;gap:2px;min-width:0}.sp-palette-ghost-copy strong{font-size:11px}.sp-palette-ghost-copy small{font-size:10px;line-height:1.65;font-weight:400;color:var(--ks-surface-1);overflow-wrap:anywhere}.sp-palette-ghost-copy small[hidden]{display:none}.sp-palette-ghost[data-feedback=invalid]{background:var(--ks-danger);border-color:var(--ks-danger)}.sp-palette-ghost[data-feedback=invalid] small{color:var(--ks-surface-1)}.sp-palette-ghost[data-feedback=neutral]{background:var(--ks-ink-strong);border-color:var(--ks-line-strong)}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.sp-palette-ghost{z-index:var(--ks-z-toast);background:var(--ks-ink-strong);color:var(--ks-surface-1)}
+.sp-palette-ghost svg,.sp-palette-ghost-copy small{color:var(--ks-surface-1);stroke:currentColor}
+.sp-palette-ghost[data-feedback=invalid]{background:var(--ks-danger);border:2px dashed var(--ks-surface-1)}
+.shelf-planner .sp-palette-origin-active{outline:3px solid var(--ks-action);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.sp-palette-ghost{will-change:auto;transition:none;animation:none}}

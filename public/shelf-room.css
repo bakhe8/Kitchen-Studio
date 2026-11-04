@@ -1,0 +1,50 @@
+/* Room overview: all surfaces are inspectable; the furniture moves only via its own command. */
+.sroom-host[hidden],.sroom-host [hidden]{display:none!important}
+.sroom-host{width:100%;min-width:0;align-self:stretch;font-family:var(--ks-font-ui)}
+.sroom{--rm-ink:var(--ks-ink);--rm-soft:var(--ks-ink-muted);--rm-grain:var(--ks-line);color:var(--rm-ink);border:1px solid var(--rm-grain);border-radius:var(--ks-radius-surface);overflow:hidden;background:var(--ks-surface-1);text-align:start;isolation:isolate}
+.sroom *{box-sizing:border-box}
+.sroom button,.sroom select{font:inherit}
+.sroom button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sroom :is(button,select,.sroom-scene):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.sroom .sroom-scene:focus-visible{outline-offset:2px}
+.sroom button:not(:disabled):hover{filter:brightness(.96)}
+.sroom-line,.sroom-selection,.sroom-actions,.sroom-switch{display:flex;align-items:center}
+.sroom-line{gap:.6rem;justify-content:space-between;flex-wrap:wrap;padding:8px 13px;background:var(--ks-surface-1);border-bottom:1px solid var(--rm-grain)}
+.sroom-switch{background:var(--ks-surface-inset);border:1px solid var(--ks-line);gap:3px;padding:3px;border-radius:var(--ks-radius-group);max-width:100%}
+.sroom button{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:var(--ks-radius-control);line-height:1.42;color:var(--ks-action);background:none;font-size:12px;font-weight:600}
+.sroom-switch button{min-height:32px;padding:3px 9px}
+.sroom-switch button[aria-pressed=true]{background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-surface-1);box-shadow:none}
+.sroom button svg{width:17px;height:17px;flex:none}
+.sroom .sroom-home{min-width:34px;min-height:34px;padding:3px 5px;color:var(--rm-soft);font-weight:500;font-size:11px}
+.sroom-figure{position:relative;display:block;margin:0;background:radial-gradient(ellipse at 52% 42%,var(--ks-surface-1),var(--ks-surface-inset) 79%);line-height:1.4}
+.sroom-scene{display:block;width:100%;height:clamp(280px,54vh,660px);height:clamp(280px,54dvh,660px);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;overflow:hidden}
+.sroom[data-room-drag] .sroom-scene,.sroom[data-room-drag] .sroom-scene *{cursor:grabbing}
+.sroom-caption{margin:0;display:flex;justify-content:center;align-items:center;gap:7px;padding:3px 9px 8px;color:var(--ks-ink);font-size:11px;line-height:1.6}
+.sroom-dot{width:6px;height:6px;flex:0 0 6px;background:var(--ks-ink-muted);border-radius:var(--ks-radius-group)}
+.sroom-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;white-space:nowrap;clip-path:inset(50%);overflow:hidden}
+.sroom-details{display:grid;grid-template-columns:minmax(220px,auto) minmax(0,1fr);align-items:center;gap:4px 16px;padding:10px 14px 12px;background:var(--ks-surface-1);border-top:1px solid var(--rm-grain)}
+.sroom-selection{flex-wrap:wrap;gap:6px 13px;grid-column:1;min-width:0}
+.sroom-selection label{display:inline-flex;align-items:center;gap:7px;min-width:0;font-size:11px;color:var(--rm-soft)}
+.sroom-selection select{min-height:36px;max-width:100%;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);padding:2px 5px;color:var(--ks-ink-strong);background:var(--ks-surface-1);font-size:12px;font-weight:650}
+.sroom-size{font-size:11px;line-height:1.6;color:var(--ks-ink)}
+.sroom-fact{grid-column:1;grid-row:2;margin:0;display:flex;align-items:center;gap:6px;color:var(--ks-ink);font-size:12px;line-height:1.65}
+.sroom-fact{flex-wrap:wrap}.sroom-visibility{font-size:11px;color:var(--ks-ink)}
+.sroom-fact i{width:10px;height:7px;background:#a4774e;border:1px solid #805a3c;flex:0 0 10px;border-radius:var(--ks-radius-group)}
+.sroom-actions{grid-column:2;grid-row:1/span 2;justify-content:flex-end;flex-wrap:wrap;gap:5px}
+.sroom-actions button{padding:6px 9px;min-height:35px;border-color:var(--ks-line);background:var(--ks-surface-2);font-size:11px}
+.sroom-actions [data-room-attach]{background:var(--ks-action);color:var(--ks-surface-1);border-color:var(--ks-line-strong)}
+.sroom-actions [data-room-attach]:disabled{cursor:default;background:var(--ks-surface-inset);color:var(--ks-ink);border-color:var(--ks-line)}
+.sroom-limit{grid-column:1/-1;margin:3px 0 0;color:var(--ks-attention);font-size:12px;line-height:1.6}
+@media(min-width:1450px){.sroom-scene{height:clamp(400px,60vh,780px);height:clamp(400px,60dvh,780px)}}
+@media(max-width:820px){.sroom-details{grid-template-columns:1fr;gap:5px}.sroom-fact,.sroom-actions,.sroom-selection{grid-column:1;grid-row:auto}.sroom-actions{justify-content:flex-start;margin-top:3px}}
+@media(max-width:500px){.sroom-line{padding:5px 6px;gap:4px}.sroom-switch{gap:1px;padding:2px}.sroom-switch button{min-height:35px;padding:4px 7px;gap:4px;font-size:11px}.sroom .sroom-home span{display:none}.sroom-scene{height:clamp(194px,52vw,278px)}.sroom-caption{padding:3px 5px 6px;font-size:10px}.sroom-details{padding:7px 8px 9px;gap:3px}.sroom-selection{gap:3px 7px}.sroom-selection label{gap:4px}.sroom-actions button{padding:5px 6px;min-height:36px}.sroom{border-radius:var(--ks-radius-surface)}}
+@media(prefers-contrast:more){.sroom{--rm-soft:var(--ks-ink-muted)}.sroom button,.sroom select{border-color:currentColor}}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.sroom :is(button,select){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+.sroom .sroom-scene:focus-visible{outline-offset:2px}
+.sroom-figure{overflow:visible}
+.sroom:has(.sroom-scene:focus-visible){overflow:visible}
+.sroom-switch button[aria-pressed=true]{background:var(--ks-action-soft);color:var(--ks-action);text-decoration:underline;text-underline-offset:4px}
+.sroom-limit{border-inline-start:4px solid var(--ks-attention);padding-inline-start:var(--ks-space-2);color:var(--ks-attention)}
+@media(prefers-reduced-motion:reduce){.sroom :is(button,select){transition:none;animation:none}.sroom button:active{transform:none!important}}

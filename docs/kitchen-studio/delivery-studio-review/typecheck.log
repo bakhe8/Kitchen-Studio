@@ -1,0 +1,6 @@
+
+> kitchen-studio@0.1.0 typecheck
+> tsc --noEmit
+
+'tsc' is not recognized as an internal or external command,
+operable program or batch file.

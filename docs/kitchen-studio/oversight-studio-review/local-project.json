@@ -1,0 +1,1252 @@
+{
+  "type": "kitchen-studio",
+  "version": 2,
+  "design": {
+    "room": {
+      "width": 500,
+      "length": 500,
+      "height": 280,
+      "colors": {},
+      "projectId": "K-4F56524C4F43414C",
+      "workshop": {
+        "storeCatalog": {
+          "version": 1,
+          "revision": 1,
+          "approved": true,
+          "name": "كتالوج اختبار عرض التكلفة — أسعار افتراضية",
+          "items": [
+            {
+              "sku": "AL-20",
+              "name": "قطاع إطار ألمنيوم ٢٠ مم",
+              "kind": "bar",
+              "role": "body",
+              "color": "فضي",
+              "thicknessMm": 20,
+              "stockLengthMm": 6000,
+              "stockWidthMm": 0,
+              "kerfMm": 3,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "BODY-6",
+              "name": "لوح جسم ٦ مم",
+              "kind": "panel",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 6,
+              "stockLengthMm": 2440,
+              "stockWidthMm": 1220,
+              "kerfMm": 3,
+              "price": 100,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "FACE-6-W",
+              "name": "لوح واجهة أبيض",
+              "kind": "panel",
+              "role": "front",
+              "color": "أبيض",
+              "thicknessMm": 6,
+              "stockLengthMm": 2440,
+              "stockWidthMm": 1220,
+              "kerfMm": 3,
+              "price": 100,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "FACE-6-G",
+              "name": "لوح واجهة رملي",
+              "kind": "panel",
+              "role": "front",
+              "color": "رملي",
+              "thicknessMm": 6,
+              "stockLengthMm": 2440,
+              "stockWidthMm": 1220,
+              "kerfMm": 3,
+              "price": 100,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "EDGE",
+              "name": "حافة الدرفة",
+              "kind": "bar",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 5000,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "UP-HANGER",
+              "name": "طقم تعليق علوي",
+              "kind": "piece",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 0,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "HINGE",
+              "name": "مفصلة باب",
+              "kind": "piece",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 0,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "PULL",
+              "name": "يد باب أو درج",
+              "kind": "piece",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 0,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "SLIDE",
+              "name": "طقم سكتين لدرج الأرز",
+              "kind": "piece",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 0,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "runner",
+              "stockUnits": 0,
+              "available": true
+            },
+            {
+              "sku": "RICE-BIN",
+              "name": "حاوية الأرز",
+              "kind": "piece",
+              "role": "body",
+              "color": "",
+              "thicknessMm": 0,
+              "stockLengthMm": 0,
+              "stockWidthMm": 0,
+              "kerfMm": 0,
+              "price": 10,
+              "offcuts": [],
+              "hardwareRole": "other",
+              "stockUnits": 0,
+              "available": true
+            }
+          ]
+        },
+        "factoryRecipes": {
+          "version": 1,
+          "revision": 2,
+          "approved": true,
+          "families": {
+            "storage": {
+              "label": "خزانة تخزين",
+              "minMm": 200,
+              "maxMm": 1200,
+              "stepMm": 50,
+              "recipe": [
+                {
+                  "sku": "AL-20",
+                  "label": "قائم جسم",
+                  "count": 4,
+                  "axis": "height",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "عارضة جسم",
+                  "count": 4,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "رابط عمق",
+                  "count": 4,
+                  "axis": "depth",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "operations": [
+                    {
+                      "kind": "drill",
+                      "machine": "CNC-1",
+                      "reference": "QA-CNC-DRILL-01",
+                      "tolerance": 0.3,
+                      "xFrom": "start",
+                      "yFrom": "start",
+                      "x": 40,
+                      "y": 35,
+                      "diameter": 7,
+                      "depth": 5,
+                      "length": 0,
+                      "width": 0,
+                      "angle": 0,
+                      "radius": 0,
+                      "minutes": 2
+                    }
+                  ],
+                  "sku": "BODY-6",
+                  "label": "جانب جسم",
+                  "count": 2,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاعدة جسم",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "رف داخلي",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "shelves"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاطع داخلي",
+                  "count": 1,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "dividers"
+                },
+                {
+                  "sku": "FACE-6-W",
+                  "label": "حشوة واجهة",
+                  "count": 1,
+                  "axis": "frontHeight",
+                  "offsetMm": -40,
+                  "axis2": "frontWidth",
+                  "offset2Mm": -40,
+                  "role": "front",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة رأسية",
+                  "count": 2,
+                  "axis": "frontHeight",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة أفقية",
+                  "count": 2,
+                  "axis": "frontWidth",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "PULL",
+                  "label": "يد",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "handle"
+                },
+                {
+                  "sku": "HINGE",
+                  "label": "مفصلة",
+                  "count": 2,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                }
+              ]
+            },
+            "rice": {
+              "label": "درج أرز",
+              "minMm": 400,
+              "maxMm": 900,
+              "stepMm": 50,
+              "recipe": [
+                {
+                  "sku": "AL-20",
+                  "label": "قائم جسم",
+                  "count": 4,
+                  "axis": "height",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "عارضة جسم",
+                  "count": 4,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "رابط عمق",
+                  "count": 4,
+                  "axis": "depth",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "جانب جسم",
+                  "count": 2,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاعدة جسم",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "FACE-6-W",
+                  "label": "حشوة واجهة",
+                  "count": 1,
+                  "axis": "frontHeight",
+                  "offsetMm": -40,
+                  "axis2": "frontWidth",
+                  "offset2Mm": -40,
+                  "role": "front",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة رأسية",
+                  "count": 2,
+                  "axis": "frontHeight",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة أفقية",
+                  "count": 2,
+                  "axis": "frontWidth",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "PULL",
+                  "label": "يد",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "handle"
+                },
+                {
+                  "sku": "SLIDE",
+                  "label": "طقم سحب",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "RICE-BIN",
+                  "label": "حاوية",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "bin",
+                  "countMode": "fixed"
+                }
+              ]
+            },
+            "dishwasher": {
+              "label": "فتحة غسالة العميل",
+              "minMm": 600,
+              "maxMm": 600,
+              "stepMm": 1,
+              "recipe": []
+            },
+            "sink": {
+              "label": "وحدة مجلى",
+              "minMm": 600,
+              "maxMm": 1200,
+              "stepMm": 50,
+              "recipe": [
+                {
+                  "sku": "AL-20",
+                  "label": "قائم جسم",
+                  "count": 4,
+                  "axis": "height",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "عارضة جسم",
+                  "count": 4,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "رابط عمق",
+                  "count": 4,
+                  "axis": "depth",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "جانب جسم",
+                  "count": 2,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاعدة جسم",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "رف داخلي",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "shelves"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاطع داخلي",
+                  "count": 1,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "dividers"
+                },
+                {
+                  "sku": "FACE-6-W",
+                  "label": "حشوة واجهة",
+                  "count": 1,
+                  "axis": "frontHeight",
+                  "offsetMm": -40,
+                  "axis2": "frontWidth",
+                  "offset2Mm": -40,
+                  "role": "front",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة رأسية",
+                  "count": 2,
+                  "axis": "frontHeight",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة أفقية",
+                  "count": 2,
+                  "axis": "frontWidth",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "PULL",
+                  "label": "يد",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "handle"
+                },
+                {
+                  "sku": "HINGE",
+                  "label": "مفصلة",
+                  "count": 2,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                }
+              ]
+            },
+            "upperStorage": {
+              "label": "خزانة علوية معلّقة",
+              "minMm": 200,
+              "maxMm": 1200,
+              "stepMm": 50,
+              "recipe": [
+                {
+                  "sku": "AL-20",
+                  "label": "قائم جسم",
+                  "count": 4,
+                  "axis": "height",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "عارضة جسم",
+                  "count": 4,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "AL-20",
+                  "label": "رابط عمق",
+                  "count": 4,
+                  "axis": "depth",
+                  "offsetMm": -40,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "جانب جسم",
+                  "count": 2,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاعدة جسم",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "رف علوي",
+                  "count": 1,
+                  "axis": "width",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "shelves"
+                },
+                {
+                  "sku": "BODY-6",
+                  "label": "قاطع رأسي",
+                  "count": 1,
+                  "axis": "height",
+                  "offsetMm": -40,
+                  "axis2": "depth",
+                  "offset2Mm": -40,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "dividers"
+                },
+                {
+                  "sku": "FACE-6-W",
+                  "label": "حشوة واجهة",
+                  "count": 1,
+                  "axis": "frontHeight",
+                  "offsetMm": -40,
+                  "axis2": "frontWidth",
+                  "offset2Mm": -40,
+                  "role": "front",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة رأسية",
+                  "count": 2,
+                  "axis": "frontHeight",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "EDGE",
+                  "label": "حافة أفقية",
+                  "count": 2,
+                  "axis": "frontWidth",
+                  "offsetMm": -4,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "PULL",
+                  "label": "يد",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "handle"
+                },
+                {
+                  "sku": "HINGE",
+                  "label": "مفصلة",
+                  "count": 2,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "front"
+                },
+                {
+                  "sku": "UP-HANGER",
+                  "label": "طقم تعليق",
+                  "count": 1,
+                  "axis": "fixed",
+                  "offsetMm": 0,
+                  "axis2": "fixed",
+                  "offset2Mm": 0,
+                  "role": "body",
+                  "when": "all",
+                  "countMode": "fixed"
+                }
+              ]
+            }
+          },
+          "baseSupport": {
+            "rules": {
+              "storage": {
+                "label": "قاعدة جسم معتمدة للاختبار",
+                "reference": "QA-BODY-01",
+                "family": "storage",
+                "mode": "integral",
+                "site": "any",
+                "default": true,
+                "minWidthMm": 200,
+                "maxWidthMm": 1200,
+                "bodyClearMm": 0,
+                "recipeHeightBasis": "net",
+                "apron": "none"
+              },
+              "rice": {
+                "label": "قاعدة جسم معتمدة للاختبار",
+                "reference": "QA-BODY-01",
+                "family": "rice",
+                "mode": "integral",
+                "site": "any",
+                "default": true,
+                "minWidthMm": 400,
+                "maxWidthMm": 900,
+                "bodyClearMm": 0,
+                "recipeHeightBasis": "net",
+                "apron": "none"
+              },
+              "sink": {
+                "label": "قاعدة جسم معتمدة للاختبار",
+                "reference": "QA-BODY-01",
+                "family": "sink",
+                "mode": "integral",
+                "site": "any",
+                "default": true,
+                "minWidthMm": 600,
+                "maxWidthMm": 1200,
+                "bodyClearMm": 0,
+                "recipeHeightBasis": "net",
+                "apron": "none"
+              }
+            },
+            "aprons": {}
+          },
+          "specials": {},
+          "machining": {
+            "strict": false,
+            "machines": [
+              {
+                "id": "CNC-1",
+                "name": "ماكينة اختبار CNC-1",
+                "datum": "QA fixture A — panel start corner",
+                "skus": [
+                  "BODY-6"
+                ],
+                "ops": [
+                  "drill"
+                ],
+                "maxLength": 1800,
+                "maxWidth": 900,
+                "maxThickness": 8,
+                "minTolerance": 0.2,
+                "clampMargin": 12,
+                "maxAngle": 90,
+                "minBendRadius": 45,
+                "setupMin": 15,
+                "dailyMin": 450
+              }
+            ]
+          }
+        },
+        "pricingTerms": {
+          "version": 1,
+          "revision": 1,
+          "approved": true,
+          "terms": {
+            "labor": 100,
+            "installation": 50,
+            "delivery": 20,
+            "marginPct": 0,
+            "taxPct": 0,
+            "worktop": "separate"
+          },
+          "wallRates": {
+            "curtain": null,
+            "heater-cover": null,
+            "cornice": null,
+            "filler": null
+          }
+        },
+        "catalogMeta": {
+          "version": 1,
+          "name": "كتالوج اختبار عرض التكلفة — أسعار افتراضية",
+          "revision": 2,
+          "layoutRevision": 1
+        },
+        "baseSupport": {
+          "runs": {
+            "run-1": {
+              "reference": "QA-LEVEL-01"
+            }
+          },
+          "units": {}
+        },
+        "chains": {
+          "right": {
+            "source": "field",
+            "rows": [
+              {
+                "id": "pantry",
+                "kind": "door",
+                "gapMm": 600,
+                "widthMm": 800,
+                "bottomMm": 0,
+                "heightMm": 2100,
+                "depthMm": 40,
+                "swing": "out",
+                "hinge": "right"
+              },
+              {
+                "id": "end",
+                "kind": "corner",
+                "gapMm": 3600
+              }
+            ],
+            "attestation": {
+              "name": "اختبار آلي — ليس رفعًا بشريًا",
+              "reference": "QUOTE-TEST-5000",
+              "date": "2026-11-04T00:47:24.075Z",
+              "key": "s-60ffd595b429b9e9db6510e291178b8a87b2400385bf442687787f0f5112327e"
+            }
+          },
+          "back": {
+            "source": "field",
+            "rows": [
+              {
+                "id": "entrance",
+                "kind": "door",
+                "gapMm": 400,
+                "widthMm": 900,
+                "bottomMm": 0,
+                "heightMm": 2100,
+                "depthMm": 40,
+                "swing": "out",
+                "hinge": "left"
+              },
+              {
+                "id": "begin",
+                "kind": "start",
+                "gapMm": 0
+              },
+              {
+                "id": "window",
+                "kind": "window",
+                "gapMm": 700,
+                "widthMm": 1200,
+                "bottomMm": 1150,
+                "heightMm": 1000,
+                "depthMm": 30,
+                "swing": "sliding",
+                "parking": "within"
+              },
+              {
+                "id": "water",
+                "kind": "water",
+                "gapMm": 600,
+                "widthMm": 60,
+                "bottomMm": 500,
+                "heightMm": 60,
+                "depthMm": 30
+              },
+              {
+                "id": "drain",
+                "kind": "drain",
+                "gapMm": 0,
+                "widthMm": 80,
+                "bottomMm": 350,
+                "heightMm": 80,
+                "depthMm": 30
+              },
+              {
+                "id": "finish",
+                "kind": "stop",
+                "gapMm": 500
+              },
+              {
+                "id": "end",
+                "kind": "corner",
+                "gapMm": 700
+              }
+            ],
+            "attestation": {
+              "name": "اختبار آلي — ليس رفعًا بشريًا",
+              "reference": "QUOTE-TEST-5000",
+              "date": "2026-11-04T00:47:24.074Z",
+              "key": "s-363aa370b09bca36e94e84672d371c257d50da7cf40c1f169d67da6d6c01f9bd"
+            }
+          }
+        },
+        "rows": {
+          "run-1": {
+            "units": [
+              {
+                "id": "unit-2",
+                "family": "storage",
+                "startMm": 1300,
+                "widthMm": 550,
+                "locks": {
+                  "width": false,
+                  "position": false,
+                  "usage": false,
+                  "finish": false
+                }
+              },
+              {
+                "id": "unit-3",
+                "family": "storage",
+                "startMm": 1850,
+                "widthMm": 550,
+                "locks": {
+                  "width": false,
+                  "position": false,
+                  "usage": false,
+                  "finish": false
+                }
+              },
+              {
+                "id": "unit-4",
+                "family": "storage",
+                "startMm": 2400,
+                "widthMm": 500,
+                "locks": {
+                  "width": false,
+                  "position": false,
+                  "usage": false,
+                  "finish": false
+                }
+              },
+              {
+                "id": "unit-5",
+                "family": "storage",
+                "startMm": 2900,
+                "widthMm": 500,
+                "locks": {
+                  "width": false,
+                  "position": false,
+                  "usage": false,
+                  "finish": false
+                }
+              },
+              {
+                "id": "unit-6",
+                "family": "sink",
+                "startMm": 3400,
+                "widthMm": 900,
+                "locks": {
+                  "width": true,
+                  "position": true,
+                  "usage": true,
+                  "finish": false
+                }
+              }
+            ],
+            "warnings": [],
+            "catalogVersion": "1"
+          }
+        },
+        "activeWall": "back"
+      },
+      "name": "مشروع محلي مستقل — لم يرفع إلى الفريق"
+    },
+    "kitchen": {
+      "version": 1,
+      "nextId": 7,
+      "runs": [
+        {
+          "id": "run-1",
+          "wall": "back",
+          "tier": "base",
+          "start": 130,
+          "end": 430,
+          "depth": 60,
+          "bottom": 0,
+          "height": 86,
+          "worktopFinish": "carrara",
+          "autoFill": true
+        }
+      ],
+      "units": [
+        {
+          "id": "unit-2",
+          "runId": "run-1",
+          "kind": "storage",
+          "u": 130,
+          "width": 55,
+          "open": false,
+          "interior": {
+            "shelves": 1,
+            "dividers": 0
+          },
+          "fillRole": "fixed",
+          "frontStyle": "flat",
+          "handleStyle": "bar",
+          "frontFinish": "sage"
+        },
+        {
+          "id": "unit-3",
+          "runId": "run-1",
+          "kind": "storage",
+          "u": 185,
+          "width": 55,
+          "open": false,
+          "interior": {
+            "shelves": 1,
+            "dividers": 0
+          },
+          "fillRole": "fixed",
+          "frontStyle": "flat",
+          "handleStyle": "bar",
+          "frontFinish": "sage"
+        },
+        {
+          "id": "unit-4",
+          "runId": "run-1",
+          "kind": "storage",
+          "u": 240,
+          "width": 50,
+          "open": false,
+          "interior": {
+            "shelves": 1,
+            "dividers": 0
+          },
+          "fillRole": "fixed",
+          "frontStyle": "flat",
+          "handleStyle": "bar",
+          "frontFinish": "sage"
+        },
+        {
+          "id": "unit-5",
+          "runId": "run-1",
+          "kind": "storage",
+          "u": 290,
+          "width": 50,
+          "open": false,
+          "interior": {
+            "shelves": 1,
+            "dividers": 0
+          },
+          "fillRole": "fixed",
+          "frontStyle": "flat",
+          "handleStyle": "bar",
+          "frontFinish": "sage"
+        },
+        {
+          "id": "unit-6",
+          "runId": "run-1",
+          "kind": "sink",
+          "u": 340,
+          "width": 90,
+          "open": false,
+          "interior": {
+            "shelves": 0,
+            "dividers": 0
+          },
+          "fillRole": "fixed",
+          "frontStyle": "flat",
+          "handleStyle": "bar",
+          "frontFinish": "sage"
+        }
+      ],
+      "features": [
+        {
+          "id": "chain-right-pantry",
+          "kind": "door",
+          "wall": "right",
+          "u": 60,
+          "width": 80,
+          "depth": 4,
+          "bottom": 0,
+          "height": 210,
+          "hinge": "right",
+          "swing": "out"
+        },
+        {
+          "id": "chain-back-entrance",
+          "kind": "door",
+          "wall": "back",
+          "u": 40,
+          "width": 90,
+          "depth": 4,
+          "bottom": 0,
+          "height": 210,
+          "hinge": "left",
+          "swing": "out"
+        },
+        {
+          "id": "chain-back-window",
+          "kind": "window",
+          "wall": "back",
+          "u": 200,
+          "width": 120,
+          "depth": 3,
+          "bottom": 115,
+          "height": 100,
+          "swing": "sliding",
+          "parking": "within"
+        },
+        {
+          "id": "chain-back-water",
+          "kind": "water",
+          "wall": "back",
+          "u": 377,
+          "width": 6,
+          "depth": 3,
+          "bottom": 47,
+          "height": 6
+        },
+        {
+          "id": "chain-back-drain",
+          "kind": "drain",
+          "wall": "back",
+          "u": 376,
+          "width": 8,
+          "depth": 3,
+          "bottom": 31,
+          "height": 8
+        }
+      ]
+    }
+  },
+  "fieldFiles": [],
+  "photos": {}
+}

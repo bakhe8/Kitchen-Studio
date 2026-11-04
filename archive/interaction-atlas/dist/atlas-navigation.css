@@ -1,0 +1,17 @@
+.experiment-views{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:6px 0 14px;border-bottom:1px solid #d7ddcf}
+.experiment-views a{font-size:13px;font-weight:650;text-decoration:none;color:#455d50;padding:9px 12px;border-bottom:3px solid transparent}
+.experiment-views a[aria-current=page]{color:#153f35;border-color:#94734a}
+.experiment-views a:hover,.experiment-views a:focus-visible{background:#e9eee4}
+#knowledge-view:focus{outline:none}
+#example-knowledge{margin:16px clamp(8px,2vw,23px)}
+.profile-disclosure:not([open]){border-block:1px solid #d9dece;padding-block:5px}
+.atlas-tabs a:focus-visible,.experiment-views a:focus-visible{outline:2px solid #995634;outline-offset:2px}
+@media(max-width:560px){.atlas-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.atlas-tabs a{text-align:center;font-size:12px;padding:8px 2px}.experiment-views{gap:0}.experiment-views a{font-size:11px;padding:8px}.atlas-page,.experiment-column,#knowledge-view{min-width:0}}
+.comparison-questions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.comparison-questions a{display:grid;gap:3px;padding:10px 14px;border:1px solid #d2dbcb;border-radius:9px;background:#f6f7f0;text-decoration:none;color:#24493c}
+.comparison-questions small{font-size:10px;color:#826240}.comparison-questions strong{font-size:13px;font-weight:650}.comparison-questions a:focus-visible,.comparison-questions a:hover{border-color:#64806d;background:#edf3e9}
+@media(max-width:560px){.comparison-questions{grid-template-columns:1fr;gap:4px}.comparison-questions a{display:flex;align-items:baseline;gap:8px;padding:7px 10px}.comparison-questions small{min-width:74px}}
+
+.planner-entry{display:inline-flex;gap:.4rem;align-items:center;color:#2a5144;text-decoration:none;font-weight:650;font-size:12px;border:1px solid #bdc9b9;border-radius:8px;padding:6px 10px;background:#f1f4e9;white-space:nowrap}
+.planner-entry:hover,.planner-entry:focus-visible{background:#e5eadf;border-color:#6e8c78}.planner-entry span{font-size:13px}
+@media(max-width:800px){.atlas-header .planner-entry{margin-inline-start:auto}.atlas-header .atlas-tabs{order:3;margin-inline:0}}

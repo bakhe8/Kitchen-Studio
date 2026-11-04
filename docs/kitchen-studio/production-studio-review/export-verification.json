@@ -1,0 +1,49 @@
+{
+  "testOnly": true,
+  "projectId": "K-70726F6475637431",
+  "units": 5,
+  "pieceRows": 54,
+  "pieceCount": 127,
+  "operations": 4,
+  "changedPhysicalUnits": [
+    "unit-2",
+    "unit-3",
+    "unit-4",
+    "unit-5"
+  ],
+  "operation": {
+    "x": 60,
+    "y": 35,
+    "diameter": 7,
+    "depth": 5,
+    "tolerance": 0.3
+  },
+  "measuredGeometryMaterialsPricesAndCutPackingUnchanged": true,
+  "total": 1060,
+  "valid": {
+    "structure": true,
+    "customer": true,
+    "release": true
+  },
+  "releaseConcernCount": 0,
+  "recordApprovals": {
+    "store": true,
+    "factory": true,
+    "pricing": true
+  },
+  "versions": [
+    {
+      "n": 1,
+      "total": 1060,
+      "reason": ""
+    },
+    {
+      "n": 2,
+      "total": 1060,
+      "reason": "اختبار نقل ثقب الوصفة المشتركة من X40 إلى X60 مم دون تغيير مقاسات الوحدات أو سعرها."
+    }
+  ],
+  "unroutedRows": 40,
+  "strictMachining": false,
+  "csvVerified": true
+}

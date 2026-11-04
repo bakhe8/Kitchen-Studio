@@ -1,0 +1,95 @@
+@import url('./kitchen-row-strip.css');
+/* Application chrome. Workspace drawings, projects and exports remain in cm;
+   this layer replaces the surrounding atlas page only in the kitchen editor. */
+body[data-project-mode=kitchen]{
+ --studio-deep:var(--ks-ink-strong);--studio-ink:var(--ks-ink);--studio-muted:var(--ks-ink-muted);--studio-edge:var(--ks-line);--studio-paper:var(--ks-canvas);--studio-copper:var(--ks-attention);
+ --studio-font:var(--ks-font-ui);
+ margin:0;max-width:none;min-width:0;background:var(--ks-surface-1);color:var(--studio-ink);overflow-x:hidden;overflow-y:auto
+}
+body[data-project-mode=kitchen] > :is(.sp-topbar,.sp-footer){display:none!important}
+body[data-project-mode=kitchen] > .k-app{
+ isolation:isolate;display:flex;flex-direction:column;position:relative;direction:rtl;text-align:start;
+ margin:0;width:100%;max-width:none;height:100vh;height:100dvh;min-height:400px;min-width:0;padding:0;
+ background:var(--studio-paper);color:var(--studio-ink);font:400 14px/1.5 var(--studio-font)
+}
+.k-app *,.k-app *::before,.k-app *::after{box-sizing:border-box}
+.k-app .k-titlebar{
+ position:relative;z-index:12;display:flex;align-items:center;justify-content:space-between;
+ flex:0 0 auto;flex-wrap:wrap;gap:8px 16px;min-height:66px;margin:0;padding:7px clamp(11px,1.6vw,30px);
+ border:0;border-bottom:3px solid var(--ks-line-strong);background:linear-gradient(105deg,var(--ks-ink-strong),var(--ks-ink-strong) 80%);color:var(--ks-on-dark)
+}
+.k-titlebar .k-studio-brand{display:flex;align-items:center;gap:10px;min-width:0}
+.k-studio-mark{display:grid;place-items:center;flex:none;width:39px;height:39px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);background:var(--ks-ink-strong);color:var(--ks-on-dark-muted);box-shadow:var(--ks-shadow-mark)}
+.k-titlebar .k-studio-brand{text-decoration:none;color:inherit}.k-studio-mark svg,.k-studio-mark img{display:block;width:25px;height:25px}
+.k-app .k-titlebar h1{margin:0;color:var(--ks-on-dark);font:700 clamp(19px,1.9vw,28px)/1.26 var(--studio-font);letter-spacing:0}
+.k-app .k-titlebar p{margin:1px 0 0;line-height:1.35;color:var(--ks-on-dark-muted);font-size:11px}
+.k-app .k-docbar{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:wrap;max-width:100%;min-width:0}
+.k-app .k-docbar :is(button,summary,a){font-family:var(--studio-font);font-size:12px;font-weight:600;line-height:1.45;cursor:pointer}
+.k-app .k-docbar>:is(a,button),.k-app .k-docbar>details>summary{
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;min-width:32px;min-height:36px;padding:4px 10px;
+ border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-control);color:var(--ks-on-dark);background:var(--ks-ink-strong);text-decoration:none
+}
+.k-app .k-docbar>:is(a,button):hover,.k-app .k-docbar>details>summary:hover{background:var(--ks-action);border-color:var(--ks-action)}
+.k-app .k-docbar svg{width:16px;height:16px;flex:none}
+.k-app .k-docbar .k-doc-main,.k-app .k-docbar :is([data-pro-library],[data-k-library]){
+ color:var(--ks-ink);background:var(--ks-surface-2);border-color:var(--ks-on-dark-muted)
+}
+.k-app .k-docbar .k-doc-main:hover,.k-app .k-docbar :is([data-pro-library],[data-k-library]):hover{background:var(--ks-surface-1);color:var(--ks-action)}
+.k-app .k-docbar button:disabled{opacity:.4;cursor:default}
+.k-app .k-docbar button[aria-expanded=true],.k-app .k-docbar details[open]>summary{color:var(--ks-ink-strong);border-color:var(--ks-line);background:var(--ks-surface-inset)}
+.k-app .k-docbar details summary{list-style:none}.k-docbar summary::-webkit-details-marker{display:none}
+.k-app .k-docbar details>div{top:calc(100% + 5px);max-width:calc(100vw - 18px);color:var(--ks-ink);border-radius:var(--ks-radius-control);border:1px solid var(--ks-line);background:var(--ks-surface-1);box-shadow:var(--ks-shadow-surface)}
+.k-app .k-docbar details>div :is(a,button){color:var(--ks-ink);background:var(--ks-surface-1);text-align:start;border:0}
+.k-app .k-docbar details>div :is(a,button):hover{background:var(--ks-surface-1)}
+.k-app #shelf-kitchen-host{display:flex;flex:1 1 auto;min-height:0;min-width:0}
+.k-app .k-app-status{flex:none;min-height:0;margin:0;padding:0 10px;background:var(--ks-surface-1);color:var(--ks-ink);font-size:11px;line-height:1.55}
+.k-app .k-app-status:empty{display:none}.k-app .k-app-status:not(:empty){padding-block:2px}
+.k-app .k-room-form{left:clamp(6px,1.35vw,24px);right:auto;top:clamp(77px,12vh,112px);width:min(336px,calc(100vw - 15px));max-height:calc(100dvh - 104px);padding:15px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1);color:var(--ks-ink);box-shadow:var(--ks-shadow-overlay);text-align:start}
+.k-app .k-room-form h2,.k-app .k-room-form h3{color:var(--ks-ink)}.k-app .k-room-form input,.k-app .k-room-form select{font-family:var(--studio-font);font-size:13px;color:var(--ks-ink);border-color:var(--ks-line);background:var(--ks-surface-1)}
+.k-app .k-room-form button{background:var(--ks-surface-1);color:var(--ks-ink);border-color:var(--ks-line)}
+.k-app .k-room-form .k-room-foot button:first-child,.k-app .kidea-save button{background:var(--ks-action);color:var(--ks-on-dark);border-color:var(--ks-action)}
+.k-app :is(.k-docbar,.k-room-form,.k-studio-brand) :focus-visible,.k-app .k-docbar :is(button,a,summary):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-app .k-review-trigger:not([hidden]){background:var(--ks-surface-inset);border-color:var(--ks-line);color:var(--ks-ink)}
+.k-app .kcreative{border:0;padding:0;margin:4px 0}.k-app .kcreative .kcreative-toggle{color:var(--ks-ink);background:var(--ks-surface-1);border-color:var(--ks-line)}.k-app .kmat-choice[aria-pressed=true]{border-color:var(--ks-action)}
+body[data-project-mode=kitchen-unit]{--sp-ink:var(--ks-ink);--sp-line:var(--ks-line);background:var(--ks-surface-1)}
+body[data-project-mode=kitchen-unit] .sp-topbar{background:var(--ks-ink-strong);border-bottom:2px solid var(--ks-line-strong)}
+body[data-project-mode=kitchen-unit] .sp-brand{color:var(--ks-on-dark)}body[data-project-mode=kitchen-unit] .sp-brand small{color:var(--ks-ink-muted)}
+body[data-project-mode=kitchen-unit] :is(#kitchen-unit-toolbar,.sp-stage-heading){background:var(--ks-surface-1);color:var(--ks-ink)}
+body[data-project-mode=kitchen-unit] .sp-brand-mark{background:var(--ks-ink-strong);border-color:var(--ks-line-strong);color:var(--ks-on-dark-muted)}
+body[data-project-mode=kitchen-unit] .sp-stage-card{border-color:var(--ks-line)}
+body[data-project-mode=kitchen-unit] #shelf-dock{border-color:var(--ks-line-strong)}
+@media(min-width:1650px){.k-app .k-titlebar{min-height:73px}.k-app .k-docbar>:is(a,button),.k-app .k-docbar>details>summary{min-height:40px;font-size:13px;padding-inline:13px}}
+@media(max-width:820px){.k-app .k-titlebar{min-height:57px;gap:5px 8px}.k-app .k-docbar{gap:3px}.k-app .k-docbar>:is(a,button),.k-app .k-docbar>details>summary{min-height:32px;padding:3px 6px;font-size:11px}.k-studio-mark{width:32px;height:32px}.k-app .k-titlebar h1{font-size:20px}}
+@media(max-width:650px){
+ body[data-project-mode=kitchen]>.k-app{min-height:380px}.k-app .k-titlebar{padding:5px 7px;gap:4px;min-height:52px}
+ .k-titlebar .k-studio-brand{gap:5px}.k-studio-mark{width:28px;height:28px;border-radius:var(--ks-radius-structural)}.k-studio-mark svg{width:18px;height:18px}.k-app .k-titlebar h1{font-size:17px}.k-app .k-titlebar p{font-size:9px}
+ .k-app .k-docbar{gap:3px;justify-content:flex-start}.k-app .k-docbar>:is(a,button),.k-app .k-docbar>details>summary{min-width:27px;min-height:29px;padding:3px 5px;font-size:10px}
+ .k-app .k-docbar svg{width:13px;height:13px}.k-app .k-room-form{top:86px;left:4px;max-height:calc(100dvh - 93px);padding:10px}
+}
+@media(max-width:395px){.k-app .k-titlebar{align-items:flex-start}.k-app .k-docbar{width:100%}.k-app .k-titlebar p{max-width:140px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}}
+@media print{body[data-project-mode=kitchen]>.k-app{height:auto;min-height:0}.k-app :is(.k-docbar,.kit-palette,.kit-panel,.kit-foot,.kit-command,.k-app-status){display:none!important}.k-app .kit-mat{height:80vh}}
+
+.k-app .k-docbar>[data-studio-panel=library]{background:var(--ks-ink-strong);border-color:var(--ks-line-strong);color:var(--ks-on-dark)}
+.k-app .k-docbar>[data-studio-photo]{background:var(--ks-surface-2);color:var(--ks-ink);border-color:var(--ks-on-dark-muted)}
+.k-app .k-docbar>[data-studio-photo]:hover{background:var(--ks-surface-inset);color:var(--ks-action);border-color:var(--ks-on-dark-muted)}
+.k-app .k-docbar>[data-studio-panel][aria-expanded=true]{border-color:var(--ks-line);background:var(--ks-surface-inset);color:var(--ks-ink)}
+/* The standalone studio does not load the atlas' skip-link stylesheet. */
+body[data-project-mode=kitchen]>.sp-skip{position:fixed;z-index:1200;top:6px;right:8px;transform:translateY(calc(-100% - 12px));padding:6px 12px;border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-ink);font:600 13px/1.5 var(--studio-font);text-decoration:none}
+body[data-project-mode=kitchen]>.sp-skip:focus{transform:none;outline:3px solid var(--ks-focus-ring)}
+.k-titlebar img.k-studio-mark{object-fit:contain;box-shadow:none;border:0;background:transparent}
+.room-survey .survey-sketch{width:100%;display:block;max-height:170px;direction:ltr;border-radius:var(--ks-radius-control)}
+.room-survey .survey-tabs button{font-size:11px;min-height:35px}.survey-kicker,.survey-actions{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:10px 0 3px}.survey-kicker{font-size:11px;color:var(--ks-ink-muted);border-bottom:1px solid var(--ks-on-dark-muted);padding-bottom:4px}.survey-kicker b{border-radius:var(--ks-radius-control);color:var(--ks-ink);background:var(--ks-surface-1);padding:1px 6px}.survey-actions{justify-content:flex-start;margin-top:14px}.room-survey .pr-fields{row-gap:0}.room-survey .pr-field{margin:5px 0}.room-survey input[type=number]{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}.survey-preset-list{display:grid;gap:8px}.survey-preset-list article{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:center;border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);padding:7px}.survey-preset-list article>div{display:grid;gap:2px}.survey-preset-list strong{font-size:12px}.survey-preset-list article b{justify-self:start;font-size:10px;color:var(--ks-ink-muted)}.survey-preset-list article small{font-size:10px;color:var(--ks-ink-muted)}.survey-preset-list article a{color:var(--ks-ink);font-size:11px}.survey-preset-list .survey-sketch{min-height:70px}.survey-preset-list article button{grid-column:2 / -1;justify-self:start}.room-survey .pr-note{display:block;margin-top:8px}
+.kit-panel .kit-row-depth-form{background:var(--ks-surface-1);padding:7px 8px;border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control)}
+.kit-row-depth-form .kit-fields{align-items:end}
+.kit-row-depth-form small{display:block;margin-top:4px;color:var(--ks-ink-muted);font-size:11px}
+.room-survey [data-plan-kind]{cursor:pointer;outline:3px solid var(--ks-focus-ring)}
+.room-survey [data-plan-kind="point"],.room-survey [data-plan-kind="feature"]{cursor:grab;touch-action:none}
+.room-survey [data-plan-kind]:focus-visible,.room-survey [data-plan-kind][data-current]{filter:var(--ks-filter-pick)}
+.room-survey [data-plan-kind]:is(:hover,:focus-visible) .survey-plan-hit{stroke:var(--ks-action)}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+body[data-project-mode=kitchen]>.sp-skip{z-index:var(--ks-z-skip)}
+.k-app .k-docbar details>div :is(a,button):hover{background:var(--ks-action-soft)}
+.k-app .k-docbar button[aria-expanded=true],.k-app .k-docbar details[open]>summary{border-inline-start:4px double var(--ks-action);background:var(--ks-action-soft);color:var(--ks-action)}
+
+.k-app.k-app .k-docbar button:is(:disabled,[aria-disabled="true"]):hover{border-color:var(--ks-line-strong);background:var(--ks-ink-strong);color:var(--ks-on-dark-muted)}

@@ -1,0 +1,84 @@
+/* Keep visit, design and the drawing in the foreground. */
+.k-app .k-titlebar{z-index:var(--ks-z-sticky);min-height:66px;flex-wrap:nowrap;align-items:center;padding:9px clamp(12px,3vw,44px);gap:12px;border:0;border-bottom:1px solid var(--ks-line-strong);background:var(--ks-ink-strong)}
+.k-app .k-titlebar h1{font-size:clamp(17px,2vw,23px);line-height:1.3}
+.k-app .k-titlebar p{max-width:29vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--ks-surface-1)}
+.k-app .k-docbar{width:auto;flex:none;gap:8px;justify-content:flex-end;flex-wrap:nowrap}
+.k-app .k-docbar>button{min-height:44px;min-width:44px;display:flex;gap:7px;align-items:center;padding:5px 14px;border-radius:var(--ks-radius-control);font-size:14px;}
+.k-app .k-docbar>button.ws-entry{background:var(--ks-surface-inset);border:1px solid var(--ks-line);color:var(--ks-ink-strong)}
+.k-app .k-docbar>button.ws-entry:hover{background:var(--ks-surface-2);color:var(--ks-ink-strong)}
+.k-app .k-docbar>button.studio-visit{background:transparent;border:1px solid var(--ks-line-strong);color:var(--ks-surface-1)}
+.k-app .k-docbar>button.studio-more{padding:0;background:transparent;border:1px solid transparent;color:var(--ks-surface-1)}
+.k-app .k-docbar>button.studio-more[aria-expanded=true]{background:var(--ks-action)}
+.studio-commands{position:absolute;inset-inline-end:0;top:calc(100% + 8px);width:min(325px,calc(100vw - 18px));max-height:calc(100dvh - 74px);overflow:auto;overscroll-behavior:contain;padding:8px 12px;z-index:var(--ks-z-popover);color:var(--ks-ink-strong);background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);box-shadow:var(--ks-shadow-overlay)}
+.studio-commands[hidden],.studio-commands button[hidden]{display:none!important}
+.studio-commands section{padding:6px 0;margin:0}.studio-commands section+section{border-top:1px solid var(--ks-line)}
+.studio-commands h2{margin:1px 6px 4px;color:var(--ks-ink);font-size:12px;font-weight:600}
+.k-app .studio-commands button{width:100%;display:flex;align-items:center;gap:12px;min-height:44px;padding:6px 10px;background:var(--ks-surface-1);color:var(--ks-ink-strong);border:0;border-radius:var(--ks-radius-control);text-align:start;font-size:14px}
+.k-app .studio-commands button:is(:hover,:focus-visible){background:var(--ks-surface-2)}.k-app .studio-commands button:disabled{opacity:.48}
+.studio-history{display:flex}.k-app .studio-history button{width:50%;font-size:13px}
+.k-app .kit-command{background:var(--ks-surface-1);border-color:var(--ks-line)}.k-app .kit .kit-mat{background:var(--ks-surface-2)}
+.k-app .kit-view{background:var(--ks-surface-2);border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);padding:3px;gap:2px}
+.k-app .kit-view button{min-height:38px;border:none;background:transparent;color:var(--ks-action);border-radius:var(--ks-radius-control)}
+.k-app .kit-view button[aria-pressed=true]{background:var(--ks-surface-1);color:var(--ks-action);box-shadow:none}
+.k-app .kit-palette{border-radius:var(--ks-radius-overlay);background:var(--ks-surface-1);border:1px solid var(--ks-line);color:var(--ks-ink-strong);box-shadow:var(--ks-shadow-overlay)}
+.k-app .kit-palette>summary{min-height:40px;color:var(--ks-ink-strong);font-size:13px}.k-app .kit-palette>summary::after,.k-app .kit-grip{color:var(--ks-action)}
+.k-app .kit-foot{background:var(--ks-surface-1);border-color:var(--ks-line)}.k-app .kit-foot-links>button{display:none}
+.k-app .kit-quick .kit-selected-action{background:var(--ks-action-soft);border:1px solid var(--ks-action);border-radius:var(--ks-radius-control);padding:5px 10px;color:var(--ks-action);font-weight:700}
+.k-app-status:empty{display:none}
+@media(max-width:650px){
+ .k-app .k-titlebar{min-height:58px;padding:6px 8px;gap:4px}.k-app .k-titlebar .k-studio-brand{gap:5px;flex:1}.k-app .k-studio-mark{width:26px;height:26px}
+ .k-app .k-titlebar h1{font-size:15px}.k-app .k-titlebar p{font-size:10px;max-width:26vw}
+ .k-app .k-docbar{gap:2px}.k-app .k-docbar>button{min-height:44px;min-width:42px;padding:3px 7px;font-size:12px;gap:4px}.k-app .k-docbar>button.studio-more{min-width:38px}
+ .studio-commands{inset-inline-end:0}
+ .k-app .kit-command{padding:5px 7px}.k-app .kit-quick label{font-size:11px}
+ .k-app .kit-quick input,.k-app .kit-quick select{min-height:38px;font-size:16px;max-width:121px}
+ .k-app .kit-state .kit-status{font-size:12px}.k-app .kit-guide summary{min-height:38px;font-size:11px}
+}
+@media(max-width:370px){.k-app .k-studio-mark{display:none}.k-app .studio-visit svg,.k-app .ws-entry svg{display:none}.k-app .k-titlebar p{max-width:30vw}}
+
+.k-app .k-docbar .studio-more[data-has-conflicts]{position:relative}.k-docbar .studio-more[data-has-conflicts]::after{content:"";position:absolute;inset:6px 6px auto auto;width:8px;height:8px;border-radius:var(--ks-radius-group);background:var(--ks-line)}
+/* The project title and tools share one ink-coloured mast across workspaces. */
+.k-app .k-titlebar{background:var(--ks-ink-strong);border-color:var(--ks-line-strong);color:var(--ks-surface-1)}
+.k-app .k-titlebar h1{color:var(--ks-surface-1);max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-app .k-titlebar p{color:var(--ks-surface-1);font-size:12px}
+.k-app .k-docbar>button{border-radius:var(--ks-radius-control)}
+.k-app .k-docbar>button.ws-entry{color:var(--ks-surface-1);background:var(--ks-action);border-color:var(--ks-line-strong)}
+.k-app .k-docbar>button.ws-entry:hover,.k-app .k-docbar>button.ws-entry[aria-expanded=true]{background:var(--ks-action);color:var(--ks-surface-1)}
+.k-app .k-docbar>button.studio-visit,.k-app .k-docbar>button.studio-more{color:var(--ks-surface-1);background:transparent;border-color:var(--ks-line-strong)}
+.k-app .k-docbar>button.studio-visit:hover,.k-app .k-docbar>button.studio-more:is(:hover,[aria-expanded=true]){color:var(--ks-surface-1);background:var(--ks-action);border-color:var(--ks-line-strong)}
+.k-app .k-docbar>button.studio-more{border-radius:var(--ks-radius-control)}
+.k-app .k-docbar>button.studio-more svg{width:21px;height:21px}
+/* Undo and redo stay one tap away at the end of the drawing's command row (a tablet has no keyboard shortcut). */
+.k-app .kit-history{display:flex;flex:none;align-items:center;gap:6px}
+.k-app .kit-history button{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0;color:var(--ks-ink-strong);background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);cursor:pointer}
+.k-app .kit-history button:not(:disabled):hover{background:var(--ks-surface-2);border-color:var(--ks-line-strong)}
+.k-app .kit-history button:disabled{opacity:.4;cursor:default}
+.k-app .kit-history button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-app .kit-history svg{width:21px;height:21px}
+.studio-commands{border-color:var(--ks-line);border-radius:var(--ks-radius-group);box-shadow:var(--ks-shadow-overlay)}
+.studio-commands h2{color:var(--ks-ink);font-size:14px;margin-inline:8px}
+.k-app .studio-commands button{color:var(--ks-ink-strong)}
+.k-app .studio-commands button svg{color:var(--ks-action)}
+.k-app .studio-commands button:is(:hover,:focus-visible){background:var(--ks-surface-2)}
+.k-app .kit .kit-mat{background:var(--ks-surface-2)}.k-app .kit-view,.k-app .kit-view button,.k-app .kit-palette,.k-app .kit-quick .kit-selected-action{border-radius:var(--ks-radius-overlay)}
+@media(max-width:650px){.k-app .k-titlebar h1{max-width:30vw}.k-app .k-titlebar p{font-size:10px}}
+
+/* Drawing commands share the same anchored menu in survey, proposal and CAD. */
+.k-drawing-menu {position:fixed;z-index:var(--ks-z-popover);display:grid;min-width:175px;max-width:min(300px,calc(100vw - 12px));max-height:calc(100dvh - 12px);overflow:auto;overscroll-behavior:contain;box-sizing:border-box;padding:5px;background:var(--ks-surface-1);color:var(--ks-ink-strong);border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);box-shadow:var(--ks-shadow-surface);font:14px/1.5 Tahoma,Arial,sans-serif;}
+.k-drawing-menu strong {padding:6px 10px;color:var(--ks-ink);border-bottom:1px solid var(--ks-line);font-size:12px;}
+.k-drawing-menu button {background:transparent;color:inherit;font:inherit;border:0;border-radius:var(--ks-radius-control);text-align:start;padding:6px 10px;min-height:40px;cursor:pointer;}
+.k-drawing-menu button:is(:focus-visible,:hover){outline:3px solid var(--ks-focus-ring);outline-offset:2px;background:var(--ks-surface-2);}
+@media (pointer:coarse){.k-drawing-menu button{min-height:44px;}}
+svg[data-drawing-panning]{cursor:grabbing!important;}
+
+.studio-commands [hidden]{display:none!important}
+.k-app[data-standalone-panel] > .k-titlebar .k-docbar{visibility:hidden}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.studio-commands,.k-drawing-menu{z-index:var(--ks-z-popover)}
+.k-drawing-menu button{min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+.k-app .k-titlebar :is(button,a,summary):focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}
+.k-app .k-titlebar .studio-commands :focus-visible,.k-drawing-menu button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-app .k-docbar>button,.k-app .kit-view button,.k-app .kit-palette>summary,.k-app .kit-quick :is(input,select),.k-app .kit-guide summary{min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+.k-app .kit-view button[aria-pressed=true]{background:var(--ks-action-soft);color:var(--ks-action);text-decoration:underline;text-underline-offset:4px}
+@media(prefers-reduced-motion:reduce){.studio-commands,.k-drawing-menu{transition:none;animation:none}}

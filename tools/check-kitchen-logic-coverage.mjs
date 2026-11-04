@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFileSync, existsSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {fieldInputs} from '../public/kitchen-field-catalog.js';
+const root=new URL('../',import.meta.url);
+const report=readFileSync(new URL('docs/kitchen-studio/logic-coverage.html',root),'utf8');
+const items=[...report.matchAll(/<tr data-code="([^"]+)" data-type="([APR])">/g)].map(m=>m[1]);
+assert.deepEqual(items,fieldInputs.map(i=>i.code));
+assert.equal(new Set(items).size,146);
+const ids=new Set([...report.matchAll(/ id="([^"]+)"/g)].map(m=>m[1]));
+for(const [,id] of report.matchAll(/href="#([^"]+)"/g))assert(ids.has(id),id);
+for(const [,f] of report.matchAll(/<code>([^<]+)<\/code>/g))assert(existsSync(fileURLToPath(new URL(f,root))),f);
+console.log('146 dictionary IDs in order, one scope classification each, all report anchors and source/test references exist.');

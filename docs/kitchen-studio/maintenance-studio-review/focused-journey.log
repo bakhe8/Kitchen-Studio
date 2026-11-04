@@ -1,0 +1,21 @@
+Focused maintenance checks · 2026-11-04T00:25:04.4832727Z
+Command: node tools/check-kitchen-maintenance-studio.mjs
+(node:53560) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Maintenance cold entry: actual application bootstrap opens maintenance without a local drawing, while a new design still uses visit intake.
+Maintenance studio: receipt-bound anchored preview, native text undo, local undo/redo/discard, explicit draft save/reopen and subject isolation.
+Maintenance studio: blank/oversized reports and reversed warranty dates preserve raw input without writes; unaccepted units expose no service submission.
+Maintenance studio: actual accepted handover → anchored ticket → owner coverage → repair → owner customer closure → reopen and fresh review, without changing receipt geometry or prior decisions.
+Maintenance studio: tickets remain possible without documented warranty or after expiry; covered decisions are rejected and explicit outside-coverage review remains available.
+Maintenance studio: rejected save and lost committed response preserve raw fields and retry one stable request without duplicate tickets.
+Maintenance studio: acknowledged API save plus failed GET has visible recovery without resubmitting the event.
+Maintenance studio: two tickets on one unit preserve independent review drafts and write only the selected ticket.
+Maintenance studio: saved review drafts become explicitly stale when warranty or unit sequence changes, preserving raw text until discard.
+Maintenance studio: factory can report, repair and reopen; warranty, coverage approval and customer closure remain owner actions.
+Maintenance studio: authenticated subject binding and server scope prevent another account from submitting an owner draft.
+Maintenance studio: unavailable draft storage blocks an unrepeatable API request while preserving editable input.
+Maintenance workshop: actual mount, pending navigation guard, discard, server save and clean return to delivery without local project mutation.
+Maintenance workshop: actual handover and Back preserve exact project/receipt/unit/ticket focus over another ticket’s saved selection.
+Maintenance workshop: uncertain reopen survives handover/Back and committed-response refresh/other-pin selection, then retries the original request exactly once.
+Maintenance scoped portal: actual factory workspace mounts the service controller, and forged store/rep navigation cannot enter it.
+Maintenance journey exit code: 0

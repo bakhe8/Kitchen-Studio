@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import {kitchenDrawingBook,printKitchen,planSheet,elevationSheet,sheetFaces} from '../public/kitchen-sheet.js';
+import {roomArchitecture} from '../public/kitchen-architecture.js';
+import {createKitchen} from '../public/kitchen-model.js';
+import {makeChainExample} from '../public/kitchen-chain-model.js';
+import {makeVisitExample} from './fixture-kitchen-visit-example.mjs';
+import {proposeWholeKitchen} from '../public/kitchen-whole-plan.js';
+import {outputStamp} from '../public/kitchen-output-stamp.js';
+
+const source=makeVisitExample();
+const {candidates}=await proposeWholeKitchen(source);
+const doc=structuredClone(candidates[0].doc);
+doc.room.name='منزل <اختبار> "المخطط"';
+doc.room.sitePoints=[{id:'floor-p',kind:'floor-drain',x:100,z:120,size:12}];
+const faces=sheetFaces(doc);
+for(const mm of [true,false]){
+ const stamp=outputStamp(doc,'المطبخ كاملًا','لوحات المقاسات'),book=kitchenDrawingBook(doc,mm,stamp);
+ assert.match(book,/^<!doctype html><html lang="ar" dir="rtl">/);
+ assert.match(book,/منزل &lt;اختبار&gt; &quot;المخطط&quot;/);
+ assert.doesNotMatch(book,/<اختبار>|<script|(?:src|href)="(?:https?:|data:|\/)/i);
+ assert.ok(book.includes(planSheet(doc,mm)));for(const [face] of faces.slice(1))assert.ok(book.includes(elevationSheet(doc,face,mm)));
+ const targets=[...book.matchAll(/class="entry" href="#([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(targets.length,faces.length);
+ for(const id of targets)assert.equal(book.split('id="'+id+'"').length,2);
+ assert.ok(book.includes('تجهيزات الموقع · الأرضية')&&book.includes('صرف أرضي'));
+ assert.ok(book.includes('جدول أضلاع الغرفة')&&book.includes('مركز النقطة')&&book.includes('طرف البرواز الخارجي / أسفله'));
+ assert.ok(book.includes('P-01 · المسقط العام · '+stamp.revision));
+ assert.match(book,/<thead><tr class="schedule-head"><th scope="colgroup"/);
+ assert.ok(book.includes(stamp.status));
+ assert.match(book,/thead\{display:table-header-group/);
+}
+const plain=makeChainExample();
+const p=roomArchitecture(plain.room).walls.find(x=>plain.room.workshop.chains[x.id]);
+assert.ok(kitchenDrawingBook(plain,true).includes('مثال توضيحي')&&p);
+const r={width:360,length:300,height:260,name:'زاوية',architecture:{wallThickness:18,cut:{kind:'notch',corner:'back-left',width:100,depth:80}}};
+const odd={room:r,kitchen:createKitchen(r,'empty')};const unusual=kitchenDrawingBook(odd,true);
+assert.equal((unusual.match(/class="entry" href="/g)||[]).length,1+roomArchitecture(r).walls.length);
+assert.doesNotMatch(unusual,/NaN|undefined|رقم.*<اختبار>/);
+let written,closed=false;const popup={opener:{},document:{write:h=>{written=h;},close:()=>{closed=true;}}};
+globalThis.window={open:()=>null};assert.equal(printKitchen(doc,true),false);
+globalThis.window.open=()=>popup;assert.equal(printKitchen(doc,true),true);assert.ok(closed&&written.includes('فهرس اللوحات'));assert.equal(popup.opener,null);
+console.log('Technical HTML workbook exports the exact plan and every elevation in either unit, real room datum and services, persistent sheet/revision headers, isolated print popup and local navigation.');

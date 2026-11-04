@@ -1,0 +1,70 @@
+[
+  {
+    "path": "public/kitchen-production-preview.js",
+    "sha256": "13e697aedb01345a381aa54d940a25e095c11f5c97fe770962118bba68a7614e"
+  },
+  {
+    "path": "public/kitchen-production-drawing.js",
+    "sha256": "6a23f9386561298ad51440ecf2075dca0fae95fae592a7aa03f2c63e5f12db7f"
+  },
+  {
+    "path": "public/kitchen-production-studio.js",
+    "sha256": "66c25ed716c76845265e0b65c8a6bc89b90648ab5b12581e3e682903861aeb6b"
+  },
+  {
+    "path": "public/kitchen-production-studio.css",
+    "sha256": "ed61c9a9690b62c125a81a6bb0b803b738c02ea024f3b5f09bbacdaabbe2a0fb"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "aa317b4a2c5fa5a2e5ebe8909c0871a49faf1592ffa615ff9b6d28466b434254"
+  },
+  {
+    "path": "public/kitchen-gateways.js",
+    "sha256": "16feb58b2344930255c043fa689269166c16801f272fb96c340d26ce5e5324fd"
+  },
+  {
+    "path": "public/kitchen-role-pages.js",
+    "sha256": "89383a88176596b32b6f475b312022740013714b6089a926b53a723c49dc2335"
+  },
+  {
+    "path": "public/kitchen-quote-studio.js",
+    "sha256": "9cb1fd68de0b8202edea7860fe8edeec41dccd69bb9033b2ebaacaaefc5c7d88"
+  },
+  {
+    "path": "public/kitchen-workshop-factory-ui.js",
+    "sha256": "61fdcde42d7fb38a0496f111399e35173b9f242dec6a6b392e0b97a16d89d7aa"
+  },
+  {
+    "path": "public/kitchen-wall-scribe-ui.js",
+    "sha256": "3d80ddc3f2ff901074d1b2ccfe16171a1af7b799e535b68a8a423ccb747076f9"
+  },
+  {
+    "path": "tools/check-kitchen-production-preview.mjs",
+    "sha256": "f557d70987c0a0584b2c9fd3c2c8f3c9a8a1e2509cfc19be1bb2eedc9c4a7089"
+  },
+  {
+    "path": "tools/check-kitchen-production-drawing.mjs",
+    "sha256": "5f5f96283b87b77d791b82b13448101f203edde7ed6b591e7cd7444468dedc4a"
+  },
+  {
+    "path": "tools/check-kitchen-production-workshop.mjs",
+    "sha256": "2077482941498c7f542b6f5ff9c3392ca73c81f9016606e31e99a80323ff1fcf"
+  },
+  {
+    "path": "tools/fixture-kitchen-production-ready.mjs",
+    "sha256": "4234c6778e7f867e5665d213d3f5dcabaed5292706b69357a8713b2bc7313bfb"
+  },
+  {
+    "path": "tools/create-production-review-fixture.mjs",
+    "sha256": "32295c995ef67776d0a6e0d5bfaf1dfdd5b728685b2c4f60db0b9f7a491f0680"
+  },
+  {
+    "path": "tools/check-kitchen-role-pages.mjs",
+    "sha256": "fe1af023c6f4c2f8f8ed30ef621f492b7ee560521dfd8ab8708b79e3dd118bd8"
+  },
+  {
+    "path": "tools/check-kitchen-gateways.mjs",
+    "sha256": "0eec1961284c56030405e8ea3f7959673805316d2b43e3b1a4ea4014c2171a8c"
+  }
+]

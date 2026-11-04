@@ -1,0 +1,28 @@
+.dv-card h4{margin:10px 0 4px;font-size:14px}
+.dv-card .dv-changes{margin:4px 0 8px;padding-inline-start:20px;display:grid;gap:3px;font-size:14px}
+.dv-card .dv-price{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin-block:6px;padding:8px 10px;border-radius:var(--ks-radius-control);background:var(--ks-surface-1);font-size:14px}
+.dv-card .dv-price b{font-weight:700}
+.dv-card .dv-price strong{margin-inline-start:auto;color:var(--ks-ink)}
+.dv-card .dv-warn{margin:6px 0;padding:8px 10px;border-inline-start:3px solid var(--ks-attention);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);font-size:14px}
+.dv-card .dv-history{margin-top:8px}
+.dv-card .dv-history summary{display:flex;align-items:center;min-height:36px;font-weight:600;cursor:pointer}
+.dv-card .dv-history ol{display:grid;gap:8px;margin:6px 0 0;padding-inline-start:20px;font-size:14px}
+.dv-card .dv-history li span{color:var(--ks-ink-muted)}
+.dv-card .dv-history .ws-action{width:auto;margin-inline-start:6px}
+.dv-reason{display:grid;gap:4px;margin-block:6px;font-size:14px;font-weight:600}
+.dv-reason textarea{min-height:72px;padding:8px 10px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);font:inherit;font-weight:400;resize:vertical}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.dv-card.dv-card :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.dv-card.dv-card :is(button,a,summary){min-inline-size:var(--ks-target)}
+.dv-card.dv-card :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.dv-card.dv-card :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+.dv-card.dv-card :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+.dv-card.dv-card :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){.dv-card.dv-card :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.dv-card.dv-card :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}.dv-card.dv-card :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.dv-card .dv-warn{border-inline-start:3px dashed var(--ks-attention);background:var(--ks-attention-soft);color:var(--ks-attention)}
+.dv-card .dv-price strong{color:var(--ks-ink-strong);font-variant-numeric:tabular-nums}
+.dv-reason textarea:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}

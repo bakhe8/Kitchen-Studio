@@ -1,0 +1,117 @@
+:root{
+  color-scheme:light;
+  --ks-canvas:#f3f6f4;
+  --ks-surface-1:#fffefb;
+  --ks-surface-2:#f7f9f7;
+  --ks-surface-inset:#edf2ef;
+  --ks-ink-strong:#132f3b;
+  --ks-ink:#28434d;
+  --ks-ink-muted:#53666c;
+  --ks-line:#d5dedb;
+  --ks-line-strong:#a9bab7;
+  --ks-action:#0f766e;
+  --ks-action-hover:#0b625c;
+  --ks-action-pressed:#084f4b;
+  --ks-action-soft:#e3f2ee;
+  --ks-complete:#287a50;
+  --ks-complete-soft:#e8f4ec;
+  --ks-attention:#94540f;
+  --ks-attention-soft:#fff4dd;
+  --ks-danger:#b33a32;
+  --ks-danger-soft:#fff0ed;
+  --ks-info:#366b82;
+  --ks-info-soft:#eaf3f7;
+  --ks-focus-ring:#167d8c;
+  --ks-focus-ring-dark:#55c8d4;
+  --ks-metal:#b5976d;
+  --ks-space-1:4px;
+  --ks-space-2:8px;
+  --ks-space-3:12px;
+  --ks-space-4:16px;
+  --ks-space-5:24px;
+  --ks-space-6:32px;
+  --ks-radius-control:9px;
+  --ks-radius-group:11px;
+  --ks-radius-surface:15px;
+  --ks-radius-overlay:16px;
+  --ks-border:1px solid var(--ks-line);
+  --ks-shadow-surface:0 10px 28px #17384312;
+  --ks-shadow-overlay:0 18px 48px #122e3a2b;
+  --ks-duration-fast:140ms;
+  --ks-duration-panel:200ms;
+  --ks-ease:cubic-bezier(.2,.8,.2,1);
+  --ks-target:44px;
+  --ks-font-ui:Tahoma,Arial,sans-serif;
+  --ks-z-sticky:40;
+  --ks-z-popover:200;
+  --ks-z-dialog:400;
+  --ks-z-toast:500;
+  --ks-z-photo:1200;
+  --ks-z-skip:1300;
+  --ks-radius-structural:4px;
+  --ks-radius-route-corner:0 0 0 var(--ks-radius-structural);
+  --ks-radius-chip:999px;
+  --ks-print-paper:#fff;
+  --ks-print-ink:#000;
+  --ks-shadow-dimension-halo:0 0 2px var(--ks-print-paper),0 0 2px var(--ks-print-paper);
+  --ks-shadow-sample:inset 0 -5px #0000000f;
+  --ks-radius-circle:50%;
+  --ks-scrim:#132f3be6;
+  --ks-photo-surface:#132f3b;
+  --ks-on-dark:#fffefb;
+  --ks-on-dark-muted:#d5dedb;
+  --ks-shadow-selected:inset 0 0 0 2px var(--ks-action);
+  --ks-shadow-mark:inset 0 0 0 3px var(--ks-ink);
+  --ks-shadow-swatch:0 4px 3px #524d3933;
+  --ks-filter-pick:drop-shadow(0 0 2px var(--ks-action));
+  --ks-font-display:28px;
+  --ks-font-title:22px;
+  --ks-font-section:18px;
+  --ks-font-body:14px;
+  --ks-font-meta:12px;
+  --ks-line-height:1.6;
+  --ks-gap-control:var(--ks-space-2);
+  --ks-pad-panel:var(--ks-space-4);
+  --ks-gutter-workspace:var(--ks-space-5);
+  --ks-density-field:var(--ks-space-4);
+  --ks-density-studio:var(--ks-space-3);
+  --ks-density-factory:var(--ks-space-2);
+  --ks-density-presentation:var(--ks-space-5);
+}
+
+:where(body[data-project-mode]){
+  background:var(--ks-canvas);
+  color:var(--ks-ink);
+  font-family:var(--ks-font-ui);
+}
+
+/* Only safe, low-priority primitives are consolidated. Feature contracts stay unlayered. */
+@layer ks-primitives{
+  :where(body[data-project-mode]) :where(button,input,select,textarea){font:inherit}
+  :where(body[data-project-mode]) :where(input[inputmode=decimal],input[type=number],bdi,code){font-variant-numeric:tabular-nums}
+  :where(body[data-project-mode]) :where(button,summary){touch-action:manipulation}
+  @media(pointer:coarse){
+    :where(body[data-project-mode]) :where(button,summary,input:not([type=checkbox]):not([type=radio]),select){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+  }
+}
+:where(body[data-project-mode]) :focus-visible{
+  outline:3px solid var(--ks-focus-ring);
+  outline-offset:2px;
+}
+:where(body[data-project-mode]) :disabled,
+:where(body[data-project-mode]) [aria-disabled="true"]{
+  cursor:not-allowed;
+  box-shadow:none;
+}
+:where(body[data-project-mode]) ::selection{background:var(--ks-action-soft);color:var(--ks-ink-strong)}
+
+@media(prefers-reduced-motion:reduce){
+  :where(body[data-project-mode]) *,
+  :where(body[data-project-mode]) *::before,
+  :where(body[data-project-mode]) *::after{
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+  }
+}

@@ -1,0 +1,26 @@
+.sp-compare-bar{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px 22px;flex-wrap:wrap;background:var(--ks-surface-2);border-block-start:1px solid var(--ks-line)}
+.sp-compare-bar[hidden],#shelf-compare-stage[hidden],#shelf-scene[hidden]{display:none!important}
+.sp-compare-bar strong{font-size:15px;color:var(--ks-ink-strong)}
+.sp-compare-bar p{font-size:12px;margin:3px 0;max-width:64ch;line-height:1.7;color:var(--ks-ink)}
+.sp-compare-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sp-compare-actions button{padding:5px 10px;font:inherit;font-size:12px}
+#shelf-compare-stage{padding-top:4px;background:var(--ks-surface-inset)}
+.sp-compare-frame{direction:ltr;position:relative;--split:50%;width:min(100%,calc(var(--comparison-ar,1.3) * clamp(180px,62dvh,860px)));margin-inline:auto;aspect-ratio:var(--comparison-ar,1.3);touch-action:pan-y;user-select:none;overflow:hidden;cursor:ew-resize}
+#shelf-compare-image svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sp-compare-line{position:absolute;top:0;bottom:0;left:clamp(1px,var(--split),calc(100% - 1px));width:2px;transform:translateX(-50%);background:var(--ks-surface-1);box-shadow:var(--ks-shadow-surface);pointer-events:none}
+.sp-compare-line b{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:35px;height:35px;border-radius:var(--ks-radius-group);background:var(--ks-ink-strong);color:var(--ks-surface-1);font:700 20px sans-serif;border:2px solid var(--ks-surface-1)}
+.sp-compare-badge{position:absolute;top:9px;background:color-mix(in srgb, var(--ks-surface-1) 92.16%, transparent);color:var(--ks-ink-strong);border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);font-size:12px;font-weight:600;line-height:1.6;padding:2px 8px;pointer-events:none}
+.sp-option-a{left:9px}.sp-option-b{right:9px}
+.sp-compare-range{direction:rtl;display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 12px;color:var(--ks-action);font-size:12px;background:var(--ks-surface-2)}
+.sp-compare-range input{width:min(270px,54vw);accent-color:var(--ks-action)}
+@media(max-width:640px){.sp-compare-bar{padding:10px}.sp-compare-actions button{min-height:36px}}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.sp-compare-bar :is(button,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target)}
+.sp-compare-bar :is(button,summary){min-inline-size:var(--ks-target)}
+.sp-compare-bar :is(button,input,select,summary):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(pointer:coarse){.sp-compare-bar :is(button,summary,label:has(input[type=checkbox]),label:has(input[type=radio])){min-inline-size:var(--ks-target);min-block-size:var(--ks-target)}}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.sp-compare-range input{min-block-size:var(--ks-target)}
+.sp-compare-frame:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}

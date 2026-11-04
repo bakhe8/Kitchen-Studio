@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {createKitchen,updateUnit,kitchenGeometry} from '../public/kitchen-model.js';
+import {createShelfPlan} from '../public/shelf-model.js';
+import {getKitchenPhotoMesh} from '../public/kitchen-render.js';
+import {buildPhotoScene} from '../public/kitchen-photo-scene.js';
+import {photoCamera,buildPhotoBVH,createPhotoFrame,renderPhotoRows,resolvePhotoFrame,rayPhoto} from '../public/kitchen-photo-trace.js';
+import {photograph} from '../public/kitchen-photo-worker.js';
+import {createHash} from 'node:crypto';
+const digest=b=>createHash('sha256').update(b).digest('hex'),room=createShelfPlan(),k=createKitchen(room),mesh=getKitchenPhotoMesh(room,k),sc=buildPhotoScene(room,k),tree=buildPhotoBVH(sc);
+assert.ok(mesh.faces.some(f=>f.tag==='faucet')&&mesh.faces.some(f=>f.tag==='rack-wire')===false);assert.ok(tree.ids.length>450);structuredClone(sc); // Safe to send to a local module worker.
+const H=tree.room.height,g=mesh.geometry,sink=g.units.find(u=>u.kind==='sink'),r=sink.cutout.rect,slab=g.worktops.find(w=>w.holes?.some(h=>h.unitId===sink.id)),plane=H-slab.bottom-slab.height;
+const ray=rayPhoto(tree,[r.x+r.w*.37,plane-3,r.z+r.d*.51],[0,1,0]);assert.ok(ray.t>12,'ray enters a real sink aperture and strikes the bowl below counter level');const m=tree.materials[tree.ids[ray.i]];assert.equal(m.type,'metal');
+const w=sc.windows[0];assert.ok(w);const cam=photoCamera(tree),cam2=photoCamera(tree,{yaw:-130,fov:40});assert.notDeepEqual(cam.eye,cam2.eye);assert.deepEqual(photoCamera(tree,{fov:32}).eye,photoCamera(tree,{fov:82}).eye,'focal length must not move the camera');assert(cam.eye[0]>=0&&cam.eye[0]<tree.room.width&&cam.eye[2]>=0&&cam.eye[2]<tree.room.length);assert.ok(sc.materials.some(m=>m.type==='floor-wood'));assert.ok(sc.materials.some(m=>m.type==='plaster'&&m.wall==='ceiling'));
+const snap=(scene,opts={})=>{const f=createPhotoFrame(buildPhotoBVH(scene),90,60,opts);renderPhotoRows(f,0,0,60);renderPhotoRows(f,1,0,60);return resolvePhotoFrame(f,2);},base=snap(sc),rgb=new Set();for(let i=0;i<base.length;i+=4){assert.equal(base[i+3],255);rgb.add((base[i]<<16)+(base[i+1]<<8)+base[i+2]);}assert.ok(rgb.size>300);assert.equal(digest(base),digest(snap(sc)));for(const opts of [{yaw:-38},{fov:36},{lighting:'warm'},{lighting:'studio'},{framing:'cutaway',pitch:42}])assert.notEqual(digest(base),digest(snap(sc,opts)));
+const changed=updateUnit(k,room,sink.id,{frontFinish:'walnut',frontColor:'#98455c',open:true});assert(changed.ok);assert.notEqual(digest(base),digest(snap(buildPhotoScene(room,changed.kitchen))));
+assert(mesh.faces.some(f=>f.tag==='faucet-nozzle'));assert(Math.min(...mesh.faces.filter(f=>f.tag==='faucet').flatMap(f=>f.points.map(p=>p.y)))<plane-25,'a high curved tap above the actual basin');
+const image={width:2,height:2,tileCm:22,mean:[.3,.3,.3],data:new Uint8ClampedArray([22,199,75,255,199,22,80,255,200,35,169,255,59,190,130,255])};assert.notEqual(digest(base),digest(snap({...sc,textures:{floorwood:image,'wall:back':image}})));
+assert.notEqual(digest(base),digest(snap({...sc,textures:{environment:image}})),'registered outdoor environment appears through a real window');
+const msgs=[];await photograph(sc,{width:46,height:30,samples:2},m=>msgs.push(m));assert.deepEqual(msgs.filter(m=>m.pixels).map(m=>[m.type,m.width,m.height]),[['preview',46,30],['frame',46,30],['frame',46,30]]);assert.equal(msgs.at(-1).type,'done');assert.notEqual(digest(msgs[0].pixels),digest(msgs.at(-2).pixels));let live=true,observed=[];await photograph(sc,{width:48,height:32,samples:5},m=>{observed.push(m.type);if(m.type==='preview')live=false;},()=>live);assert.deepEqual(observed,['preview']);
+assert.ok(mesh.faces.filter(f=>f.part==='module'&&f.id===sink.id).every(f=>f.points.every(p=>Object.values(p).every(Number.isFinite))));console.log('PASS: actual transferable kitchen mesh, physical sink ray, interior camera and cutaway, deterministic progressive raster images responding to real doors/materials, light/lens/orbit, sampled wall & floor pixels, worker-sized frames, cancellation.');

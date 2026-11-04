@@ -1,0 +1,170 @@
+/* Finding a destination uses the same routes as the four visit stages. */
+.ws-page-search{display:flex;align-items:center;gap:8px;padding:0 11px;margin-block:0 10px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);color:var(--ks-ink);background:var(--ks-surface-1)}
+.ws-page-search input{width:100%;min-width:0;height:44px;border:0!important;background:transparent;color:var(--ks-ink-strong);font:inherit;box-shadow:none!important}
+.ws-page-search:focus-within{outline:3px solid var(--ks-focus-ring);outline-offset:2px}.ws-page-search input:focus-visible{outline:3px solid var(--ks-focus-ring)}
+.ws-page-search svg,.ws-tool-links .studio-icon{width:18px;height:18px;flex:none}.ws-tool-links button{gap:8px}
+.ws-found-group h3,.ws-find-count{margin:6px 10px;color:var(--ks-ink-muted);font-size:13px}
+.ws-found-group+.ws-found-group{border-block-start:1px solid var(--ks-on-dark-muted);padding-top:6px}
+.ws-find-empty{padding:10px 8px;font-size:14px}
+
+/* The required question can be answered here. Secondary work is indexed by stage. */
+.project-guide .pg-current{border:1px solid var(--ks-on-dark-muted);background:var(--ks-surface-1);border-radius:var(--ks-radius-control);overflow:hidden;padding:0 16px 15px}
+.project-guide .pg-question-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 -16px 14px;padding:7px 16px;min-height:42px;background:var(--ks-ink-strong);color:var(--ks-on-dark)}
+.project-guide .pg-question-head .pg-kicker,.project-guide .pg-question-head .pg-meta{margin:0;color:var(--ks-on-dark);font-size:13px}
+.project-guide .pg-question-head .pg-kicker{display:flex;gap:7px;align-items:center;font-weight:700}
+.project-guide .pg-question-head svg{width:18px;height:18px}
+.project-guide .pg-current h2{font-size:clamp(18px,1.6vw,23px);color:var(--ks-ink-strong);line-height:1.6}
+.project-guide .pg-phase{background:var(--ks-surface-1);border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);margin-block:6px}
+.project-guide .pg-phase>summary{display:flex;align-items:center;min-height:44px;gap:9px;padding:4px 10px;cursor:pointer;font-weight:700}
+.project-guide .pg-phase>summary::marker{content:''}.project-guide .pg-phase>summary b{border-radius:var(--ks-radius-control);padding:0 7px;background:var(--ks-surface-1);font-size:13px}
+.project-guide .pg-phase summary svg{margin-inline-start:auto;width:16px}.project-guide .pg-phase[open] summary svg{transform:rotate(180deg)}
+.project-guide :is(.pg-phase,.pg-available) li button{display:grid;grid-template-columns:minmax(45px,auto) 1fr auto;align-items:center;width:100%;gap:9px;text-align:start}
+.project-guide li .studio-icon{width:15px}.project-guide .pg-phase li:last-child{margin-bottom:6px}
+
+/* Entry shortcuts keep the dimensions and the survey action together. */
+.visit-progress .visit-jumps{display:flex;align-items:center;gap:3px;border:1px solid var(--ks-line);padding:1px;background:var(--ks-surface-1);border-radius:var(--ks-radius-control)}
+.visit-progress .visit-jumps button{min-height:44px;display:flex;gap:3px;align-items:center;padding:2px 7px;border:1px solid transparent;border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-ink);font-size:13px}
+.visit-jumps .studio-icon{display:none;width:14px;height:14px}
+.visit-progress .visit-jumps button[data-next=true]{border-color:var(--ks-line-strong);background:var(--ks-surface-1);color:var(--ks-ink)}
+.visit-progress .visit-jumps button[data-measured=true]{color:var(--ks-complete)}.visit-jumps [data-measured=true] .studio-icon{display:block}
+@media(min-width:768px) and (max-width:880px){.visit-submit{gap:6px}.visit-progress{gap:8px}.visit-submit [data-visit-tip]{max-width:16ch;font-size:12px}}
+
+/* The file jacket, layout choices, and technical sheets each have their own reading order. */
+.k-app .pr-head,.k-app .kul-head{background:var(--ks-ink-strong);color:var(--ks-on-dark);border-block-end:2px solid var(--ks-line)}
+.k-app .pr-head :is(span,h2,button),.k-app .kul-head :is(h2,button){color:inherit}
+.k-app .pr-head button,.k-app .kul-head button{display:inline-grid;place-items:center;min-width:44px;min-height:44px;border-color:var(--ks-line-strong);background:transparent}
+.pr-project-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);margin:12px 0}
+.pr-project-facts div{padding:8px 12px}.pr-project-facts div+div{border-inline-start:1px solid var(--ks-on-dark-muted)}
+.pr-project-facts dt{font-size:13px;color:var(--ks-ink)}.pr-project-facts dd{margin:1px 0;font-weight:700;font-size:21px;color:var(--ks-ink)}
+.k-app .pr-actions button,.k-app .pr-tabs button,.k-app .pr-preview-row button{min-height:44px}
+.pr-actions .studio-icon{width:18px;vertical-align:middle}
+#pro-layouts .pr-layout{align-content:start;min-width:0}
+#pro-layouts .pr-layout>small{font-size:12px;color:var(--ks-ink);line-height:1.45}
+#pro-layouts .pr-unfit{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--ks-ink)}
+#pro-layouts .pr-layout[aria-pressed=true],#pro-library .pr-tabs [aria-pressed=true]{outline:3px solid var(--ks-action);outline-offset:2px}
+#pro-library .pr-filters{padding-block:5px}#pro-library .pr-filters :is(select,input){min-height:44px}
+#pro-library .pr-card:focus-visible,.k-app .fr-record button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+#pro-project:has([data-wall-sheet]) .pr-sheet-bar{padding-block:5px;border-block-end:1px solid var(--ks-on-dark-muted)}
+#pro-project .pr-fields :is(input,select){min-height:42px}
+.k-app .fr-group{padding:6px 8px;background:var(--ks-surface-1);border-inline-start:3px solid var(--ks-line-strong);color:var(--ks-ink)}
+
+.k-app .fr-record .fr-value{font-variant-numeric:tabular-nums}.k-app .fr-filters :is(select,input){min-height:44px}
+.k-app .ksup-grid .ksup-number{font-weight:700;font-variant-numeric:tabular-nums}.k-app :is(.ksup-submit,.kul-primary,.df-primary){min-height:44px;background:var(--ks-action);color:var(--ks-surface-1)}
+.k-app .df-panel,.k-app .ka-shell{font-size:14px;color:var(--ks-ink-strong)}.k-app :is(.df-property,.df-field select,.ka-scope select,.ka-row-actions button){min-height:44px}
+.k-app .kidea-save{border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);padding:9px}.k-app :is(.kidea-save,.k-room-form) input:not([type=checkbox]):not([type=range]),.k-app .kidea-save button{min-height:42px}
+.k-app .kit-command .kit-view [aria-pressed=true],.k-app .kit-dock [aria-pressed=true]{background:var(--ks-action);color:var(--ks-surface-1);border-color:var(--ks-action)}
+.k-app .kit-dock summary:focus-visible,.k-app .kit-view button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+
+/* Camera position and rendering quality stay alongside the live picture. */
+.kph .kph-head{background:var(--ks-ink-strong);color:var(--ks-surface-1);border-block-end:2px solid var(--ks-line)}
+.kph .kph-head :is(h2,small){color:var(--ks-on-dark)}.kph .kph-head button{color:var(--ks-surface-1);border:1px solid var(--ks-line);background:transparent;min-height:44px}
+.kph :is(.kph-setting,.kph-angles){min-inline-size:0;padding:5px 9px 9px;margin:0;border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);background:var(--ks-surface-1)}
+.kph .kph-setting legend{color:var(--ks-ink);font-weight:700;padding:0 4px;font-size:14px}
+.kph .kph-angles summary{font-weight:700;cursor:pointer;min-height:44px;align-content:center;color:var(--ks-ink)}
+.kph .kph-control select,.kph :is(.kph-download,.kph-stop){min-height:44px}
+.kph .kph-controls>p{font-size:13px;line-height:1.6}
+.kph .kph-download{background:var(--ks-action);color:var(--ks-on-dark)}.kph .kph-picture{background:var(--ks-ink-strong)}
+
+/* Separate unit-detail editor. Keep the native divider tools and their states. */
+body[data-project-mode=kitchen-unit]{--sp-ink:var(--ks-ink);--sp-green:var(--ks-action)}
+body[data-project-mode=kitchen-unit] .sp-topbar{background:var(--ks-ink-strong);color:var(--ks-surface-1);border-bottom:2px solid var(--ks-line)}
+body[data-project-mode=kitchen-unit] .sp-topbar-inner{min-height:56px;padding-block:4px}
+body[data-project-mode=kitchen-unit] .sp-brand{display:flex;align-items:center;gap:10px}
+body[data-project-mode=kitchen-unit] .sp-brand :is(strong,small){color:var(--ks-surface-1)}
+body[data-project-mode=kitchen-unit] .sp-header-action{background:var(--ks-ink-strong);border:1px solid var(--ks-line-strong);color:var(--ks-surface-1);min-height:44px}
+body[data-project-mode=kitchen-unit] .sp-header-action svg{color:inherit}
+body[data-project-mode=kitchen-unit] :is(.sp-stage-heading,.sp-inspector-head,.sp-dock-head){border-block-end:1px solid var(--ks-line);background:var(--ks-surface-1);color:var(--ks-ink)}
+body[data-project-mode=kitchen-unit] #shelf-dock-grid>.sp-dock-button:is([aria-pressed=true],[aria-expanded=true]){background:var(--ks-action);color:var(--ks-surface-1);border-color:var(--ks-action)}
+body[data-project-mode=kitchen-unit] #shelf-dock-grid>.sp-dock-button[data-tool=delete][aria-pressed=true]{background:var(--ks-danger)}
+body[data-project-mode=kitchen-unit] #kitchen-unit-toolbar:not([hidden]){display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:6px 12px;border:1px solid var(--ks-line);background:var(--ks-surface-1);border-radius:var(--ks-radius-control)}
+body[data-project-mode=kitchen-unit] #kitchen-unit-caption{margin-inline-end:auto;color:var(--ks-ink);font-weight:700}
+body[data-project-mode=kitchen-unit] #kitchen-unit-toolbar button{min-height:44px}
+
+/* Keep keyboard location visible on both the paper and the dark toolbars. */
+:where(.k-app,.visit-start,.shelf-planner) :is(button,a,input,select,textarea,summary,[role=button]):focus-visible{
+ outline:3px solid var(--ks-focus-ring);outline-offset:2px;box-shadow:var(--ks-shadow-surface)
+}
+.k-app .ws-content button:not(:disabled):active,.ws-page-search:active{box-shadow:var(--ks-shadow-mark)}
+.k-app:has(>.k-workshop:not([hidden]))>.k-app-status{display:none}
+.k-workshop .ws-screen[aria-busy=true]{display:flex;align-items:center;gap:10px;min-height:68px;color:var(--ks-ink)}
+.k-workshop .ws-screen[aria-busy=true]::before{content:"";width:17px;height:17px;border:2px solid var(--ks-line);border-top-color:var(--ks-line-strong);border-radius:var(--ks-radius-control);animation:ws-page-loading var(--ks-duration-fast) var(--ks-ease) infinite;flex:none}
+@keyframes ws-page-loading{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){.k-workshop .ws-screen[aria-busy=true]::before{animation:none}}
+.k-workshop .ws-load-error{padding:14px;border-inline-start:3px solid var(--ks-danger);background:var(--ks-surface-1);color:var(--ks-danger)}
+.k-workshop .ws-load-error button{min-height:44px;background:var(--ks-danger);color:var(--ks-surface-1);border:1px solid var(--ks-danger);border-radius:var(--ks-radius-control);padding:7px 15px}
+@media(forced-colors:active){
+ :where(.k-app,.visit-start,.shelf-planner) :is(button,a,input,select,textarea,summary,[role=button]):focus-visible{outline:3px solid var(--ks-focus-ring);box-shadow:none}
+}
+
+/* Let full-page documents occupy the same grid cell as the drawing. The
+   project header keeps its actual height and the hidden CAD retains its size. */
+@media screen and (min-width:768px){
+  .k-app[data-standalone-panel]:has(> :is(.pro-drawer,.kul-panel,#k-idea-panel):not([hidden])){
+    display:grid;grid-template: auto minmax(0,1fr) auto / minmax(0,1fr);
+  }
+  .k-app[data-standalone-panel]>.k-titlebar{grid-area:1/1}
+  .k-app[data-standalone-panel]:has(> :is(.pro-drawer,.kul-panel,#k-idea-panel):not([hidden]))>#shelf-kitchen-host[inert]{grid-area:2/1;visibility:hidden}
+  .k-app[data-standalone-panel]>.k-app-status{grid-area:3/1}
+  .k-app[data-standalone-panel]>:is(.pro-drawer,.kul-panel,#k-idea-panel):not([hidden]){
+    position:relative;grid-area:2/1;inset:auto;align-self:stretch;
+    width:100%;height:auto;max-width:none;max-height:none;min-height:0;
+    margin:0;border:0;border-radius:0;box-shadow:none;
+  }
+  .k-app[data-standalone-panel] .pr-head,.k-app[data-standalone-panel] .kul-head{flex:none}
+  .k-app[data-standalone-panel] :is(.pr-inner,.kul-body){flex:1;min-height:0}
+  .k-app[data-standalone-panel] .room-survey .survey-sketch{max-height:min(45dvh,620px)}
+  .k-app #pro-project .pr-elevation svg{height:max(280px,calc(100dvh - 275px))}
+  .kul-body{display:grid;align-content:start;grid-template-columns:repeat(auto-fit,minmax(min(21rem,100%),1fr));gap:12px}
+  .kul-body>p{grid-column:1/-1}
+  .k-app #pro-layouts .pr-layout-grid{grid-template-columns:repeat(auto-fit,minmax(min(13rem,100%),1fr))}
+  .k-app #pro-library .pr-grid{grid-template-columns:repeat(auto-fill,minmax(min(10.5rem,100%),1fr))}
+
+  #k-photo-panel.kph{padding:0;display:block}
+  #k-photo-panel .kph-shell{
+    width:100%;max-width:none;height:100%;display:grid;
+    grid-template-rows:auto minmax(0,1fr);margin:0;border:0;border-radius:0;
+  }
+  #k-photo-panel .kph-work{min-height:0;grid-template-columns:minmax(0,1fr) clamp(220px,24%,360px)}
+  #k-photo-panel .kph-controls{min-height:0;overflow:auto;overscroll-behavior:contain}
+  #k-photo-panel .kph-picture{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto}
+  #k-photo-panel .kph-picture canvas{width:100%;height:100%;max-height:none;aspect-ratio:auto;object-fit:contain}
+
+  body[data-project-mode=kitchen-unit].shelf-planner{
+    display:flex;flex-direction:column;height:100dvh;margin:0;
+  }
+  body[data-project-mode=kitchen-unit] .sp-topbar{flex:none}
+  body[data-project-mode=kitchen-unit] .sp-topbar-inner{
+    width:100%;max-width:none;margin:0;padding-inline:clamp(10px,1.6vw,26px);
+  }
+  body[data-project-mode=kitchen-unit] #shelf-workspace.sp-workspace{
+    display:flex;flex:1;flex-direction:column;min-height:0;width:100%;margin:0;padding:0;
+  }
+  body[data-project-mode=kitchen-unit] .sp-workspace-head{flex:none;margin:0;padding:3px 12px}
+  body[data-project-mode=kitchen-unit] #kitchen-unit-toolbar{flex:none;margin:0;border-inline:0;border-radius:0}
+  body[data-project-mode=kitchen-unit] .sp-workspace-layout{
+    flex:1;min-height:0;grid-template:"stage rail" minmax(0,1fr) / minmax(0,1fr) var(--dock-current-width);
+    gap:0;align-items:stretch;
+  }
+  body[data-project-mode=kitchen-unit] .sp-stage-card{
+    display:flex;flex-direction:column;min-height:0;overflow:auto;border:0;border-radius:0;
+  }
+  body[data-project-mode=kitchen-unit] .sp-stage-card>:not(.sp-canvas-mat){flex:none}
+  body[data-project-mode=kitchen-unit] .sp-canvas-mat{flex:1;min-height:150px}
+  body[data-project-mode=kitchen-unit] #shelf-scene,
+  body[data-project-mode=kitchen-unit] #shelf-scene .shc-view,
+  body[data-project-mode=kitchen-unit] #shelf-workspace #shelf-scene .shc-board{
+    height:100%;min-height:0;max-height:none;
+  }
+  body[data-project-mode=kitchen-unit] #shelf-dock.sp-dock{
+    position:relative;inset:auto;grid-area:rail;align-self:stretch;min-height:0;max-height:none;
+    border:0;border-inline-end:1px solid var(--ks-on-dark-muted);border-radius:0;box-shadow:none;
+  }
+}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.visit-progress .visit-jumps button[data-measured=true]{color:var(--ks-complete);border-inline-start:4px double var(--ks-complete)}
+.k-workshop .ws-load-error{background:var(--ks-danger-soft);border-inline-start:4px double var(--ks-danger)}
+.k-workshop .ws-load-error button{background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-on-dark)}
+
+.visit-progress .visit-jumps button[data-next=true]{border-inline-start:4px double var(--ks-action);background:var(--ks-action-soft);color:var(--ks-action)}
+.k-app.k-app :is(.pr-head,.kul-head) :focus-visible{outline:3px solid var(--ks-focus-ring-dark);outline-offset:2px}

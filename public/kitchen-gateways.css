@@ -1,0 +1,68 @@
+/* The four gateways of the real work: the store, the factory, the rep and the result. */
+
+/* The logo is the way home. Its touch area is 44 px, its place in the bar is the mark's own size. */
+.k-studio-home{display:grid;place-items:center;flex:none;min-width:44px;min-height:44px;margin:-3px;padding:0;border:0;border-radius:var(--ks-radius-surface);background:transparent;cursor:pointer}
+.k-studio-home:hover{background:var(--ks-surface-1)}
+.k-studio-home:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+
+/* The page picker, grouped by gateway. */
+.ws-home-link button{display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:6px 10px;border:0;border-radius:var(--ks-radius-control);background:none;color:var(--ws-ink,var(--ks-ink));font:inherit;font-weight:700;text-align:start;cursor:pointer}
+.ws-home-link button[aria-current]{color:var(--ks-action);background:var(--ks-surface-1)}
+.ws-gateway{margin-top:6px;border:1px solid var(--ws-line,var(--ks-on-dark-muted));border-radius:var(--ks-radius-group);background:var(--ks-surface-1)}
+.ws-gateway>summary{display:flex;align-items:center;gap:9px;min-height:48px;padding:6px 10px;border-radius:var(--ks-radius-group);cursor:pointer;list-style:none;color:var(--ws-ink,var(--ks-ink))}
+.ws-gateway>summary::-webkit-details-marker{display:none}
+.ws-gateway>summary svg{width:18px;height:18px;flex:none}
+.ws-gateway>summary svg:last-child{margin-inline-start:auto}
+.ws-gateway[open]>summary svg:last-child{transform:rotate(180deg)}
+.ws-gateway-name{font-size:16px;font-weight:700}
+.ws-gateway>summary small{color:var(--ws-quiet,var(--ks-ink-muted));font-size:12px;line-height:1.4}
+.ws-gateway-body{display:grid;gap:4px;padding:2px 6px 8px}
+.ws-gateway[data-minor]{background:transparent}
+.ws-gateway[data-minor] .ws-gateway-name{font-size:14px;font-weight:600}
+.ws-from{margin-inline-start:auto;padding:1px 8px;border-radius:var(--ks-radius-chip);background:var(--ks-surface-1);color:var(--ks-ink);font-size:11px;font-weight:600}
+
+/* The home of the gateways. */
+.gw-home{display:grid;gap:14px;max-width:1000px;margin-inline:auto;padding:6px 2px 16px}
+.gw-head h2{margin:0 0 4px;font-size:22px}
+.gw-head p{margin:0;color:var(--ks-ink);font-size:14px;line-height:1.7}
+.gw-project{margin:0;padding:8px 12px;border-radius:var(--ks-radius-group);background:var(--ks-surface-1);color:var(--ks-ink);font-size:14px}
+.gw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gw-card{--gw:var(--ks-ink-strong);display:grid;gap:10px;align-content:start;padding:14px;border:1px solid var(--ks-on-dark-muted);border-top:5px solid var(--gw);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1)}
+.gw-card[data-gateway=store]{--gw:var(--ks-ink-strong)}
+.gw-card[data-gateway=factory]{--gw:var(--ks-ink-strong)}
+.gw-card[data-gateway=rep]{--gw:var(--ks-ink-strong)}
+.gw-card[data-gateway=result]{--gw:var(--ks-ink-strong)}
+.gw-card h3{display:flex;align-items:center;gap:9px;margin:0;font-size:20px;color:var(--gw)}
+.gw-card h3 svg{width:24px;height:24px}
+.gw-lead{margin:0;color:var(--ks-ink);font-size:15px;line-height:1.6}
+.gw-facts{display:grid;gap:3px;margin:0;padding:0;list-style:none;color:var(--ks-ink);font-size:13.5px}
+.gw-facts li::before{content:"· ";color:var(--gw);font-weight:700}
+.gw-resume{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:var(--ks-radius-surface);background:var(--ks-surface-1);border-inline-start:5px solid var(--ks-line-strong)}
+.gw-resume[hidden]{display:none}
+.gw-resume>div{display:grid;gap:3px;min-width:0}.gw-resume small{color:var(--ks-ink);font-size:12px}.gw-resume b{font-size:15px;line-height:1.6}
+.gw-resume button{flex:none;min-height:44px;padding:6px 16px;border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-control);background:var(--ks-ink-strong);color:var(--ks-on-dark);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.gw-resume button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.gw-links{display:flex;flex-wrap:wrap;gap:6px}
+.gw-card button,.gw-system button{min-height:44px;padding:6px 12px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-ink);font:inherit;font-size:14px;cursor:pointer}
+.gw-card button:focus-visible,.gw-system button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.gw-card .gw-enter{border-color:var(--gw);background:var(--gw);color:var(--ks-on-dark);font-weight:700}
+.gw-card .gw-enter{min-height:48px;font-size:16px}
+.gw-system{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;border:1px dashed var(--ks-line);border-radius:var(--ks-radius-group);color:var(--ks-ink);font-size:13.5px}
+@media(max-width:700px){.gw-grid{grid-template-columns:1fr}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+:is(.gw-home,.ws-route-picker) :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+:is(.gw-home,.ws-route-picker) :is(button,a,summary){min-inline-size:var(--ks-target)}
+:is(.gw-home,.ws-route-picker) :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){:is(.gw-home,.ws-route-picker) :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+:is(.gw-home,.ws-route-picker) :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+:is(.gw-home,.ws-route-picker) :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){:is(.gw-home,.ws-route-picker) :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){:is(.gw-home,.ws-route-picker) :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}:is(.gw-home,.ws-route-picker) :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.k-studio-home:hover{background:var(--ks-ink)}
+.ws-home-link button[aria-current]{color:var(--ks-action);background:var(--ks-action-soft);border-inline-start:4px double var(--ks-action);text-decoration:underline}
+.gw-card .gw-enter,.gw-resume button{background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-on-dark)}
+.gw-card .gw-enter:not(:disabled):hover,.gw-resume button:not(:disabled):hover{background:var(--ks-action-hover)}
+.gw-resume{border-inline-start-color:var(--ks-action);background:var(--ks-action-soft)}

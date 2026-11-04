@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {makeChainExample,applyChain,resolveChain,cleanChains,readChainRange,attestChain} from '../public/kitchen-chain-model.js';
+import {cleanIdea} from '../public/kitchen-ideas.js';
+const d=makeChainExample(),original=d.room.workshop.chains.back,chain=structuredClone(original);
+const door=chain.rows.find(x=>x.kind==='door'),win=chain.rows.find(x=>x.kind==='window');
+door.widthMm=null;door.frameRead={method:'station',distanceMm:1300};
+win.widthMm=null;win.frameRead={method:'opposite',wallLengthMm:5000,distanceMm:1800};
+const p=applyChain(d,'back',chain);assert(p.ok,p.reason);assert.deepEqual(p.doc.kitchen.features,d.kitchen.features);
+assert.deepEqual(readChainRange(p.doc,'back').baseSpans,[{startMm:1300,endMm:4300}]);
+const saved=cleanIdea(JSON.parse(JSON.stringify(p.doc)));assert(saved);
+const book=saved.room.workshop.chains.back;assert.equal(book.rows.find(x=>x.kind==='window').widthMm,1200);
+const corrected=structuredClone(book);corrected.rows[0].gapMm=450;
+assert.equal(cleanChains({back:corrected}).back.rows[0].widthMm,850);assert.equal(resolveChain(saved.room,'back',corrected).readings[0].nextMm,1300);
+const wrong=structuredClone(book);wrong.rows.find(x=>x.kind==='window').frameRead.wallLengthMm=5010;assert(!resolveChain(d.room,'back',wrong).ok);assert(!attestChain(d,'back',wrong,{name:'QA',reference:'R'}).ok);
+const inverted=structuredClone(book);inverted.rows[0].frameRead.distanceMm=200;assert(!resolveChain(d.room,'back',inverted).ok);
+console.log('Casing width from near edge and opposite/outgoing station without double trim; field wall length required for reverse station. Fresh widths after prior edit, negative and inconsistent readings held.');

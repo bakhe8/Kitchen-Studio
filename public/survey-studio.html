@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4ee">
+  <meta name="description" content="نموذج تفاعلي تجريبي لرفع الموقع: الجدار والعنصر والقياس في مساحة واحدة.">
+  <title>دفتر الموقع — استوديو المطابخ</title>
+  <link rel="icon" href="./studio-mark.svg">
+  <link rel="stylesheet" href="./kitchen-survey-wall-sheet.css">
+  <link rel="stylesheet" href="./survey-studio.css">
+</head>
+<body>
+  <a class="skip" href="#drawing">انتقل إلى واجهة الجدار</a>
+  <header class="masthead">
+    <a class="brand" href="./index.html"><img src="./studio-mark.svg" width="34" height="34" alt=""><span>استوديو المطابخ<small>KITCHEN STUDIO / FIELD NOTES</small></span></a>
+    <div class="project-heading"><span class="eyebrow">مساحة الفني</span><strong>مطبخ تجريبي <span class="divider">/</span> دفتر الموقع</strong></div>
+    <div class="header-actions"><span class="demo-label">نموذج تجريبي</span><button data-action="help" class="icon-button" aria-label="دليل الاستخدام"></button><button data-action="export" class="secondary"></button></div>
+  </header>
+  <div class="journey"><div><span class="step-dot">١</span><strong>رفع الموقع</strong><span class="journey-line"></span><span>٢ التصميم</span><span class="journey-line"></span><span>٣ المراجعة</span></div><span class="session-note">بيانات افتراضية · جلسة مستقلة عن مشاريعك</span></div>
+  <main class="workspace">
+    <aside class="objects" aria-label="جدران الغرفة وقراءاتها">
+      <div class="rail-heading"><span class="eyebrow">الغرفة ٠١</span><h1>كل قياس، في مكانه.</h1><p>واجه الجدار، ثم سجّل ما تراه.</p></div>
+      <div id="walls" class="wall-navigation" role="group" aria-label="اختر الجدار"></div>
+      <div class="rail-divider"></div>
+      <div class="section-heading"><h2>عناصر الجدار</h2><span id="reading-count"></span></div>
+      <div id="readings" class="readings"></div>
+      <button class="add-reading" data-action="add-menu"></button>
+      <div class="datum-card"><span class="eyebrow">مرجع القراءة</span><strong>من ركن البداية</strong><p>نتجه يمينًا ونحن نواجه الجدار من داخل الغرفة. المناسيب من الأرضية النهائية.</p></div>
+      <div class="rail-footer"><span id="progress"></span><div class="progress-track"><i id="progress-bar"></i></div></div>
+    </aside>
+    <section class="drawing-space" aria-label="مساحة الرفع">
+      <header class="canvas-heading"><div><span class="eyebrow" id="wall-number"></span><h2 id="wall-title"></h2></div><div class="view-label">واجهة أمامية <span>الأبعاد بالملليمتر</span></div></header>
+      <div class="canvas-toolbar"><div class="tool-group" role="group" aria-label="إضافة عنصر"><button data-kind="window"></button><button data-kind="door"></button><span class="toolbar-divider"></span><button data-kind="water"></button><button data-kind="electric"></button><button data-kind="drain"></button></div><div class="history-tools"><button data-action="undo" class="icon-button" aria-label="تراجع" title="تراجع Ctrl+Z"></button><button data-action="redo" class="icon-button" aria-label="إعادة" title="إعادة Ctrl+Shift+Z"></button></div></div>
+      <div class="stage" id="drawing" tabindex="-1"><div class="sheet-label"><span>FIELD ELEVATION</span><span id="dimension-summary"></span></div><div id="sheet"></div><div class="context-hud" id="context-hud" hidden></div><div class="canvas-state" id="canvas-state"></div></div>
+      <div class="drawing-legend"><span><i class="legend-line"></i>مرجع من الرسم</span><span><i class="legend-line measured"></i>قراءة ميدانية مسجّلة</span><span class="gesture-tip">حدّد العنصر أو اسحبه لتجربة موضعه</span></div>
+      <section class="closure-strip" aria-labelledby="closure-title"><div class="closure-copy"><span class="eyebrow">التحقق المستقل</span><h3 id="closure-title">هل أُغلق قياس الجدار؟</h3><p>أدخل قراءة كاملة من الركن إلى الركن، مستقلة عن الرسم.</p></div><form id="closure-form"><label for="closure-input">القياس الميداني بالملليمتر</label><div class="closure-input"><input id="closure-input" name="closure" inputmode="decimal" autocomplete="off" placeholder="لم يُقَس بعد" dir="ltr"><span>مم</span><button type="submit" class="icon-button" aria-label="تسجيل قياس الإغلاق"></button></div><small id="closure-result"></small><button type="button" data-action="cancel-closure" class="closure-cancel" hidden>إلغاء إدخال الإغلاق</button></form></section>
+      <div class="status-line" role="status" aria-live="polite" aria-atomic="true" id="status"></div>
+    </section>
+    <aside class="inspector" aria-label="تفاصيل القياس">
+      <div id="inspector-content"></div>
+      <section class="wall-review"><div class="section-heading"><h2>مراجعة الجدار</h2><span id="wall-status"></span></div><label class="check-row"><input type="checkbox" id="dimensions-measured"><span>راجعت طول الجدار وارتفاعه ميدانيًا<small>محاكاة على الأبعاد الافتراضية المعروضة</small></span></label><label class="check-row" id="empty-wall-review" hidden><input type="checkbox" id="empty-reviewed"><span>راجعت الجدار وهو خالٍ من الفتحات والخدمات<small>تأكيد صريح؛ لا حاجة لاختراع عنصر.</small></span></label><div id="blockers"></div><button data-action="review" class="review-button"></button><p class="review-note">تأكيد داخل التجربة فقط. لا يصدر اعتمادًا أو أمر تصنيع.</p></section>
+    </aside>
+  </main>
+  <dialog id="review-dialog" aria-labelledby="review-title"><button class="dialog-close icon-button" data-close aria-label="إغلاق"></button><span class="eyebrow">قبل الانتقال</span><h2 id="review-title">تأكيد مراجعة الجدار</h2><div id="review-summary"></div><p>هذه بيانات تدريبية. سيُسجّل التأكيد داخل هذه الجلسة، وأي تغيير في القياسات يلغي تأكيد الجدار.</p><div class="dialog-actions"><button class="primary" data-action="confirm">تأكيد الجدار في التجربة</button><button class="secondary" data-close>العودة للقياسات</button></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><button class="dialog-close icon-button" data-close aria-label="إغلاق"></button><span class="eyebrow">دليل سريع</span><h2 id="help-title">المكان أولًا. الرقم بدقة.</h2><ol><li>اختر الجدار، ثم العنصر من الرسم أو القائمة.</li><li>اسحب العنصر أو مقبضه لمعاينة التغيير. أدخل الرقم لإثبات القياس الدقيق.</li><li>اختر مصدر القراءة، ثم «تثبيت القراءة». تحريك الرسم لا يثبت قياسًا ميدانيًا.</li><li>سجّل قياس الإغلاق المستقل وراجع الأبعاد، ثم راجع الجدار.</li></ol><p><kbd>Esc</kbd> لإلغاء المسودة · <kbd>Ctrl Z</kbd> للتراجع · أسهم لوحة المفاتيح داخل الحقل للتعديل بمقدار ١ مم، ومع <kbd>Shift</kbd> بمقدار ١٠ مم.</p><p>الأرقام العربية واللاتينية مدعومة. السحب على اسم الحقل يغيّر القيمة، ويبقى الإدخال الرقمي متاحًا. القيم الافتراضية لا تُعد قياسات حقيقية.</p><p class="help-session">لا تحفظ التجربة في مشاريعك. يمكنك تنزيل سجل التجربة قبل إغلاق الصفحة؛ إعادة تحميلها تبدأ جلسة جديدة.</p><button class="primary" data-close>ابدأ التجربة</button></dialog>
+  <noscript>يحتاج نموذج دفتر الموقع إلى JavaScript لعرض الرسم والتفاعل.</noscript>
+  <script type="module" src="./survey-studio.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import {kitchenGeometry} from '../public/kitchen-model.js';
+import {cleanUpstandProfiles,cleanUpstandSpec,worktopUpstandTakeoff} from '../public/kitchen-worktop-upstand.js';
+const panel={sku:'STONE',name:'حجر العميل',kind:'panel',thicknessMm:20,stockLengthMm:3200,stockWidthMm:1600};
+const profile={id:'U1',sku:'STONE',heightMm:100,reference:'رسم المصنع ١'};
+const cat={approved:true,items:[panel],terms:{worktop:'include'},upstandProfiles:[profile]};
+const factory={mode:'factory',profileId:'U1'}, supplier={mode:'supplier',material:'رخام مقاس',heightMm:100,thicknessMm:20};
+const run={id:'r',wall:'back',tier:'base',start:0,end:500,depth:60,height:80,bottom:6,worktopThicknessMm:40};
+const make=(choice,units=[['a','storage',0,100],['b','storage',100,100],['f','fridge',200,65],['c','drawers',305,95]],features=[])=>({
+ room:{width:500,length:500,height:290,workshop:choice?{upstand:{choice,walls:{}}}:{}},
+ kitchen:{runs:[run],units:units.map(([id,kind,u,width])=>({id,kind,u,width,runId:'r'})),features}
+});
+const take=(d,c=cat)=>worktopUpstandTakeoff(d,c,kitchenGeometry(d.kitchen,d.room));
+const spans=(r,w)=>r.segments.filter(s=>s.wall===w).map(s=>[s.fromMm,s.toMm]);
+const d=make(factory);
+const low={id:'low',kind:'window',wall:'back',u:65,width:35,bottom:94,height:100,depth:4};
+const high={...low,id:'high',u:105,bottom:100};
+const x=take(make(factory,undefined,[low,high]));
+assert.deepEqual(spans(x,'back'),[[0,650],[1000,2000],[3050,4000]]);
+assert.deepEqual(spans(x,'left'),[[4400,4980]]); // right-angle butt against through-wall strip?
+assert.ok(x.segments.every(s=>s.bottomMm===900&&s.heightMm===100&&s.thicknessMm===20));
+assert.equal(x.pieces.length,x.segments.length);
+assert.ok(x.pieces.every(p=>p.sku==='STONE'&&p.b===100&&p.kind==='panel'&&p.count===1));
+assert.equal(x.supplier.length,0);
+assert.equal(take(make({mode:'none'})).segments.length,0);
+assert.equal(take(make(undefined)).decisionIssues.length>0,true);
+const handed=take(make(supplier),{...cat,terms:{worktop:'separate'}});
+assert.ok(handed.supplier.length);assert.equal(handed.pieces.length,0);
+assert.ok(take(d,{...cat,approved:false}).issues.length);
+const none=make(factory,[]);assert.equal(take(none).segments.length,0);
+const island=make(factory,[['x','storage',0,100]]);
+Object.assign(island.kitchen.runs[0]={...run},{placement:'free',wall:null,x:180,z:140,angle:0});
+assert.equal(take(island).segments.length,0);
+const side=make(factory);side.room.workshop.upstand.walls.left={mode:'none'};
+assert.deepEqual(spans(take(side),'left'),[]);assert.equal(spans(take(side),'back')[0][0],0);
+assert.equal(cleanUpstandSpec({choice:{mode:'bogus'}}),null);
+assert.equal(cleanUpstandProfiles([profile,profile],cat.items),null);
+assert.equal(cleanUpstandProfiles([{...profile,sku:'missing'}],cat.items),null);
+console.log('Worktop upstand geometry, decisions and procurement verified.');
+
+// Test normal quote, import/restore, cut purchases, export, approvals and scope.
+const {seedCatalog,cleanCatalog,buildFactoryQuote}=await import('../public/kitchen-workshop-factory.js');
+const {factorySaleRows,factoryCSV}=await import('../public/kitchen-workshop-factory-ui.js');
+const {approvalState,cleanWorkshop}=await import('../public/kitchen-workshop-state.js');
+const book=seedCatalog();
+book.items.push({...book.items.find(i=>i.kind==='panel'),...panel,role:'body',price:300,kerfMm:3,stockUnits:1});
+book.upstandProfiles=[profile];book.approved=true;
+assert.deepEqual(cleanCatalog(book).upstandProfiles,[profile]);
+const project=make(factory,[['a','storage',0,90],['b','storage',90,90]]);
+project.room.workshop.catalog=book;
+project.room.workshop.rows={r:{units:project.kitchen.units.map(u=>({id:u.id,startMm:u.u*10,widthMm:u.width*10,family:'storage'})),catalogVersion:'1',warnings:[]}};
+const quote=buildFactoryQuote(project),stock=quote.purchases.find(p=>p.sku==='STONE');
+assert.deepEqual(quote.pieces.filter(p=>p.family==='upstand').map(p=>[p.a,p.b]),[[1800,100],[580,100]]);
+assert.ok(stock);assert.equal(stock.qty,1);assert.equal(stock.cost,300);assert.equal(stock.net,.238);
+assert.ok(!quote.extras.some(e=>e.kind==='upstand'));
+assert.equal(buildFactoryQuote(project,{unitIds:['a']}).pieces.some(p=>p.family==='upstand'),false);
+const imported=cleanWorkshop({upstand:{choice:supplier},catalog:book});
+assert.deepEqual(imported.upstand.choice,supplier);
+const subProject=structuredClone(project);subProject.room.workshop.upstand={choice:supplier,walls:{left:{mode:'none'}}};
+const external=buildFactoryQuote(subProject),sale=factoryCSV(['البند','القيمة','الشرط'],factorySaleRows(external,book));
+assert.equal(external.purchases.some(p=>p.sku==='STONE'),false);
+assert.equal(external.extras.filter(e=>e.kind==='upstand').length,1);
+assert.match(sale,/رخام مقاس/);assert.match(sale,/1800/);
+const legacy=structuredClone(project);delete legacy.room.workshop.upstand;
+assert.match(factoryCSV([],factorySaleRows(buildFactoryQuote(legacy),book)),/قرار معلّق/);
+const cut=take(d),exclude=cut.edges.find(e=>e.wall==='back');
+d.room.workshop.upstand.omitted=[{wall:exclude.wall,fromMm:exclude.fromMm,toMm:exclude.toMm,bottomMm:exclude.bottomMm}];
+assert.equal(take(d).segments.some(s=>s.wall==='back'&&s.fromMm===0),false);
+d.kitchen.units[0].width=85;
+assert.ok(take(d).issues.some(s=>s.includes('استثناؤها')));
+const before=await approvalState(project),after=await approvalState(subProject);
+assert.notEqual(before.keys.customer,after.keys.customer);
+console.log('Stock panels, supplier export, scope, inherited/stale decisions and approval dependencies verified.');
+const {acceptPattern}=await import('../public/kitchen-surface-pattern.js');
+const notched=make(factory,[['x','storage',100,100]]),top=kitchenGeometry(notched.kitchen,notched.room).worktops[0];
+const actual=acceptPattern(notched,top,{source:'Final site template',datum:'rear left',materialRef:'STONE',limitRef:'factory record',levelRef:'Installed',inspector:'survey',date:'2026-10-28',fitToleranceMm:1,edgeGapMm:1,webMm:10,thicknessMm:40,
+ outer:[[0,0],[300,0],[300,40],[450,40],[450,0],[1000,0],[1000,600],[0,600]],holes:[]});
+assert.ok(actual.ok,actual.reason);assert.deepEqual(spans(take(actual.doc),'back'),[[1000,1300],[1450,2000]]);
+const door=make(factory,[['x','storage',100,100]],[{kind:'door',id:'dr',wall:'back',u:112,width:38,bottom:0,height:210,depth:4}]);
+assert.deepEqual(spans(take(door),'back'),[[1000,1120],[1500,2000]]);
+const socket=make(factory,[['x','storage',100,100]],[{kind:'electric',id:'p',wall:'back',u:151,width:8,bottom:92,height:10,depth:3}]);
+assert.equal(take(socket).pieces.length,0);assert.ok(take(socket).issues.length);
+console.log('Surveyed contours, frame breaks and blocked service cuts verified.');

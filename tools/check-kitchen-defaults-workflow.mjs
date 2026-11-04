@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {makeFurnishedSaudiRoom} from '../public/kitchen-room-presets.js';
+import {buildAssistant,applyAnswer} from '../public/kitchen-assist-engine.js';
+import {setProjectDefault,resetProjectDefault,resolveDefault,newProjectDefaultRoom} from '../public/kitchen-defaults-model.js';
+import {manualDefault} from '../public/kitchen-defaults-field.js';
+import {readFieldRegister,upsertFieldRecord} from '../public/kitchen-field-model.js';
+let d=makeFurnishedSaudiRoom('apartment');
+const set=(code,property,type,value,unit='',itemId='')=>{const z=setProjectDefault(d,{code,property,type,value,unit,itemId});assert(z.ok,z.reason);d={...d,room:z.room};};
+set('USE-08','وزن الكيس الواحد','number',5000,'غ');set('USE-08','كمية الأرز التي يريد العميل تخزينها','number',20,'كجم');
+const topic='customer';let v=buildAssistant(d,topic);assert(!v.questions.length);assert(v.estimating);assert(v.derived.some(a=>a.value==='٤ أكياس'));assert.equal(readFieldRegister(d.room).records.length,0);
+let a=applyAnswer(d,topic,'rice-qty',30,{entityId:v.entityId});assert(a.ok);d={...d,room:a.room};v=buildAssistant(d,topic);assert(v.derived.some(x=>x.value==='٦ أكياس'));assert.equal(readFieldRegister(d.room).records.length,1);
+const min='الحد الأدنى لارتفاع فتحة الموديل';const dw=d.kitchen.units.find(u=>u.kind==='dishwasher');
+set('EQP-02',min,'number',820,'مم',dw.id);let h=applyAnswer(d,'equipment','bearing','zero',{entityId:dw.id});assert(h.ok);d={...d,room:h.room};const check=buildAssistant(d,'equipment',{entityId:dw.id});assert.equal(check.answers.find(q=>q.id==='min').evidence.state,'assumed');assert(check.derived.some(x=>x.label.includes('مبدئي')&&x.value.includes('٤٠')));
+const unresolved=upsertFieldRecord(d.room,{inputCode:'EQP-02',itemId:dw.id,property:min,valueType:'number',unit:'مم',value:null,verification:'unknown'});assert(unresolved.ok);d={...d,room:unresolved.room};const unknown=buildAssistant(d,'equipment',{entityId:dw.id});assert.equal(unknown.answers.find(q=>q.id==='min').evidence.state,'unknown');assert(!unknown.derived.some(x=>x.label.includes('مقارنة ارتفاع الموديل')));
+let o=manualDefault(d,{code:'SITE-07',property:'مساحة الأرضية الصافية',itemId:'room'});assert.equal(o.value,16.25);assert.equal(o.origin,'calculated');
+set('USE-09','عدد القطع الخاصة','number',0,'عدد');o=manualDefault(d,{code:'USE-09',property:'عدد القطع الخاصة',itemId:'أواني-02'});assert.equal(o.value,0);assert.equal(o.mode,'value');
+console.log('Default-first workflows: estimates generated without records, converted defaults reused, only an exception saved, same-item unknown blocks provisional appliance default, live CAD field suggestions, zero retained.');

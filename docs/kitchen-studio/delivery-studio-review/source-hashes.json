@@ -1,0 +1,58 @@
+[
+  {
+    "path": "app/api/jobs/route.ts",
+    "sha256": "3A8CC0791BDAE1F804AE64D66448A259ADCC2267A340E3E680FE53E77FCE451C"
+  },
+  {
+    "path": "public/kitchen-order-tracking-ui.js",
+    "sha256": "CEB5BCE32F52D147195BA8FB30CB48007938E9E03889125724F0D5C19FC2AAB3"
+  },
+  {
+    "path": "public/kitchen-delivery-studio.js",
+    "sha256": "E29715CBF85124E181B3DF3969C3FDE61C3D646EA394B01D473BAE6A42BBE5BB"
+  },
+  {
+    "path": "public/kitchen-delivery-draft.js",
+    "sha256": "2EE4AD7C387C65F2A8D259148E659125742503CE0B9458805FA9F35EE865E0F6"
+  },
+  {
+    "path": "public/kitchen-delivery-domain.js",
+    "sha256": "365DE609DD3A4C36EC8C7466E630378FC70E0093D455BB0E739EDDD08B818DD4"
+  },
+  {
+    "path": "public/kitchen-delivery-drawing.js",
+    "sha256": "7E15BF69B6A7468DFB9B0F4660B7E4841F849675C43B5073218019309299FA3C"
+  },
+  {
+    "path": "public/kitchen-delivery-studio.css",
+    "sha256": "2359320493ACEB154F4F6DCE723E99048EFE4A2B77D4EA4CFAB07CE7ECF78310"
+  },
+  {
+    "path": "public/kitchen-gateways.js",
+    "sha256": "175483D9E331B9FFD2D258FC2A793657ED06A406B2C47C8FF73A78E1327F2EB0"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "304BFD86045EA972EB472469EF97C4B0415B0D5E286A2E26800EA7F829F64CF7"
+  },
+  {
+    "path": "tools/check-kitchen-delivery-domain.mjs",
+    "sha256": "21418B0CF659C0C48E8C4798D0800C1B3DC85CFAF713502F213C6E62A9F44BB6"
+  },
+  {
+    "path": "tools/check-kitchen-delivery-studio.mjs",
+    "sha256": "C1B0AF5A04CFB1356B4C3F1A1E94DA02FD15FA1D27DFDB3A6019987F799DEC4F"
+  },
+  {
+    "path": "tools/check-kitchen-guide-tracking.mjs",
+    "sha256": "D2B3BE66957F070283DA72949DE6D88B2A6CB7A73D8670C194744C72CEBBC6FC"
+  },
+  {
+    "path": "scripts/check-workshop-jobs.mjs",
+    "sha256": "5358DB5D9411666BEA7C07E20BD302BB43EFCACB9526C666CEF45E832F0C1704"
+  },
+  {
+    "path": "scripts/serve-delivery-review.mjs",
+    "sha256": "FE13701B3E6746B42E09E5963959BD1FF1D2BB6AAD26EED37E7450EF4E322F62"
+  }
+]

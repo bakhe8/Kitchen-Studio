@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {makeChainExample,applyChain,newChainRow,surveyedDesignRange} from '../public/kitchen-chain-model.js';
+import {readWallOptions,applyWallOptions} from '../public/kitchen-chain-options.js';
+import {projectDecisions,decisionIssues,updateDecisionReview,cleanDecisionReview} from '../public/kitchen-project-decisions.js';
+import {approvalState,releaseConcerns} from '../public/kitchen-workshop-state.js';
+import {applyWorkshopCorner} from '../public/kitchen-production-row.js';
+import {saveApplianceRequest} from '../public/kitchen-appliance-intake.js';
+import {cleanIdea} from '../public/kitchen-ideas.js';
+let doc=makeChainExample();
+const partial=applyChain(doc,'front',{rows:[{...newChainRow('water','tap'),gapMm:500}]});
+assert(partial.ok,partial.reason);
+assert.equal(surveyedDesignRange(partial.doc,'front'),null,'a partial saved walk does not select an unmeasured length for cabinetry');
+assert(surveyedDesignRange(doc,'back'));
+const set=(out)=>{assert(out.ok,out.reason);doc=out.doc;};
+assert.deepEqual(decisionIssues(doc),[],'legacy plans without a decision brief retain their previous workflow');
+set(updateDecisionReview(doc,{active:true,walls:['back'],noCustomerDevices:true}));
+assert(decisionIssues(doc).some(m=>m.includes('ستارة')));assert(decisionIssues(doc).some(m=>m.includes('كورنيش')));
+const o=structuredClone(readWallOptions(doc,'back'));o.mode='none';o.decisions={upper:true};o.curtains['chain-back-window']={state:'none',type:'roller',leftMm:0,rightMm:0,aboveMm:0,dropMm:1000,projectionMm:0};set(applyWallOptions(doc,'back',o));
+assert.deepEqual(decisionIssues(doc),[]);assert(projectDecisions(doc).items.some(i=>i.id==='feature:chain-back-window'&&i.value==='بدون ستارة'));assert(!projectDecisions(doc).items.find(i=>i.id==='cornice:back'));
+const r=saveApplianceRequest(doc,{id:'f1',kind:'fridge',placement:'bay',name:'ثلاجة',manual:'',model:'',body:{width:null,height:null,depth:null},space:{width:null,height:null,depth:null},wall:'',recipe:'',host:''});
+set(r);assert.equal(doc.room.workshop.decisionReview.noCustomerDevices,false);assert(decisionIssues(doc).some(s=>s.includes('ثلاجة')));assert(!updateDecisionReview(doc,{noCustomerDevices:true}).ok);
+const snapshot=cleanIdea(JSON.parse(JSON.stringify(doc)));assert(snapshot?.room.workshop.decisionReview.active);assert(releaseConcerns(snapshot,await approvalState(snapshot)).some(msg=>msg.includes('ثلاجة')));
+assert.equal(cleanDecisionReview({active:true,walls:['back','back'],noCustomerDevices:false,noCorners:[]}),null);
+let corners=makeChainExample();for(const w of ['back','right']){
+ const rows=[{...newChainRow('start','s'),gapMm:0},{...newChainRow('corner','n'),gapMm:5000}];const out=applyChain(corners,w,{source:'field',rows});assert(out.ok,out.reason);corners=out.doc;
+}
+const active=updateDecisionReview(corners,{active:true,walls:['back','right']}).doc;
+const joint=projectDecisions(active).items.find(i=>i.id.startsWith('corner:'));assert(joint?.open);
+const declined=updateDecisionReview(active,{noCorners:[joint.focus.joint]}).doc;
+assert(!projectDecisions(declined).items.find(i=>i.id===joint.id).open);
+const [a,b]=joint.focus.joint.split('+'),c={a,b,tall:false,base:{aMm:900,bMm:900,access:'both',inside:'shelves',sku:''}};
+const choose=applyWorkshopCorner(declined,joint.focus.joint,c);assert(choose.ok,choose.reason);assert(!choose.doc.room.workshop.decisionReview.noCorners.length);
+const undo=applyWorkshopCorner(choose.doc,joint.focus.joint,null);assert(undo.ok);assert(projectDecisions(undo.doc).items.find(i=>i.id===joint.id).open,'removal does not automatically mean the customer declined');
+console.log('Customer review is conditional on drawn walls and real endpoints; unanswered vs explicit no curtain, no upper => no cornice needed, no appliances vs pending, no corner vs removal, portable review and actual release gates.');

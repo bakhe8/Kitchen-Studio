@@ -1,0 +1,42 @@
+[
+  {
+    "path": "public/kitchen-finish-desk.js",
+    "sha256": "aef98a5afdd369ac9572fb10c988297faebddbf96cfcc6dec39445cd4d19bb4a"
+  },
+  {
+    "path": "public/kitchen-finish-preview.js",
+    "sha256": "c427599a2545be8d618a831d1a9d22ec92e6ecaf7cf0e07173fc85d7361d22f3"
+  },
+  {
+    "path": "public/kitchen-finish-studio.css",
+    "sha256": "04d57848bb31937f096e7eb3236d772dc526ebda615f6ea985caaf56209da2e7"
+  },
+  {
+    "path": "public/kitchen-finish-parts-ui.js",
+    "sha256": "126d2b14d5fa226cdd0d3f1631b562f7cb20e89576344c9b27fcdfc90bc611bc"
+  },
+  {
+    "path": "public/kitchen-corner-finish-ui.js",
+    "sha256": "4ddcd216f0a55d110fea166e21b65af6d2cafcbcdecb374e98ea405ff50a1d5c"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "b6051da39d9268eefcd2c713dccc6a78bf16db0ff029fcd8aac31d8f548f4dd9"
+  },
+  {
+    "path": "public/index.html",
+    "sha256": "5954daa7f94b3e9bdf89328758ec7f82ba4c24d91e0f4fc184af955ae33a6ed4"
+  },
+  {
+    "path": "tools/check-kitchen-finish-preview.mjs",
+    "sha256": "f7c0ba54de5ae94e5180b826f8aea925cf4361487284ca0ab51666e446eca228"
+  },
+  {
+    "path": "tools/check-kitchen-finish-studio.mjs",
+    "sha256": "c286e249d4dfc82b952190a4a896ab1c452d9c4d3b864e4447503c2b333b618c"
+  },
+  {
+    "path": "tools/check-kitchen-finish-workshop.mjs",
+    "sha256": "46b0059266a07a2fd23a184ddd078cdba7c8ef432ff6209e96a59a6040d8416e"
+  }
+]

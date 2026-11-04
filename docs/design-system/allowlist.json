@@ -1,0 +1,770 @@
+{
+  "schemaVersion": 1,
+  "description": "Precise color-data exceptions only. Each entry requires file, selector, property, exact value, category, and a substantive reason. No wildcard file, selector, value, or geometry/motion waiver is accepted. Inline concatenated JS color exceptions may require an exact sourcePrefix immediately before the CSS declaration to bind the expression to its authored sink context.",
+  "categories": [
+    "material-swatch",
+    "technical-visualization",
+    "user-color",
+    "print-data"
+  ],
+  "entries": [
+    {
+      "file": "public/kitchen-survey-entry.css",
+      "selector": ".sv-symbol .sv-door",
+      "property": "fill",
+      "value": "#e5d7bc",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-entry.css",
+      "selector": ".sv-symbol .sv-obstacle",
+      "property": "fill",
+      "value": "#dfdad1",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-entry.css",
+      "selector": ".sv-symbol .sv-window",
+      "property": "fill",
+      "value": "#cde3de",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-notebook.css",
+      "selector": ".sv.sv-notebook .survey-wall-sheet .wsheet-opening",
+      "property": "fill",
+      "value": "#e7eddf",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-notebook.css",
+      "selector": ".sv.sv-notebook .survey-wall-sheet .wsheet-opening",
+      "property": "stroke",
+      "value": "#79916f",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-notebook.css",
+      "selector": ".sv.sv-notebook .survey-wall-sheet [data-wall-kind=\"door\"] .wsheet-opening",
+      "property": "fill",
+      "value": "#eee7d7",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-notebook.css",
+      "selector": ".sv.sv-notebook .survey-wall-sheet [data-wall-kind=\"door\"] .wsheet-opening",
+      "property": "stroke",
+      "value": "#8c755a",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-center",
+      "property": "fill",
+      "value": "#fffaf1",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-center",
+      "property": "stroke",
+      "value": "#8a735a",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-door-lever",
+      "property": "stroke",
+      "value": "#635749",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-flag",
+      "property": "fill",
+      "value": "#8a745b",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-glass",
+      "property": "stroke",
+      "value": "#7396a8",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-marker",
+      "property": "stroke",
+      "value": "#8a745b",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-obstacle",
+      "property": "fill",
+      "value": "#e4e4e2",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-obstacle",
+      "property": "stroke",
+      "value": "#5f6770",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-opening",
+      "property": "fill",
+      "value": "#dfeaf0",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet .wsheet-opening",
+      "property": "stroke",
+      "value": "#476574",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet [data-wall-kind=door] .wsheet-opening",
+      "property": "fill",
+      "value": "#ede4d7",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-survey-wall-sheet.css",
+      "selector": ".survey-wall-sheet [data-wall-kind=door] .wsheet-opening",
+      "property": "stroke",
+      "value": "#816953",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-back",
+      "property": "fill",
+      "value": "#dce7e6",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-back",
+      "property": "stroke",
+      "value": "#698286",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-floor",
+      "property": "stroke",
+      "value": "#587578",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-ghost",
+      "property": "stroke",
+      "value": "#879b9b",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-inner",
+      "property": "stroke",
+      "value": "#698488",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-side",
+      "property": "fill",
+      "value": "#b7ccd0",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-side",
+      "property": "stroke",
+      "value": "#55717c",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-visit-start.css",
+      "selector": ".visit-volume-wall-cap",
+      "property": "stroke",
+      "value": "#33585b",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/survey-studio.css",
+      "selector": ".survey-wall-sheet .wsheet-opening",
+      "property": "fill",
+      "value": "#e8eddf",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/survey-studio.css",
+      "selector": ".survey-wall-sheet .wsheet-opening",
+      "property": "stroke",
+      "value": "#7b9271",
+      "category": "technical-visualization",
+      "reason": "Authored architectural object/material palette for the measured drawing; does not encode interaction or validation state."
+    },
+    {
+      "file": "public/kitchen-design-pages.css",
+      "selector": ".dp-upper-silhouette",
+      "property": "border-top",
+      "value": "2px solid #657e85",
+      "category": "technical-visualization",
+      "reason": "Authored cabinet-tier silhouette and filler material depiction; does not encode selected or validation state."
+    },
+    {
+      "file": "public/kitchen-design-pages.css",
+      "selector": ".dp-upper-silhouette::before",
+      "property": "background",
+      "value": "#bad4cd",
+      "category": "technical-visualization",
+      "reason": "Authored cabinet-tier silhouette and filler material depiction; does not encode selected or validation state."
+    },
+    {
+      "file": "public/kitchen-design-pages.css",
+      "selector": ".dp-upper-silhouette::before",
+      "property": "border",
+      "value": "1px solid #526e74",
+      "category": "technical-visualization",
+      "reason": "Authored cabinet-tier silhouette and filler material depiction; does not encode selected or validation state."
+    },
+    {
+      "file": "public/kitchen-design-pages.css",
+      "selector": ".dp-upper-silhouette[data-mode=\"two\"]::after,.dp-upper-silhouette[data-mode=\"filler\"]::after",
+      "property": "border-top",
+      "value": "2px solid #526e74",
+      "category": "technical-visualization",
+      "reason": "Authored cabinet-tier silhouette and filler material depiction; does not encode selected or validation state."
+    },
+    {
+      "file": "public/kitchen-design-pages.css",
+      "selector": ".dp-upper-silhouette[data-mode=\"filler\"]::after",
+      "property": "background",
+      "value": "#b19a77",
+      "category": "technical-visualization",
+      "reason": "Authored cabinet-tier silhouette and filler material depiction; does not encode selected or validation state."
+    },
+    {
+      "file": "public/kitchen-stage-design.css",
+      "selector": ".pd-alt-strip rect",
+      "property": "fill",
+      "value": "#e9edef",
+      "category": "technical-visualization",
+      "reason": "Authored alternative-layout comparison palette distinguishes changed cabinet geometry and connecting technical paths."
+    },
+    {
+      "file": "public/kitchen-stage-design.css",
+      "selector": ".pd-alt-strip rect",
+      "property": "stroke",
+      "value": "#889da4",
+      "category": "technical-visualization",
+      "reason": "Authored alternative-layout comparison palette distinguishes changed cabinet geometry and connecting technical paths."
+    },
+    {
+      "file": "public/kitchen-stage-design.css",
+      "selector": ".pd-alt-strip .pd-alt-change",
+      "property": "fill",
+      "value": "#81b5bb",
+      "category": "technical-visualization",
+      "reason": "Authored alternative-layout comparison palette distinguishes changed cabinet geometry and connecting technical paths."
+    },
+    {
+      "file": "public/kitchen-stage-design.css",
+      "selector": ".pd-alt-strip .pd-alt-change",
+      "property": "stroke",
+      "value": "#155e6b",
+      "category": "technical-visualization",
+      "reason": "Authored alternative-layout comparison palette distinguishes changed cabinet geometry and connecting technical paths."
+    },
+    {
+      "file": "public/kitchen-stage-design.css",
+      "selector": ".pd-alt-strip path",
+      "property": "stroke",
+      "value": "#985c32",
+      "category": "technical-visualization",
+      "reason": "Authored alternative-layout comparison palette distinguishes changed cabinet geometry and connecting technical paths."
+    },
+    {
+      "file": "public/shelf-room.css",
+      "selector": ".sroom-fact i",
+      "property": "background",
+      "value": "#a4774e",
+      "category": "technical-visualization",
+      "reason": "Furniture material legend sample in the room overview; not a selectable or validation state."
+    },
+    {
+      "file": "public/shelf-room.css",
+      "selector": ".sroom-fact i",
+      "property": "border",
+      "value": "1px solid #805a3c",
+      "category": "technical-visualization",
+      "reason": "Furniture material legend sample in the room overview; not a selectable or validation state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-oak",
+      "property": "background",
+      "value": "repeating-linear-gradient(4deg,transparent 0 5px,#75522728 6px,transparent 7px 11px),linear-gradient(105deg,#cdab7e,#e1bd8c 35%,#bf9569 72%,#d6b386)",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-walnut",
+      "property": "background",
+      "value": "repeating-linear-gradient(-5deg,transparent 0 4px,#33201360 5px,transparent 6px 10px),linear-gradient(105deg,#806447,#9d7451 40%,#73533a 78%,#916b4b)",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-ivory",
+      "property": "background",
+      "value": "linear-gradient(132deg,#f4f0de,#e8e2cc 75%,#f3edda)",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-library",
+      "property": "background-image",
+      "value": "repeating-linear-gradient(to bottom,transparent 0 6px,#a98e69 6px 8px),linear-gradient(to left,transparent 45%,#a98e69 45% 52%,transparent 52%)",
+      "category": "technical-visualization",
+      "reason": "Original shelf-layout preset thumbnail palette represents timber divisions, not selection or validation."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-display",
+      "property": "background-image",
+      "value": "linear-gradient(to bottom,transparent 55%,#a98e69 55% 63%,transparent 63%),linear-gradient(to left,transparent 30%,#a98e69 30% 37%,transparent 37%)",
+      "category": "technical-visualization",
+      "reason": "Original shelf-layout preset thumbnail palette represents timber divisions, not selection or validation."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-sand",
+      "property": "background",
+      "value": "#d8c6ae",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-sage",
+      "property": "background",
+      "value": "#adb99c",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-stone",
+      "property": "background",
+      "value": "#bec0b6",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-wood-sample:before",
+      "property": "background",
+      "value": "repeating-linear-gradient(12deg,#b38f66 0px,#c8a47e 2px,#dbbd99 4px)",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/shelf-planner.css",
+      "selector": ".sp-wood-sample:before",
+      "property": "border",
+      "value": "1px solid #8c6c48",
+      "category": "material-swatch",
+      "reason": "Original authored wood or wall material sample, restored from the distribution CSS matching the inventoried source SHA-256; independent of interaction state."
+    },
+    {
+      "file": "public/kitchen-defaults-ui.js",
+      "selector": "[inline-style]",
+      "property": "background",
+      "value": "'+goodColor(m.color)+'",
+      "sourcePrefix": "<div class=\"df-material-head\"><i style=\"",
+      "category": "user-color",
+      "reason": "Defaults calculated surface-material sample beside the material name; exact existing goodColor(m.color) sanitizer preserves material/user color data, independent of any interaction or status."
+    },
+    {
+      "file": "public/kitchen-defaults-ui.js",
+      "selector": "[inline-style]",
+      "property": "background",
+      "value": "'+goodColor(m.color)+'",
+      "sourcePrefix": "<dl class=\"df-finish-list\">'+parts.map(m=>'<div><dt><i style=\"",
+      "category": "user-color",
+      "reason": "Defaults unit-front material sample beside its finish name; exact existing goodColor(m.color) sanitizer preserves material/user color data, independent of any interaction or status."
+    },
+    {
+      "file": "public/kitchen-factory-pages.css",
+      "selector": ".k-workshop .kf-outline",
+      "property": "stroke",
+      "value": "#315b64",
+      "category": "technical-visualization",
+      "reason": "Original measured-surface outline and hole palette represents authored geometry and material, separate from interaction, validation, and readiness UI."
+    },
+    {
+      "file": "public/kitchen-factory-pages.css",
+      "selector": ".k-workshop .kf-outline",
+      "property": "fill",
+      "value": "#dce9e5",
+      "category": "technical-visualization",
+      "reason": "Original measured-surface outline and hole palette represents authored geometry and material, separate from interaction, validation, and readiness UI."
+    },
+    {
+      "file": "public/kitchen-factory-pages.css",
+      "selector": ".k-workshop .kf-outline[data-measured=false]",
+      "property": "fill",
+      "value": "#eef1ed",
+      "category": "technical-visualization",
+      "reason": "Original measured-surface outline and hole palette represents authored geometry and material, separate from interaction, validation, and readiness UI."
+    },
+    {
+      "file": "public/kitchen-factory-pages.css",
+      "selector": ".k-workshop .kf-holes",
+      "property": "fill",
+      "value": "#fafaf6",
+      "category": "technical-visualization",
+      "reason": "Original measured-surface outline and hole palette represents authored geometry and material, separate from interaction, validation, and readiness UI."
+    },
+    {
+      "file": "public/kitchen-factory-pages.css",
+      "selector": ".k-workshop .kf-holes",
+      "property": "stroke",
+      "value": "#916c44",
+      "category": "technical-visualization",
+      "reason": "Original measured-surface outline and hole palette represents authored geometry and material, separate from interaction, validation, and readiness UI."
+    },
+    {
+      "file": "public/kitchen-workshop-factory-ui.js",
+      "selector": "[inline-style]",
+      "property": "background",
+      "value": "'+color+'",
+      "sourcePrefix": "<i class=\"kw-stock-swatch\" style=\"",
+      "category": "material-swatch",
+      "reason": "Original catalog stock material sample beside the item name, code and specification; exact six-digit hex validation preserves product color independent of selected or readiness state."
+    },
+    {
+      "file": "public/kitchen-delivery-studio.css",
+      "selector": ".delivery-studio .dl-diagram-label",
+      "property": "fill",
+      "value": "#61755f",
+      "category": "technical-visualization",
+      "reason": "Authored delivery drawing reference palette for origin, static labels or depth plane; interactive selection/validation colors are separate semantic rules."
+    },
+    {
+      "file": "public/kitchen-delivery-studio.css",
+      "selector": ".delivery-studio .dl-origin",
+      "property": "stroke",
+      "value": "#91a28d",
+      "category": "technical-visualization",
+      "reason": "Authored delivery drawing reference palette for origin, static labels or depth plane; interactive selection/validation colors are separate semantic rules."
+    },
+    {
+      "file": "public/kitchen-delivery-studio.css",
+      "selector": ".delivery-studio .dl-origin-label",
+      "property": "fill",
+      "value": "#687e67",
+      "category": "technical-visualization",
+      "reason": "Authored delivery drawing reference palette for origin, static labels or depth plane; interactive selection/validation colors are separate semantic rules."
+    },
+    {
+      "file": "public/kitchen-delivery-studio.css",
+      "selector": ".delivery-studio .dl-depth-hit",
+      "property": "fill",
+      "value": "#f0eee2",
+      "category": "technical-visualization",
+      "reason": "Authored delivery drawing reference palette for origin, static labels or depth plane; interactive selection/validation colors are separate semantic rules."
+    },
+    {
+      "file": "public/kitchen-delivery-studio.css",
+      "selector": ".delivery-studio .dl-depth-hit",
+      "property": "stroke",
+      "value": "#d6decd",
+      "category": "technical-visualization",
+      "reason": "Authored delivery drawing reference palette for origin, static labels or depth plane; interactive selection/validation colors are separate semantic rules."
+    },
+    {
+      "file": "public/kitchen-design-print.css",
+      "selector": "body[data-project-mode]",
+      "property": "background",
+      "value": "#fff!important",
+      "category": "print-data",
+      "reason": "Physical paper baseline for main-app printing, independent of screen canvas tokens or printer background graphics."
+    },
+    {
+      "file": "public/kitchen-design-print.css",
+      "selector": "body[data-project-mode]",
+      "property": "color",
+      "value": "#000!important",
+      "category": "print-data",
+      "reason": "Black ink baseline for readable monochrome main-app documents; technical SVG strokes and material sample colors retain their authored values."
+    },
+    {
+      "file": "public/kitchen-fullwidth-forms.css",
+      "selector": ".dp-bay-required",
+      "property": "fill",
+      "value": "#ceddd9",
+      "category": "technical-visualization",
+      "reason": "Original static required/measured geometry or cabinet depth-plane palette; selection, validation and draft state use separate semantic selectors."
+    },
+    {
+      "file": "public/kitchen-fullwidth-forms.css",
+      "selector": ".dp-bay-required",
+      "property": "stroke",
+      "value": "#214e52",
+      "category": "technical-visualization",
+      "reason": "Original static required/measured geometry or cabinet depth-plane palette; selection, validation and draft state use separate semantic selectors."
+    },
+    {
+      "file": "public/kitchen-fullwidth-forms.css",
+      "selector": ".dp-bay-measured",
+      "property": "stroke",
+      "value": "#97501c",
+      "category": "technical-visualization",
+      "reason": "Original static required/measured geometry or cabinet depth-plane palette; selection, validation and draft state use separate semantic selectors."
+    },
+    {
+      "file": "public/kitchen-maintenance-studio.css",
+      "selector": ".maintenance-studio .dl-body-plane",
+      "property": "fill",
+      "value": "#eee7d7",
+      "category": "technical-visualization",
+      "reason": "Original static required/measured geometry or cabinet depth-plane palette; selection, validation and draft state use separate semantic selectors."
+    },
+    {
+      "file": "public/kitchen-maintenance-studio.css",
+      "selector": ".maintenance-studio .dl-body-plane",
+      "property": "stroke",
+      "value": "#7d9294",
+      "category": "technical-visualization",
+      "reason": "Original static required/measured geometry or cabinet depth-plane palette; selection, validation and draft state use separate semantic selectors."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".pr-swatch",
+      "property": "background-image",
+      "value": "linear-gradient(135deg,#ffffff12,#00000016),var(--pic,none)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".front-swatch em",
+      "property": "background",
+      "value": "#829483",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".front-swatch em",
+      "property": "border",
+      "value": "1px solid #637b68",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".front-swatch.framed em:after",
+      "property": "border",
+      "value": "3px ridge #9eaa94",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".front-swatch.fluted em",
+      "property": "background",
+      "value": "repeating-linear-gradient(90deg,#768977 0 2px,#90a78e 3px 5px,#a6b7a0 6px)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".hardware-swatch em",
+      "property": "background",
+      "value": "linear-gradient(#767b70,#d9d1b2,#635e4d)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".hardware-swatch.knob em",
+      "property": "background",
+      "value": "radial-gradient(at 30% 25%,#dac895,#6f613c)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-panels.css",
+      "selector": ".hardware-swatch.handleless em",
+      "property": "background",
+      "value": "#6e7163",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-shell.css",
+      "selector": ".kmat-chip[data-texture=wood]",
+      "property": "background-image",
+      "value": "repeating-linear-gradient(6deg,transparent 0 3px,#4c28101f 3.5px 4px)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-shell.css",
+      "selector": ".kmat-chip[data-texture=stone]",
+      "property": "background-image",
+      "value": "radial-gradient(#0003 .6px,transparent .7px)",
+      "category": "material-swatch",
+      "reason": "Original authored material/finish or hardware preview palette; item selection is indicated separately by its control boundary."
+    },
+    {
+      "file": "public/kitchen-creative.js",
+      "selector": "[inline-style]",
+      "property": "--kmat",
+      "value": "'+p.color+'",
+      "category": "material-swatch",
+      "reason": "Exact authored front/worktop palette color and line sample from the existing product palette; selection is a separate button boundary.",
+      "sourcePrefix": "abel+'\"><i class=\"kmat-chip\" data-texture=\"'+p.texture+'\" style=\""
+    },
+    {
+      "file": "public/kitchen-creative.js",
+      "selector": "[inline-style]",
+      "property": "--kmat-line",
+      "value": "'+p.ink+'",
+      "category": "material-swatch",
+      "reason": "Exact authored front/worktop palette color and line sample from the existing product palette; selection is a separate button boundary.",
+      "sourcePrefix": "mat-chip\" data-texture=\"'+p.texture+'\" style=\"--kmat:'+p.color+';"
+    },
+    {
+      "file": "public/kitchen-finish-desk.js",
+      "selector": "[inline-style]",
+      "property": "background-color",
+      "value": "'+hex+'",
+      "category": "material-swatch",
+      "reason": "Exact existing validated hex material sample in the finish inspector or material-choice chip; product identity is independent of selection.",
+      "sourcePrefix": "lse\"><i class=\"dp-sample-chip\" aria-hidden=\"true\"'+(hex?' style=\""
+    },
+    {
+      "file": "public/kitchen-finish-desk.js",
+      "selector": "[inline-style]",
+      "property": "background-color",
+      "value": "'+hex+'",
+      "category": "material-swatch",
+      "reason": "Exact existing validated hex material sample in the finish inspector or material-choice chip; product identity is independent of selection.",
+      "sourcePrefix": "(' · ');\n   sample.innerHTML=(hex?'<i class=\"finish-chip\" style=\""
+    },
+    {
+      "file": "public/kitchen-finish-parts-ui.js",
+      "selector": "[inline-style]",
+      "property": "background-color",
+      "value": "'+hex+'",
+      "category": "material-swatch",
+      "reason": "Exact existing validated hex material sample for a catalog part; the surrounding button owns selected state.",
+      "sourcePrefix": ")+'\"><i class=\"dp-sample-chip\" aria-hidden=\"true\"'+(hex?' style=\""
+    },
+    {
+      "file": "public/kitchen-quote-studio.js",
+      "selector": "[inline-style]",
+      "property": "--material-color",
+      "value": "'+color+'",
+      "category": "material-swatch",
+      "reason": "Exact existing material-color sample beside the SKU and label in quote selection; prices and selected-state boundaries remain independent.",
+      "sourcePrefix": "d=\"'+(sku===v.sku)+'\"><span class=\"qs-material\"'+(color?' style=\""
+    },
+    {
+      "file": "public/kitchen-proposal-presentation.js",
+      "selector": "[inline-style]",
+      "property": "--swatch",
+      "value": "'+s.color+'",
+      "category": "material-swatch",
+      "reason": "Exact existing customer proposal finish/material sample beside its material name and part references; not approval or validation state.",
+      "sourcePrefix": "map(s=>'<div class=\"material\"><i class=\"chip\" '+(s.color?'style=\""
+    },
+    {
+      "file": "public/kitchen-photo-plane-ui.js",
+      "selector": "[inline-style]",
+      "property": "stroke",
+      "value": "'+color+'",
+      "category": "technical-visualization",
+      "reason": "Original two-kind photographic calibration reference and frame coordinate palette; identifies technical point sets rather than validation or UI selection.",
+      "sourcePrefix": "hape=(points,color)=>points.length>1?'<polyline style=\"fill:none;"
+    },
+    {
+      "file": "public/kitchen-measured-outline-ui.js",
+      "selector": "[inline-style]",
+      "property": "stroke",
+      "value": "#fff",
+      "category": "technical-visualization",
+      "reason": "Original white halo around numbered measured-outline leg labels preserves legibility over geometry; the interactive leg hit/focus state is separate.",
+      "sourcePrefix": "\"middle\" font-size=\"12\" fill=\"#294c40\" style=\"paint-order:stroke;"
+    },
+    {
+      "file": "public/kitchen-report-scene.js",
+      "selector": "[style-block]",
+      "property": "--embedded-css",
+      "value": "'+rules.join('')+'",
+      "category": "technical-visualization",
+      "reason": "Exact printFaces palette assembly reuses the original authored technical polygon fill/stroke/stroke-width in painter order; its stylesheet contains only exported geometry paint, not UI controls or state."
+    },
+    {
+      "file": "public/kitchen-studio-panels.js",
+      "selector": "[inline-style]",
+      "property": "--base",
+      "value": "'+e.color+'",
+      "category": "material-swatch",
+      "reason": "Exact existing product finish color or authored texture URL for the material sample; selected state belongs to the surrounding card.",
+      "sourcePrefix": "a?'url('+data.src+')':'none';return '<i class=\"pr-swatch\" style=\""
+    },
+    {
+      "file": "public/kitchen-studio-panels.js",
+      "selector": "[inline-style]",
+      "property": "--pic",
+      "value": "'+pic+'",
+      "category": "material-swatch",
+      "reason": "Exact existing product finish color or authored texture URL for the material sample; selected state belongs to the surrounding card.",
+      "sourcePrefix": ")':'none';return '<i class=\"pr-swatch\" style=\"--base:'+e.color+';"
+    }
+  ]
+}

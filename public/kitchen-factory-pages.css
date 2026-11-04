@@ -1,0 +1,148 @@
+/* Operator workspaces. The status and work surfaces live with their actual
+   records, so stock availability and saved approvals never come from CSS. */
+.k-workshop :is(.kf-select-bar,.kf-sync-pair,.kf-version,.kf-readiness,.kf-balances,.kf-sign-gates,.kf-job-progress,.kf-pattern){box-sizing:border-box;min-width:0}
+.k-workshop .kf-select-bar{display:flex;align-items:end;gap:var(--ks-space-2) var(--ks-space-4);flex-wrap:wrap;padding:var(--ks-space-3) var(--ks-space-4);border:1px solid var(--ks-line);background:var(--ks-surface-2);border-radius:var(--ks-radius-group)}
+.k-workshop .kf-select-bar>label{min-width:min(11rem,100%);flex:1 1 11rem;margin:0}
+.k-workshop .kf-select-bar :is(button,select){min-height:44px}
+.k-workshop .kf-connection{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--ks-ink)}
+.k-workshop .kf-connection p{margin:0}
+.k-workshop :is(.kf-version,.kf-sync-pair section){padding:13px 16px;background:var(--ks-surface-2);border-inline-start:4px solid var(--ks-line-strong)}
+.k-workshop .kf-version{display:flex;flex-wrap:wrap;align-items:center;gap:5px 16px}
+.k-workshop .kf-version h3,.k-workshop .kf-version p{margin:0}
+.k-workshop .kf-version p{width:100%;color:var(--ks-ink-muted)}
+.k-workshop :is(.kf-version small,.kf-version-compare small,.kf-sync-pair small){display:block;font-size:.87em;color:var(--ks-ink-muted)}
+.k-workshop .kf-badge{align-self:center;margin-inline-start:auto;border:1px solid var(--ks-line);color:var(--ks-ink);border-radius:var(--ks-radius-control);padding:2px 8px}
+.k-workshop .kf-version-compare{margin-block-start:12px;border:1px solid var(--ks-line);padding:12px;border-radius:var(--ks-radius-surface)}
+.k-workshop .kf-admin{border-block-start:1px solid var(--ks-line);margin-block:14px;padding-block:6px}
+.k-workshop .kf-admin>summary{min-height:44px;cursor:pointer;font-weight:700;align-content:center}
+.k-workshop .kf-sync-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.k-workshop .kf-sync-pair section:last-child{background:var(--ks-surface-2);border-color:var(--ks-line-strong)}
+.k-workshop .kf-sync-pair strong{display:block;overflow-wrap:anywhere}
+.k-workshop .kf-balances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:12px 0;background:var(--ks-surface-2);border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface);overflow:hidden}
+.k-workshop .kf-balances>div{padding:8px 12px;border-inline-end:1px solid var(--ks-line)}.k-workshop .kf-balances>div:last-child{border:0;color:var(--ks-ink);background:var(--ks-surface-inset)}
+.k-workshop .kf-balances dt{font-size:.9em}.k-workshop .kf-balances dd{margin:2px 0;font-weight:700;font-size:1.18rem}
+.k-workshop .kf-readiness{display:grid;grid-template-columns:minmax(160px,.55fr) minmax(0,1.45fr);align-items:start;gap:16px;padding:12px 14px;margin-block:12px;background:var(--ks-surface-2);border-inline-start:4px solid var(--ks-line-strong)}
+.k-workshop .kf-readiness label{margin:0}.k-workshop .kf-readiness ul{padding-inline-start:20px;margin:.3em 0}
+.k-workshop :is(.kf-pattern-fields,.kf-readiness-form,.kf-readiness-form fieldset){display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));align-items:start;gap:10px 16px}
+.k-workshop :is(.kf-pattern-fields,.kf-readiness-form)>:is(h4,details,fieldset,p),.k-workshop .kf-pattern-fields>label:has(textarea){grid-column:1/-1}
+.k-workshop .kf-readiness-form button{align-self:end;min-height:44px}
+.k-workshop .kf-pattern{margin:12px 0;padding:10px 14px;background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface)}
+.k-workshop .kf-pattern figcaption{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.k-workshop .kf-pattern figcaption span,.k-workshop .kf-pattern small{color:var(--ks-ink-muted)}.k-workshop .kf-pattern svg{display:block;width:100%;height:clamp(116px,15vh,175px);margin:6px 0}
+.k-workshop .kf-outline{stroke:#315b64;stroke-width:2px;vector-effect:non-scaling-stroke;fill:#dce9e5}
+.k-workshop .kf-outline[data-measured=false]{stroke-dasharray:6 4;fill:#eef1ed}
+.k-workshop .kf-holes{fill:#fafaf6;stroke:#916c44}
+.k-workshop .kf-holes>*{stroke-width:2px;vector-effect:non-scaling-stroke}
+.k-workshop .kf-sign-gates,.k-workshop .kf-job-progress{list-style:none;display:flex;gap:8px;flex-wrap:wrap;padding:0;margin:0 0 16px}
+.k-workshop .kf-sign-gates li,.k-workshop .kf-job-progress li{display:flex;align-items:center;gap:8px;flex:1 1 130px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1);padding:8px 10px;flex-wrap:wrap}
+.k-workshop .kf-sign-gates small{display:block;color:var(--ks-ink-muted)}.k-workshop .kf-sign-gates .ws-action{min-height:44px;width:100%;margin:0}
+.k-workshop :is(.kf-sign-gates,.kf-job-progress) li>span{display:inline-grid;place-items:center;min-width:25px;height:25px;border-radius:var(--ks-radius-control);background:var(--ks-surface-inset);color:var(--ks-ink);font-weight:700}
+.k-workshop :is(.kf-sign-gates [data-done=true],.kf-job-progress [data-reached=true])>span{background:var(--ks-action);color:var(--ks-surface-1)}
+.k-workshop .kf-job-progress li{flex:1 1 65px;border-radius:var(--ks-radius-surface);border:0;border-block-end:3px solid var(--ks-line);background:var(--ks-surface-2);font-size:.9em}
+.k-workshop .kf-job-progress [data-reached=true]{border-color:var(--ks-line-strong)}.k-workshop .kf-job-progress [aria-current=step]{font-weight:700;background:var(--ks-action-soft)}
+.k-workshop .kf-item-tools{display:grid;gap:6px;padding-block:2px 8px;border-block-end:1px solid var(--ks-line);margin-block-end:8px}
+.k-workshop .kf-item-tools [data-sku-results]:not([hidden]){display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.k-workshop .kf-item-tools button{min-height:44px}
+.k-workshop .kf-cut-search{display:flex;align-items:center;gap:12px;margin-block:8px}.k-workshop .kf-cut-search input{max-width:30em}
+.k-workshop .kf-cut-register [hidden]{display:none}
+.k-workshop .kf-cut-register th{position:sticky;inset-block-start:0;background:var(--ks-surface-inset);z-index:1}
+.k-workshop .kf-quote-switch{display:inline-flex;gap:3px;border:1px solid var(--ks-line);background:var(--ks-surface-2);border-radius:var(--ks-radius-group);padding:2px;flex-wrap:wrap;margin:7px 0}
+.k-workshop .kf-quote-switch button{min-height:44px;padding:6px 13px;display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:var(--ks-ink);border-radius:var(--ks-radius-control)}
+.k-workshop .kf-quote-switch [aria-pressed=true]{background:var(--ks-action);color:var(--ks-surface-1)}
+.k-workshop[data-ws-route=quote] [data-quote-view][hidden]{display:none}
+.k-workshop[data-ws-route=factory] .kw-item-form>button[type=submit],
+.k-workshop[data-ws-route=quote] button[data-factory-act=customerPreview],
+.k-workshop[data-ws-route=sign] button:is([data-ws-action=customer],[data-ws-action=release]):enabled,
+.k-workshop[data-ws-route=surface] button:is([data-check],[data-save]),
+.k-workshop[data-ws-route=team] button[data-tc=apply],
+.k-workshop[data-ws-route=sync] button:is([data-sync=save],[data-sync=confirm]),
+.k-workshop[data-ws-route=tracking] form[data-job-form]>button,
+.k-workshop[data-ws-route=inventory] button:is([data-inv-act=count],[data-inv-act=reserve]):enabled,
+.k-workshop[data-ws-route=logistics] button:is([data-work-action=save],[data-work-action=prove]){
+ background:var(--ks-action);border:1px solid var(--ks-line-strong);color:var(--ks-surface-1);min-height:44px;padding:6px 14px;font-weight:700
+}
+.k-workshop .kf-quote-switch button:focus-visible,.k-workshop .kf-item-tools :is(input,button):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+
+/* Read the supplier's price list and the selected item together. Searching the
+   ledger changes only the visible rows, never the open form or its values. */
+.k-workshop[data-ws-route=factory] .kw-catalog-head:has(.kw-catalog-picker){
+ display:flex;align-items:center;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin:0 0 9px;
+ padding:0 0 8px;border-bottom:1px solid var(--ks-line)
+}
+.kw-factory .kw-catalog-head:has(.kw-catalog-picker) :is(h3,p){margin:0}
+.kw-factory .kw-catalog-head>.kw-catalog-picker{display:flex;align-items:center;gap:8px}
+.kw-factory .kw-catalog-head select{min-height:44px;max-width:15rem}
+.k-workshop[data-ws-route=factory] .kw-catalog-workspace:has(.kw-material-desk){display:block}
+.kw-catalog-workspace:has(.kw-material-desk)>.kw-catalog-nav{display:none}
+.kw-material-desk{display:grid;grid-template-columns:minmax(14rem,.78fr) minmax(0,1.62fr);align-items:start;gap:clamp(8px,1.25vw,22px)}
+.kw-register,.kw-material-detail{min-width:0}
+.kw-register{border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface);background:var(--ks-surface-1);overflow:hidden}
+.k-workshop .kw-register-head,.k-workshop .kw-material-head{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.k-workshop .kw-register-head{padding:4px 10px 0}.k-workshop .kw-register-head h4,.k-workshop .kw-material-head h4{margin:0;color:var(--ks-ink)}
+.k-workshop .kw-register-head button,.kw-register>[data-factory-act=tab]{min-height:44px}
+.kw-register-search{display:flex;align-items:center;gap:5px;margin:7px 9px;padding-inline:9px;background:var(--ks-surface-1);border:1px solid var(--ks-line);border-radius:var(--ks-radius-surface)}
+.kw-register-search .studio-icon{width:17px;color:var(--ks-ink-muted);flex:none}
+.k-workshop .kw-register-search input[type=search]{width:100%;min-width:0;border:0;min-height:44px;outline-offset:2px}
+.kw-register-columns{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;color:var(--ks-ink);background:var(--ks-surface-2);font-size:12px}
+.kw-register [data-sku-results]{display:grid;max-height:clamp(160px,calc(100dvh - 320px),760px);overflow:auto;overscroll-behavior:contain}
+.k-workshop .kw-register .kw-stock-row{display:grid;width:100%;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;text-align:start;align-items:center;border:0;border-bottom:1px solid var(--ks-line);border-radius:0;background:var(--ks-surface-1);color:var(--ks-ink);padding:5px 9px;min-height:48px;font-size:13px;line-height:1.35}
+.k-workshop .kw-register .kw-stock-row[aria-pressed=true]{color:var(--ks-ink);background:var(--ks-action-soft);box-shadow:none}
+.k-workshop .kw-register .kw-stock-row:hover{background:var(--ks-surface-2)}
+.kw-stock-mark{width:19px;text-align:center}.kw-stock-mark .studio-icon,.kw-stock-swatch{display:inline-block;width:17px;height:17px;vertical-align:middle}
+.kw-stock-swatch{border:1px solid var(--ks-line-strong);border-radius:var(--ks-radius-control)}.kw-stock-label{display:grid;gap:1px}
+.kw-stock-label b{font-size:14px;font-weight:650}.kw-stock-label bdi{font-size:12px;font-weight:400;color:var(--ks-ink-muted);text-align:right;overflow-wrap:anywhere}
+.kw-stock-price{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:12px}
+.kw-register>[data-factory-act=tab]{margin:5px 8px;border:0;background:none;text-decoration:underline;text-underline-offset:3px}
+.k-workshop .kw-register [data-sku-results]>p{margin:0;padding:9px 12px}
+.k-workshop[data-ws-route=factory] .kw-material-detail>.kw-item-form{margin:0}
+.k-workshop .kw-material-detail .kw-material-head{padding:0 0 9px;margin-bottom:12px;border-bottom:1px solid var(--ks-line)}
+.k-workshop[data-ws-route=factory] .kw-material-head button[type=submit]{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:var(--ks-action);border:0;color:var(--ks-surface-1)}
+.kw-material-head .studio-icon{width:17px}
+.kw-item-error:empty{display:none}.kw-item-error:not(:empty),.kw-draft-warning{border-inline-start:3px solid var(--ks-danger);color:var(--ks-danger);background:var(--ks-danger-soft);padding:8px 12px}
+.kw-draft-warning{margin-bottom:8px}.kw-draft-warning p{font-weight:650}
+.k-workshop .kw-draft-warning button{margin-inline-end:5px;min-height:44px}
+@media(max-width:760px){.kw-material-desk{grid-template-columns:minmax(0,1fr)}.kw-register [data-sku-results]{max-height:160px}}
+.kw-register .kw-stock-row:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.kw-stock-label small{color:var(--ks-ink-muted);font-size:12px;font-weight:400;line-height:1.45}
+
+/* Factory density keeps compact content while reserving independent 44px targets. */
+.k-workshop :is(button,input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea,summary){min-block-size:var(--ks-target)}
+.k-workshop :is(button,a,summary,.kw-file){min-inline-size:var(--ks-target)}
+.k-workshop :is(a,.kw-file,label:has(>input[type=checkbox]),label:has(>input[type=radio])){min-block-size:var(--ks-target);align-content:center}
+.k-workshop :is(button,input,select,textarea,summary,a,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-workshop :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}
+.k-workshop :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+.k-workshop :is(button,input,select,textarea):disabled,.k-workshop [aria-disabled="true"]{cursor:not-allowed;box-shadow:none;transform:none;opacity:.65}
+@media(pointer:coarse){
+ .k-workshop :is(button,input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea,summary,a,.kw-file){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+}
+@media(prefers-reduced-motion:reduce){
+ .k-workshop :is(button,input,select,textarea,a,summary){transition:none;animation:none}
+ .k-workshop :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:none}
+}
+
+/* State morphology supplements the existing quantities and explanatory text. */
+.k-workshop .kf-cut-register th{z-index:var(--ks-z-sticky)}
+.k-workshop .kf-cut-register tr:focus-within{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.k-workshop .kw-register [data-sku-results]{padding:var(--ks-space-1);scroll-padding:var(--ks-space-1)}
+.k-workshop .kw-register .kw-stock-row[aria-pressed=true]{color:var(--ks-ink);background:var(--ks-action-soft);border-inline-start:3px double var(--ks-action);text-decoration:underline;text-underline-offset:3px}
+.k-workshop .kw-register .kw-stock-row:not(:disabled):hover{color:var(--ks-ink);background:var(--ks-action-soft)}
+.k-workshop .kf-quote-switch [aria-pressed=true]{background:var(--ks-action);color:var(--ks-surface-1);border:3px double currentColor;text-decoration:underline;text-underline-offset:3px}
+.k-workshop .kw-item-error:not(:empty){border-inline-start:3px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger)}
+.k-workshop .kw-draft-warning{border-inline-start:3px dashed var(--ks-attention);background:var(--ks-attention-soft);color:var(--ks-attention)}
+.k-workshop :is(.kf-version,.kf-sync-pair section){border-inline-start-color:var(--ks-info);background:var(--ks-info-soft)}
+.k-workshop .kf-badge{color:var(--ks-info);border-color:var(--ks-info)}
+.k-workshop .kf-balances>div:last-child{color:var(--ks-ink);background:var(--ks-surface-inset)}
+.k-workshop :is(.kf-sign-gates,.kf-job-progress) li>span{border-radius:var(--ks-radius-control)}
+.k-workshop :is(.kf-sign-gates [data-done=true],.kf-job-progress [data-reached=true])>span{color:var(--ks-surface-1);background:var(--ks-complete);text-decoration:underline}
+.k-workshop .kf-job-progress [data-reached=true]{border-color:var(--ks-complete)}
+.k-workshop .kf-job-progress [aria-current=step]{border-block-end-style:double;text-decoration:underline;background:var(--ks-action-soft)}
+.k-workshop .kf-stock-claim{list-style:none;padding:0;display:grid;gap:var(--ks-space-2)}
+.k-workshop .kf-stock-claim [data-state]{padding:var(--ks-space-2);font-variant-numeric:tabular-nums}
+.k-workshop .kf-stock-claim [data-state=ready]{border-inline-start:3px solid var(--ks-complete);color:var(--ks-complete);background:var(--ks-complete-soft)}
+.k-workshop .kf-stock-claim [data-state=attention]{border-inline-start:3px dashed var(--ks-attention);color:var(--ks-attention);background:var(--ks-attention-soft)}
+.k-workshop .kf-stock-claim [data-state=blocked]{border-inline-start:3px double var(--ks-danger);color:var(--ks-danger);background:var(--ks-danger-soft);font-weight:700}
+.k-workshop :is([data-factory-act=removeLine],[data-factory-act=discardItem],[data-special-remove],[data-corner-delete],[data-remove-drawer],[data-brief-remove],[data-inv-act=cancel],[data-inv-act=consume]){color:var(--ks-danger);background:var(--ks-danger-soft);border:3px double var(--ks-danger);border-radius:var(--ks-radius-control);text-decoration:underline;text-underline-offset:3px}
+.k-workshop :is([data-factory-act=removeLine],[data-factory-act=discardItem],[data-special-remove],[data-corner-delete],[data-remove-drawer],[data-brief-remove],[data-inv-act=cancel],[data-inv-act=consume]):not(:disabled):hover{color:var(--ks-danger);background:var(--ks-danger-soft);border-color:var(--ks-danger)}
+
+.k-workshop label:has(>input:is([type=checkbox],[type=radio])){display:inline-flex;align-items:center;gap:var(--ks-space-2);min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}

@@ -1,0 +1,21 @@
+.visit-catalog{padding:10px clamp(12px,1.7vw,28px) 0}
+.visit-catalog:empty{display:none}
+.visit-catalog .vc-box{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 14px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);background:var(--ks-surface-2);color:var(--ks-ink);font-size:14px}
+.visit-catalog[data-state=ready] .vc-box{border-color:var(--ks-line);background:var(--ks-surface-2);color:var(--ks-ink)}
+.visit-catalog .vc-box p{flex:1 1 320px;margin:0}
+.visit-catalog .vc-box a{display:inline-flex;align-items:center;min-height:44px;padding:6px 14px;border:1px solid currentColor;border-radius:var(--ks-radius-control);color:inherit;font-weight:700;text-decoration:none}
+.visit-catalog .vc-box a:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.kw-device{margin-block:10px;padding:10px 14px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);background:var(--ks-surface-2);color:var(--ks-ink)}
+.kw-device[data-state=ready]{border-color:var(--ks-line);background:var(--ks-surface-2);color:var(--ks-ink)}
+.kw-device h4{margin:0 0 4px;font-size:15px}
+.kw-device p{margin:4px 0}
+.kw-device .kw-subtle{font-size:13px;opacity:1}
+
+/* Readiness uses words from readinessText plus dashed/solid state edges. */
+.visit-catalog .vc-box,.kw-device{background:var(--ks-attention-soft);color:var(--ks-attention);border-color:var(--ks-attention);border-inline-start:3px dashed var(--ks-attention);border-radius:var(--ks-radius-surface)}
+.visit-catalog[data-state=ready] .vc-box,.kw-device[data-state=ready]{background:var(--ks-complete-soft);color:var(--ks-complete);border-color:var(--ks-complete);border-inline-start:3px solid var(--ks-complete)}
+.visit-catalog .vc-box a{min-block-size:var(--ks-target);min-inline-size:var(--ks-target);box-sizing:border-box;text-decoration:underline;text-underline-offset:3px;transition:background-color var(--ks-duration-fast) var(--ks-ease)}
+.visit-catalog .vc-box a:hover{background:var(--ks-surface-1)}
+.visit-catalog .vc-box a:active{box-shadow:none;transform:translateY(1px)}
+@media(pointer:coarse){.visit-catalog .vc-box a{min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.visit-catalog .vc-box a{transition:none!important;transform:none!important}}

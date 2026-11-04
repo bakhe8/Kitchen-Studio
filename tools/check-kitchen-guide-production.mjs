@@ -1,0 +1,60 @@
+import assert from 'node:assert/strict';
+import {guidedProduction} from '../public/kitchen-guide-production.js';
+import {seedCatalog} from '../public/kitchen-workshop-factory.js';
+import {approvalState,releaseConcernGroups,releaseConcerns} from '../public/kitchen-workshop-state.js';
+import {makeChainExample,attestChain,readChainRange} from '../public/kitchen-chain-model.js';
+import {planWorkshopRow} from '../public/kitchen-production-row.js';
+import {confirmFixtureFitout} from './fixture-kitchen-fitout.mjs';
+import {wallPairDatum} from '../public/kitchen-wall-pair.js';
+import {bindMeasureCheck} from '../public/kitchen-measure-fit.js';
+
+const survey=makeChainExample(),cat=seedCatalog();cat.approved=true;
+for(const item of cat.items)item.price=20;
+Object.assign(cat.terms,{worktop:'separate',labor:0,installation:0,delivery:0,taxPct:0,marginPct:0});
+survey.room.workshop.catalog=cat;
+for(const wall of ['back','right']){
+ const w=survey.room.workshop;w.chains[wall]=attestChain(survey,wall,w.chains[wall],{name:'QA',reference:'QA-visit'}).chain;
+}
+const gen=planWorkshopRow(survey,{...readChainRange(survey,'back'),tier:'base',wanted:{sink:true,rice:false,dishwasher:false}});
+assert(gen.ok,gen.reason);
+const doc=confirmFixtureFitout(gen.doc);
+const steps=async d=>guidedProduction(d,{approval:await approvalState(d)});
+async function stamp(d,k){const w=d.room.workshop,state=await approvalState(d);w.approvals={...w.approvals,[k]:{name:'QA',key:state.keys[k],date:'2026-11-01'}};}
+const byId=(items,id)=>items.find(i=>i.id==='production:'+id);
+assert.deepEqual(await steps(doc),[],'an unfinished layout must not prompt for factory tariffs');
+await stamp(doc,'structure');assert.equal(byId(await steps(doc),'customer').actor,'customer');
+const price=structuredClone(doc);const sku='EDGE';price.room.workshop.catalog.items.find(i=>i.sku===sku).price=null;
+price.room.workshop.catalog.terms.delivery=null;price.room.workshop.catalog.approved=false;
+const tasks=await steps(price);
+assert.deepEqual(byId(tasks,'price:'+sku).focus,{tab:'items',sku});assert.equal(byId(tasks,'price:'+sku).actor,'factory');
+assert.equal(byId(tasks,'term:delivery').focus.tab,'sale');assert.equal(byId(tasks,'catalog').focus.tab,'transfer');assert.equal(byId(tasks,'catalog').stage,'finish');
+assert(!byId(tasks,'customer'));assert(!tasks.some(t=>t.actor==='customer'));
+assert(!byId(tasks,'price:RICE-BIN'),'unused materials must not be requested');
+price.room.workshop.catalog.items.find(i=>i.sku===sku).price=0;price.room.workshop.catalog.terms.delivery=0;
+assert(!byId(await steps(price),'price:'+sku));assert(!byId(await steps(price),'term:delivery'));assert(!byId(await steps(price),'customer'));
+const top=structuredClone(doc);top.room.workshop.catalog.terms.worktop='include';await stamp(top,'structure');
+const slab=(await steps(top)).find(t=>t.id.startsWith('production:top-material:'));
+assert(slab);assert.equal(slab.step,'defaults');assert(['MFG-09','MFG-06'].includes(slab.focus.code));assert(slab.focus.material);
+const declined=structuredClone(doc);delete declined.room.workshop.upstand;
+await stamp(declined,'structure');assert(!byId(await steps(declined),'customer'),'unresolved existing fitout decisions must keep signature disabled');
+
+await stamp(doc,'customer');assert.deepEqual(byId(await steps(doc),'release').focus,{section:'release'});await stamp(doc,'release');
+assert.deepEqual(await steps(doc),[],'completed release has no fabricated dispatch job');
+const fit=structuredClone(doc),uid=gen.row.units[0].id;
+fit.room.workshop.measureFit={instruments:[{id:'ruler',label:'الأداة',spec:'QA',fixedMm:1,perMetreMm:0}],checks:[bindMeasureCheck(fit,{id:'edge',target:uid,axis:'width',reference:'QA',toleranceMm:1,allowanceMm:2,readings:[{station:'الأمام',instrument:'ruler',mm:553}]})]};
+const state=await approvalState(fit);assert(state.valid.customer);const problems=releaseConcerns(fit,state);
+assert.deepEqual([...new Set(releaseConcernGroups(fit,state).flatMap(g=>g.issues))],problems);
+const fitSteps=guidedProduction(fit,{approval:state});
+assert.equal(byId(fitSteps,'check:measure').step,'measure');assert(!byId(fitSteps,'release'));
+fit.room.workshop.measureFit.checks[0].readings[0].mm=554;assert(!byId(await steps(fit),'check:measure'));
+const stock=structuredClone(doc);stock.room.workshop.catalog.items.find(i=>i.sku===sku).available=false;
+const shortage=byId(await steps(stock),'stock:'+sku);assert(shortage);assert.equal(shortage.actor,'factory');
+assert.deepEqual(shortage.focus,{tab:'items',sku});assert(!byId(await steps(stock),'other-release'));
+const pair=structuredClone(doc);
+pair.room.workshop.wallPairs={back:{base:{backMm:5000,frontMm:4980,heightMm:430,depthMm:600,datum:wallPairDatum(pair,'back')}}};
+const pairSteps=await steps(pair),pairTask=pairSteps.find(t=>t.step==='survey'&&t.focus?.pair);
+assert.deepEqual(pairTask.focus,{wall:'back',tier:'base',pair:true});assert.equal(pairTask.actor,'rep');
+assert(!byId(pairSteps,'other-release'),'a known wall rule should not also lead to a generic release blocker');
+pair.room.workshop.wallPairs.back.base.anchor={side:'start',offsetMm:0};
+assert(!(await steps(pair)).some(t=>t.focus?.pair));
+console.log('Guidance verified against real quote, sign-off, plate/stock, measured clearance, defaults and scoped release decisions.');

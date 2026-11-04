@@ -1,0 +1,76 @@
+/* Keep the interaction and its result in the same desktop view. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:801px){
+ .topbar{height:76px}
+ .page{padding-top:22px}
+ .intro{margin-bottom:24px}
+ h1{font-size:34px;line-height:1.5}
+ .eyebrow{margin-bottom:5px}
+ .intro p{font-size:12px}
+ .experiment-top{padding:18px 26px 17px}
+ .experiment-top h2{font-size:21px}
+ .experiment-top p{font-size:11px}
+ .stage-meta{padding-top:9px;font-size:9px}
+ .demo-stage{min-height:0}
+ .basic-scene{height:330px;min-height:0}
+ .basic-wrap{padding-bottom:9px}
+ .basic-alternatives{padding-top:8px;font-size:9px}
+ .result-panel{margin-top:12px;min-height:83px;padding:11px 14px}
+ .experiment-bottom{padding-top:11px;padding-bottom:13px}
+ .mode-button{min-height:47px;padding-top:8px;padding-bottom:8px}
+ .nav-divider{margin-top:5px;margin-bottom:5px}
+ .nav-note{margin-top:17px}
+ .principle{margin-top:26px;padding-top:21px}
+ .geo-root{min-height:0;background:transparent;border-radius:0}
+ .geo-top{min-height:30px;padding:5px 20px 0}
+ .geo-caption{font-size:10px}
+ .geo-pill{font-size:10px;padding:4px 9px}
+ .geo-svg{height:300px}
+ .geo-legend{padding-bottom:9px;font-size:10px}
+ .geo-help{margin-bottom:12px;padding-top:8px;font-size:9px}
+ .op-demo{min-height:0;padding:18px 30px 12px}
+ .op-section-heading{margin-bottom:15px}
+ .op-demo h3{font-size:20px}
+ .op-eyebrow{font-size:10px}
+ .op-sort-demo .op-section-heading,.op-transfer-demo .op-section-heading,.op-assign-demo .op-section-heading{display:none}
+ .op-task-row{min-height:64px;padding:7px 10px}
+ .op-task-copy strong{font-size:12px}
+ .op-task-symbol{height:35px;width:35px}
+ .op-task-arrows button{height:20px}
+ .op-sort-list{gap:8px}
+ .op-sort-footer{margin-top:11px;font-size:10px}
+ .op-access{margin-top:13px;padding-top:9px;font-size:9px}
+ .op-value-demo{padding-top:15px;padding-bottom:10px}
+ .op-value-product{padding-bottom:14px}
+ .op-product-art{width:89px;height:84px}
+ .op-product-art .op-box-art{width:80px}
+ .op-value-product h3{font-size:20px}
+ .op-value-product p{font-size:11px}
+ .op-value-numbers{padding:15px 12px 8px}
+ .op-value-numbers strong{font-size:45px}
+ .op-value-note{margin-top:7px;font-size:10px}
+ .op-slider-area{padding-top:4px;padding-bottom:4px}
+ .op-transfer-panel{padding-top:15px}
+ .op-bin-content{min-height:176px}
+ .op-conservation{margin-top:14px;font-size:11px}
+ .op-worker-pool{min-height:72px;margin-bottom:12px;padding:7px 13px}
+ .op-store{padding-top:12px;padding-bottom:8px}
+ .op-shop-art{max-width:230px;height:110px;object-fit:contain}
+ .op-store-worker-slot{height:54px;margin-top:5px}
+ .op-assignment-status{margin-top:9px}
+ .op-assign-demo .op-access{margin-top:11px}
+}
+@media(max-width:800px){
+ .geo-root{min-height:0;background:transparent}
+ .geo-svg{min-height:240px}
+ .geo-caption{font-size:10px}
+ .geo-top{padding-top:8px}
+ .geo-help{font-size:10px}
+ .op-demo{min-height:0}
+ .op-section-heading{margin-bottom:14px}
+ .op-sort-demo .op-section-heading,.op-transfer-demo .op-section-heading,.op-assign-demo .op-section-heading{display:none}
+ .op-access{font-size:10px}
+ .demo-stage{min-height:0}
+ .basic-scene{height:280px;min-height:0}
+ .result-panel{position:relative}
+}

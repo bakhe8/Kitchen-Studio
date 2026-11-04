@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183e35">
+  <meta name="description" content="مختبر زر الماوس الواحد: بداية الضغط ومدته والحركة والثبات والإفلات، وما يمكن اشتقاقه منها من اتجاه ومسافة وسرعة ومسار ونتائج.">
+  <title>أطلس السحب — زر واحد</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23183e35'/%3E%3Cpath d='M20 14v32l9-9 8 15 8-4-8-15 13-1Z' fill='%23edb581' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="basic.css">
+  <link rel="stylesheet" href="geometry.css">
+  <link rel="stylesheet" href="operations.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="insights.css">
+  <link rel="stylesheet" href="consequences.css">
+  <link rel="stylesheet" href="comparisons.css">
+  <link rel="stylesheet" href="physics.css">
+  <link rel="stylesheet" href="materials.css">
+  <link rel="stylesheet" href="extensions.css">
+  <link rel="stylesheet" href="contrasts.css">
+  <link rel="stylesheet" href="completion-controls.css">
+  <link rel="stylesheet" href="completion-history.css">
+  <link rel="stylesheet" href="button-lab.css">
+  <link rel="stylesheet" href="atlas.css">
+  <link rel="stylesheet" href="principle-lab.css">
+  <link rel="stylesheet" href="knowledge-ui.css">
+  <link rel="stylesheet" href="atlas-navigation.css">
+  <link rel="stylesheet" href="channel-scenes.css">
+  <link rel="stylesheet" href="spatial-time.css">
+</head>
+<body class="atlas">
+  <a class="skip" href="#experiment">انتقل إلى التجربة</a>
+  <div id="status-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <header class="atlas-header">
+    <a class="atlas-brand" href="#lab/button-trace" aria-label="أطلس السحب — البداية">
+      <span class="atlas-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 4v22l7-7 5 9 5-3-5-9h10Z"/></svg></span>
+      <span>أطلس السحب<small>مختبر تفاعلات الماوس</small></span>
+    </a>
+    <nav class="atlas-tabs" aria-label="طرق استكشاف المختبر">
+      <a href="#lab/button-trace" data-view="lab">التجارب</a>
+      <a href="#rules" data-view="rules">دليل المفاهيم والقواعد</a>
+      <a href="#map" data-view="map">خريطة العلاقات</a>
+      <a href="#coverage" data-view="coverage">التغطية والأدلة</a>
+    </nav>
+    <a class="planner-entry" href="./shelf-planner.html"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="16" height="16" rx="1"/><path d="M2 8h16M2 13h16M9 2v16"/></svg>مخطّط دولاب الرفوف <span aria-hidden="true">↗</span></a>
+  </header>
+  <nav class="input-switch" aria-label="اختر المدخل المدروس">
+    <strong>المدخل المدروس</strong>
+    <a data-channel="primary" href="#lab/button-trace">الزر الأساسي</a>
+    <a data-channel="secondary" href="#secondary/lab/secondary-drag">الزر الثانوي</a>
+    <a data-channel="wheel" href="#wheel/lab/wheel-trace">تدوير البكرة</a>
+  </nav>
+  <main class="atlas-page">
+    <section class="atlas-intro" aria-labelledby="atlas-title">
+      <div><p class="atlas-eyebrow">الإشارة أولًا، ثم تفسيرها</p><h1 id="atlas-title">زر واحد.<br><span>ماذا تصنع حركته؟</span></h1><p id="atlas-description">اضغط، تحرّك أو اثبت، ثم أفلت. راقب ما نستخرجه من هذه الضغطة وحدها، وكيف تقرؤه قواعد مختلفة.</p></div>
+      <div class="button-cycle" aria-label="دورة ضغطة واحدة"><div><span>١</span><strong>بداية الضغط</strong><small>موضع البداية ولحظتها</small></div><div><span>٢</span><strong>استمرار الضغط</strong><small>حركة أو ثبات مع مرور الزمن</small></div><div><span>٣</span><strong>الإفلات</strong><small>موضع النهاية ولحظة الإفلات</small></div></div>
+    </section>
+    <details id="signal-foundation" class="signal-foundation"><summary><span>من أين تأتي إمكانات الزر الواحد؟</span><small>الإشارة ← القياسات ← قواعد البرنامج</small><b aria-hidden="true">+</b></summary><div id="signal-layers" class="signal-layers"></div><p class="signal-scope-note">وحدة الملاحظة ضغطة واحدة حتى الإفلات. العرض الآلي وإعادة التجربة والاسترجاع أدوات منفصلة عن الحركة التي ندرسها.</p></details>
+    <section id="lab-view">
+      <nav class="experiment-views" aria-label="مجموعات التجارب">
+        <a href="#lab/button-trace" data-mode="lab">كل التجارب</a>
+        <a href="#button/button-trace" data-mode="button">الزر وحركته</a>
+        <a href="#compare/speed-acceleration" data-mode="compare">المقارنات المضبوطة</a>
+      </nav>
+      <div class="atlas-toolbar"><div><span class="section-index">01</span><h2 id="workspace-heading">استكشف التركيب</h2><span id="workspace-caption">اختر مثالًا، ثم افتح طبقاته.</span></div><button id="show-all" type="button" class="quiet-button" hidden>إزالة عوامل التصفية <span aria-hidden="true">×</span></button></div>
+      <nav id="comparison-questions" class="comparison-questions" aria-label="جرّب سؤالًا من المقارنات" hidden>
+        <a href="#compare/speed-acceleration"><small>قياس مشتق</small><strong>سرعة واحدة، وتسارع مختلف؟</strong></a>
+        <a href="#compare/time-responses"><small>قاعدة تفسير</small><strong>ماذا تعطي مدة البقاء نفسها؟</strong></a>
+        <a href="#compare/capture-release"><small>قيد يحفظ الحالة</small><strong>متى يلتقط العنصر ومتى يفك؟</strong></a>
+      </nav>
+      <details class="route-picker" id="route-picker"><summary><span>مسارات لفهم الفروق والتركيبات</span><small id="route-count"></small><b aria-hidden="true">+</b></summary><p>اختر سؤالًا، ثم انتقل بين تجاربه. يشمل كل مسار قواعد التحكم وتطبيقاتها أو حدودها.</p><div id="route-cards" class="route-cards"></div></details>
+      <section id="active-route" class="active-route" aria-label="مسار الفهم الحالي" hidden></section>
+      <div class="facet-explorer" id="facet-explorer">
+        <div class="facet-heading"><span>ابحث عبر طبقة</span><span class="facet-hint">يمكن الجمع بين أكثر من شرط</span></div>
+        <div id="axis-tabs" class="axis-tabs" role="tablist" aria-label="محاور التصنيف"></div>
+        <div id="facet-options" class="facet-options" role="tabpanel" tabindex="0"></div>
+        <div id="selected-filters" class="selected-filters" aria-label="عوامل التصفية المختارة" hidden></div>
+      </div>
+      <div class="atlas-workspace">
+        <aside class="atlas-library" aria-label="اختيار تجربة">
+          <details id="library-drawer" open><summary>اختيار تجربة <span id="library-summary-count"></span><b aria-hidden="true">⌄</b></summary>
+            <div class="library-tools"><label class="search-label" for="example-search"><span aria-hidden="true">⌕</span><input id="example-search" type="search" placeholder="ابحث عن فكرة أو نتيجة…" autocomplete="off"></label><label class="sr-only" for="kind-filter">نوع المثال</label><select id="kind-filter"><option value="all">كل أنواع الأمثلة</option><option value="principle">قواعد التحكم</option><option value="application">تطبيقات</option><option value="composition">تراكيب</option><option value="comparison">مقارنات</option></select></div>
+            <div class="library-count"><span id="results-count"></span><span>اختر للمشاهدة</span></div>
+            <nav id="example-list" aria-label="التجارب المطابقة"></nav>
+          </details>
+          <div class="library-foot"><span aria-hidden="true">↗</span><p>هل يتكرر المبدأ؟ افتح طبقة <strong>القاعدة</strong> لتجد الأمثلة التي تشترك فيها.</p></div>
+        </aside>
+        <div class="experiment-column">
+          <section class="experiment-panel" id="experiment" aria-labelledby="experiment-title" tabindex="-1">
+            <div class="experiment-top"><div><div class="experiment-kicker"><span id="experiment-kind"></span><span>/</span><span id="experiment-family"></span></div><h2 id="experiment-title"></h2><p id="experiment-instruction"></p></div><div class="experiment-actions"><button id="watch-example" class="watch-button" type="button"><span aria-hidden="true">▷</span> شاهد المثال</button><button id="reset" class="reset-button" type="button" aria-label="إعادة التجربة" title="إعادة التجربة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v6h6M5 10a8 8 0 1 1 0 5"/></svg></button></div></div>
+            <div class="stage-wrap"><div class="stage-meta"><span id="effect-badge"></span><span class="stage-context" id="stage-context"></span></div><div id="demo-stage" class="demo-stage"></div></div>
+            <div class="result-panel" id="result-panel" data-tone="ready"><div class="result-icon" id="result-icon" aria-hidden="true">↗</div><div class="result-copy"><div class="result-label">ما حدث في التجربة</div><div id="result-message"></div><div id="result-detail"></div></div><span id="result-phase" class="result-phase">جاهز</span></div>
+            <div id="example-knowledge"></div>
+            <details id="profile-disclosure" class="profile-disclosure"><summary>وصف التجربة عبر ستة أوجه <span>للبحث والمقارنة</span></summary><div class="profile-shell"><div class="profile-heading"><h3>الملف الوصفي</h3><span>افتح طبقة لتفهم دورها</span></div><div id="profile-layers" class="profile-layers"></div><div id="profile-detail" class="profile-detail"></div></div></details>
+            <section id="lesson-panel" class="lesson-panel" aria-label="دليل فهم المثال"></section>
+            <div class="experiment-bottom"><p id="example-focus"></p><button id="next-mode" type="button">المثال التالي <span aria-hidden="true">←</span></button></div>
+          </section>
+          <section class="related-section" aria-labelledby="related-title"><div><h3 id="related-title">تجارب تشترك في بعض القواعد</h3><p>قارن الأثر الناتج مع بقاء جزء من طريقة التحكم.</p></div><div id="related-examples" class="related-examples"></div></section>
+        </div>
+      </div>
+    </section>
+    <section id="single-button-pairs" class="single-button-pairs" hidden aria-labelledby="single-button-pairs-title"><p class="atlas-eyebrow">ما الذي نغيّره كي نفهم الفرق؟</p><h2 id="single-button-pairs-title">مقارنات داخل الزر الواحد</h2><p>ثبّت ما تستطيع، وغيّر عاملًا. هذه أسئلة لتمييز القياسات والقرارات، مع روابط إلى أمثلتها.</p><div id="signal-pairs" class="signal-pairs"></div></section>
+    <section id="channel-lab" class="channel-lab" hidden tabindex="-1" aria-labelledby="channel-title">
+      <header class="channel-heading"><div><p id="channel-eyebrow" class="atlas-eyebrow"></p><h1 id="channel-title"></h1><p id="channel-instructions"></p></div><span class="channel-index">تجربة ١ من ١</span></header>
+      <div class="channel-grid"><article class="channel-workbench"><div class="channel-tools"><span id="channel-stage-label"></span><div><button id="channel-play" class="watch-button" type="button">▷ شاهد تسجيلًا مضبوطًا</button> <button id="channel-reset" class="quiet-button" type="button">إعادة التجربة</button></div></div>
+        <div id="channel-stage"></div><p id="channel-result" role="status"></p></article>
+        <aside class="channel-reading"><p class="atlas-eyebrow">دليل التجربة</p><h2>جرّب ولاحظ</h2><p id="channel-task"></p><h3>حدّ التفاعل</h3><p id="channel-boundary"></p><a id="channel-coverage" class="channel-text-link">افتح أدلة هذا المثال ←</a>
+        <details class="channel-compare"><summary>قارن بمدخل آخر</summary><p id="channel-comparison"></p><a id="channel-counterpart" class="channel-text-link"></a></details></aside></div>
+      <div id="channel-example-knowledge"></div>
+    </section>
+    <section id="knowledge-view" tabindex="-1" aria-label="استكشاف معرفة المختبر" hidden></section>
+  </main>
+  <footer class="atlas-footer"><strong>أطلس السحب</strong><span>إشارة · قياس · تفسير · نتيجة</span><span>أمثلة قابلة للمقارنة، لا قائمة نهائية بكل الإمكانات</span></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

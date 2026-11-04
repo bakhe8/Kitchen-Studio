@@ -1,0 +1,143 @@
+- link "انتقل إلى مساحة التصميم":
+  - /url: "#kitchen-workspace"
+- main:
+  - button "بوابات العمل"
+  - paragraph: استوديو المطابخ
+  - heading "مشروع محلي مستقل — لم يرفع إلى الفريق" [level=1]
+  - navigation "أدوات الاستوديو":
+    - button "أدوات الصيانة وما بعد البيع":
+  - option "الصفّان" [selected]
+  - option "السفلي"
+  - option "العلوي"
+  - dialog "الصيانة وما بعد البيع":
+    - button "رجوع إلى إدارة المشاريع والإشراف":
+    - button "اختيار المرحلة" [active]:
+      - generic: المصنع · الصيانة وما بعد البيع
+      - strong: الصيانة وما بعد البيع
+    - button "دليل المشروع":
+      - generic: دليل المشروع
+    - button "الرجوع للرسم":
+    - paragraph: دفتر الخدمة · من البلاغ إلى رضا العميل
+    - heading "الصيانة وما بعد البيع" [level=2]
+    - button "تحديث سجل الخدمة"
+    - button "مشاريع الفريق والإيصالات"
+    - status: سجل الخدمة محدث من أوامر الورشة.
+    - text: مشروع الفريق
+    - combobox "مشروع الفريق":
+      - option "اختر مشروع الفريق"
+      - option "مشروع فريق ب — ينتظر اعتماد الهيكل والعميل"
+      - option "اختبار محلي — تسليم واستلام المطبخ" [selected]
+    - text: إيصال التصنيع
+    - combobox "إيصال التصنيع":
+      - option "اختر إيصالًا وإصدارًا"
+      - option "إفراج كامل · إصدار 1 · 2026-11-04" [selected]
+    - text: الوحدة
+    - combobox "الوحدة":
+      - option "اختر الوحدة"
+      - option "خزانة تخزين · unit-2" [selected]
+      - option "خزانة تخزين · unit-3"
+      - option "خزانة تخزين · unit-4"
+      - option "خزانة تخزين · unit-5"
+      - option "وحدة حوض · unit-6"
+    - paragraph:
+      - text: إصدار الإيصال 1 · مالك المشروع ·
+      - generic: full:574aeaa7d7b31978…
+    - navigation "وحدات خدمة ما بعد البيع":
+      - heading "الوحدات والبلاغات" [level=3]
+      - button "خزانة تخزين unit-2 · استلام مثبت 1 بلاغات مفتوحة" [pressed]:
+        - generic: خزانة تخزين
+        - generic: unit-2 · استلام مثبت
+        - generic: 1 بلاغات مفتوحة
+      - button "خزانة تخزين unit-3 · استلام مثبت 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-3 · استلام مثبت
+        - generic: 0 بلاغات مفتوحة
+      - button "خزانة تخزين unit-4 · استلام مثبت 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-4 · استلام مثبت
+        - generic: 0 بلاغات مفتوحة
+      - button "خزانة تخزين unit-5 · بانتظار الاستلام 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-5 · بانتظار الاستلام
+        - generic: 0 بلاغات مفتوحة
+      - button "وحدة حوض unit-6 · بانتظار الاستلام 0 بلاغات مفتوحة":
+        - generic: وحدة حوض
+        - generic: unit-6 · بانتظار الاستلام
+        - generic: 0 بلاغات مفتوحة
+    - main:
+      - heading "خزانة تخزين" [level=3]
+      - generic: 1 مفتوحة · استلام مثبت
+      - region "مخطط مواضع بلاغات الصيانة":
+        - figure "مخطط من أبعاد إيصال الإصدار؛ لا يعرض تفاصيل الواجهة أو الخامة. مواضع الملاحظات نسبية من أعلى يسار الجسم.":
+          - group "فحص خزانة تخزين من إيصال الإصدار":
+            - generic: جسم الوحدة · أبعاد الإيصال
+            - generic: "0"
+            - button "عرض الجسم · الاسمي ٥٥٠ مم" [pressed]:
+              - generic: عرض الجسم · ٥٥٠ مم
+            - button "ارتفاع الجسم · الاسمي ٨٦٠ مم":
+              - generic: ارتفاع الجسم · ٨٦٠ مم
+            - button "عمق الجسم · الاسمي ٦٠٠ مم":
+              - generic: عمق الجسم · ٦٠٠ مم
+            - button "ملاحظة ١ · للمتابعة · بلاغ صيانة · بلاغ خدمة لاختبار الإشراف · Synthetic owner lifecycle follow-up; no actual customer complaint." [pressed]:
+              - generic: ١
+          - generic: مخطط من أبعاد إيصال الإصدار؛ لا يعرض تفاصيل الواجهة أو الخامة. مواضع الملاحظات نسبية من أعلى يسار الجسم.
+        - generic "دليل بلاغات الصيانة":
+          - paragraph: نقاط البلاغات تخص هذه الوحدة من إيصال الإصدار؛ لا تغيّر أبعادها أو محضر استلامها.
+          - generic: ١ بلاغات قيد المتابعة
+          - generic: ٠ مغلقة
+          - paragraph:
+            - strong: بلاغ خدمة لاختبار الإشراف
+            - generic: بلاغ مفتوح
+      - button "＋ بلاغ على الوحدة"
+      - button "اعتماد التشخيص والتغطية"
+      - button "إعادة فتح البلاغ" [disabled]
+      - heading "بلاغات هذه الوحدة" [level=3]
+      - text: العرض
+      - combobox "العرض":
+        - option "جميع البلاغات" [selected]
+        - option "المفتوحة فقط"
+      - button "بلاغ خدمة لاختبار الإشراف بلاغ مفتوح 2026-11-04 · ae8e6a60" [pressed]:
+        - generic: بلاغ خدمة لاختبار الإشراف
+        - generic: بلاغ مفتوح
+        - generic: 2026-11-04 · ae8e6a60
+      - generic "سجل البلاغ · 1 أحداث"
+      - article:
+        - generic: تسجيل البلاغ
+        - generic: 2026-11-04T00:47:24.167Z · Fixture owner
+    - complementary:
+      - heading "بلاغ خدمة لاختبار الإشراف" [level=3]
+      - paragraph: Synthetic owner lifecycle follow-up; no actual customer complaint.
+      - paragraph: بلاغ مفتوح
+      - generic: مرتبط بمحضر التسليم 5
+      - paragraph: لا تعديلات على المسودة
+      - button "حفظ المسودة"
+      - button "تراجع" [disabled]
+      - button "إعادة" [disabled]
+      - button "إلغاء المسودة"
+      - heading "اعتماد التشخيص والتغطية" [level=3]
+      - text: التشخيص وسبب قرار التغطية
+      - textbox "التشخيص وسبب قرار التغطية"
+      - text: قرار التغطية
+      - combobox "قرار التغطية":
+        - option "اختر القرار بعد مراجعة الشروط" [selected]
+        - option "مشمول وفق الشروط"
+        - option "خارج التغطية الموثقة"
+        - option "خدمة استثنائية معتمدة"
+      - text: مرجع قرار الخدمة
+      - textbox "مرجع قرار الخدمة"
+      - paragraph: "تاريخ تسجيل هذه الدورة: 2026-11-04 · ضمن الفترة الموثقة · يُحفظ قرار المالك مع نسخة شروطه."
+      - button "اعتماد التشخيص والتغطية في سجل الخدمة"
+    - article:
+      - heading "محضر تسليم الوحدة" [level=3]
+      - paragraph: استلام مثبت · 2026-11-04 · الحدث 5
+      - paragraph: "المستلم: Synthetic maintenance customer"
+      - paragraph: Synthetic customer acceptance; no real customer transaction.
+      - button "فتح محضر التسليم"
+    - article:
+      - heading "الضمان · ضمن الفترة الموثقة" [level=3]
+      - paragraph: Synthetic service provider · SYNTHETIC-WARRANTY-A
+      - paragraph: 2026-10-05 ← 2027-11-04
+      - paragraph: Synthetic workmanship coverage requiring an explicit owner review for each ticket.
+      - paragraph: "الاستثناءات: Synthetic misuse exclusion; this is test data."
+      - generic: سجل الضمان 6 · القرارات السابقة تحتفظ بنسختها
+      - button "توثيق تحديث شروط الضمان"

@@ -1,0 +1,75 @@
+/* Every workshop page shares the full viewport below the project bar.
+   Each page arranges and scrolls its content within that fixed work surface. */
+@media screen and (min-width:768px) {
+  .k-app:has(> .k-workshop:not([hidden])) #shelf-kitchen-host[inert] {visibility:hidden}
+  .k-app > .k-workshop[data-ws-layout]:not([hidden]) {
+    inset:var(--ws-bar-height) 0 0;
+    width:auto;
+    height:auto;
+    max-width:none;
+    max-height:none;
+    margin:0;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    padding-block-end:env(safe-area-inset-bottom,0px);
+    background:var(--ks-surface-1);
+  }
+  .k-workshop[data-ws-layout] > .ws-content {
+    min-block-size:0;
+    min-inline-size:0;
+    overscroll-behavior:contain;
+    scroll-padding-block:12px;
+    scrollbar-gutter:auto;
+  }
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) > .ws-content {
+    padding:clamp(10px,1vw,18px);
+  }
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) .ws-screen > :first-child {margin-block-start:0}
+  .k-workshop[data-ws-layout="focus"] .ws-screen > :last-child {margin-block-end:0}
+  .k-workshop[data-ws-layout] .ws-notice:not(:empty) {flex:none}
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) .ws-screen{color:var(--ws-ink)}
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) .ws-screen :is(h2,h3,h4){color:var(--ws-ink)}
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) .ws-screen :is(input,textarea,select):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+  .k-workshop:is([data-ws-layout="focus"],[data-ws-layout="editor"]) .ws-screen :is(.ws-action,button.primary,.pg-answer){background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-surface-1)}
+  .k-workshop[data-ws-layout="focus"] .ws-screen :is(.ws-card,.pg-current){border:1px solid var(--ws-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-1)}
+  .k-workshop[data-ws-layout="focus"] .ws-screen .pg-current{padding:clamp(15px,2vw,24px);border-inline-start:3px solid var(--ks-line-strong)}
+  .k-workshop .project-guide .pg-current .pg-kicker{color:var(--ks-ink);font-size:14px}
+  .k-workshop[data-ws-layout="editor"] .ws-inline > label {flex:1 1 145px;min-inline-size:0}
+  .k-workshop[data-ws-layout="editor"] :is(fieldset, form, label) {min-inline-size:0}
+  .k-workshop[data-ws-layout="editor"] :is(button, select, input:not([type="checkbox"]):not([type="radio"])) {min-height:44px}
+  .k-workshop[data-ws-route="corner"] .ws-screen > form > fieldset {
+    min-inline-size:0;border:1px solid var(--ws-line);border-radius:var(--ks-radius-control);background:var(--ws-paper);
+    margin:0;padding:12px 16px;
+  }
+  .k-workshop[data-ws-route="corner"] .ws-screen > form {display:grid;gap:12px;align-items:start}
+  .k-workshop[data-ws-route="corner"] fieldset > label {display:grid;gap:4px;margin-block:8px}
+  .k-workshop[data-ws-route="corner"] .ws-screen > form > button {justify-self:start;min-height:44px}
+  #pro-library .pr-grid {grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}
+  #pro-library .pr-card :is(svg,.pr-swatch,.front-swatch,.hardware-swatch) {height:76px}
+  .k-app > :is(#pro-project,#pro-library,.fr-drawer) .pr-head > button,
+  #pro-project :is(button,input:not([type="checkbox"]),select) {min-height:44px}
+}
+@media screen and (min-width:1000px) {
+  .k-workshop[data-ws-route="corner"] .ws-screen > form:has(> fieldset:nth-of-type(2):not([hidden])) {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .k-workshop[data-ws-route="corner"] .ws-screen > form > :not(fieldset) {grid-column:1/-1}
+}
+
+.pr-sheet-bar{display:flex;align-items:end;gap:8px 16px;flex-wrap:wrap;margin-block:10px}
+.pr-sheet-bar>.pr-field{display:grid;gap:2px;margin:0;min-width:0}
+.pr-sheet-bar>.pr-field select{margin:0;width:100%}
+.pr-sheet-ops{display:flex;gap:3px;margin-inline-start:auto;align-items:center}
+.pr-sheet-ops>button,.pr-export>summary{box-sizing:border-box;display:grid;place-items:center;padding:0;min-width:44px;min-height:44px;background:var(--ks-surface-1);color:var(--ks-ink);border-radius:var(--ks-radius-control);border:1px solid var(--ks-on-dark-muted);cursor:pointer}
+.pr-export{position:relative}
+.pr-export summary,.pr-sheet-schedules summary{list-style:none}
+.pr-export summary::-webkit-details-marker,.pr-sheet-schedules summary::-webkit-details-marker{display:none}
+.pr-export[open]>summary,.pr-sheet-ops>button:hover{background:var(--ks-surface-1)}
+.pr-export[open]>div{position:absolute;z-index:4;inset-inline-end:0;top:calc(100% + 4px);display:grid;min-width:205px;padding:4px;background:var(--ks-surface-1);border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);box-shadow:var(--ks-shadow-surface)}
+.pr-export>div button{border:0;text-align:start;color:var(--ks-ink);background:transparent;padding:8px 10px}
+.pr-export>div button:is(:hover,:focus-visible){background:var(--ks-surface-1)}
+.pr-sheet-schedules{margin-top:6px;border-block-start:1px solid var(--ks-on-dark-muted)}
+.pr-sheet-schedules>summary{cursor:pointer;display:flex;gap:8px;align-items:center;min-height:44px;font-weight:650}
+.pr-sheet-schedules>summary::after{content:"⌄";margin-inline-start:auto}
+.pr-sheet-schedules[open]>summary::after{transform:rotate(180deg)}

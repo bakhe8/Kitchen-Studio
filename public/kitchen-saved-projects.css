@@ -1,0 +1,46 @@
+.saved-projects{display:grid;gap:8px;margin:12px 0;padding:12px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-group);background:var(--ks-surface-1);color:var(--ks-action);font:inherit;text-align:start}
+.saved-projects[hidden]{display:none}
+.saved-projects h3{display:flex;align-items:center;gap:8px;margin:0;font-size:15px}
+.saved-projects h3 b{min-width:24px;padding:1px 8px;border-radius:var(--ks-radius-chip);background:var(--ks-action);color:var(--ks-on-dark);font-size:13px;text-align:center}
+.saved-projects ul{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.saved-projects li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid var(--ks-on-dark-muted);border-radius:var(--ks-radius-control);background:var(--ks-surface-1)}
+.saved-projects .sp-info{display:grid;min-width:0;gap:1px}
+.saved-projects .sp-info strong{overflow-wrap:anywhere}
+.saved-projects small{color:var(--ks-action);font-size:12.5px}
+.saved-projects .sp-warn{color:var(--ks-attention);font-weight:600}
+.saved-projects .sp-actions{display:flex;flex:none;gap:6px}
+.saved-projects button{min-height:44px;padding:6px 14px;border:1px solid var(--ks-action);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-action);font:inherit;font-weight:600;cursor:pointer}
+.saved-projects button:disabled{opacity:.55;cursor:default}
+.saved-projects button[data-saved-open]{border-color:var(--ks-action);background:var(--ks-action);color:var(--ks-on-dark)}
+.saved-projects button[data-saved-delete-confirm]{border-color:var(--ks-danger);background:var(--ks-danger);color:var(--ks-on-dark)}
+.saved-projects button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.saved-projects .sp-note{margin:0;font-size:13.5px}
+.saved-projects .sp-note:empty{display:none}
+.saved-projects .sp-note[data-tone=error]{color:var(--ks-danger)}
+.pr-actions.pr-actions-single{grid-template-columns:1fr}
+.pr-backup{margin:8px 0;padding:8px 10px;border:1px solid var(--ks-line);border-radius:var(--ks-radius-control);background:var(--ks-surface-1);color:var(--ks-ink);font-size:13px;line-height:1.6}
+.pr-backup[data-state=never],.pr-backup[data-state=changed]{border-color:var(--ks-line);background:var(--ks-surface-1);color:var(--ks-ink)}
+.pr-backup[data-state=current]{border-color:var(--ks-complete);background:var(--ks-surface-1);color:var(--ks-complete)}
+.visit-saved{padding:10px clamp(12px,1.7vw,28px) 0}
+.visit-saved .saved-projects{margin:0}
+@media(max-width:600px){.saved-projects li{flex-wrap:wrap}.saved-projects .sp-actions{width:100%}.saved-projects .sp-actions button{flex:1}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.saved-projects.saved-projects :is(button,input:not([type=checkbox]):not([type=radio]),select,textarea,summary){min-block-size:var(--ks-target)}
+.saved-projects.saved-projects :is(button,a,summary){min-inline-size:var(--ks-target)}
+.saved-projects.saved-projects :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.saved-projects.saved-projects :is(button,a,summary):not(:disabled):not([aria-disabled="true"]):active{transform:translateY(1px);box-shadow:none}}
+.saved-projects.saved-projects :is(button,input,select,textarea):disabled{cursor:not-allowed;box-shadow:none}
+.saved-projects.saved-projects :is(button,summary):not(:disabled):not([aria-disabled="true"]):hover{border-color:var(--ks-action)}
+@media(pointer:coarse){.saved-projects.saved-projects :is(button,a,input:not([type=checkbox]):not([type=radio]),select,summary){min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}}
+@media(prefers-reduced-motion:reduce){.saved-projects.saved-projects :is(button,a,input,select,textarea,summary,[tabindex]){transition:none;animation:none}.saved-projects.saved-projects :is(button,a,summary):active{transform:none}}
+
+/* Measured Workshop operations contract; unlayered to retain feature cascade ownership. */
+.saved-projects button[data-saved-open]{background:var(--ks-action);border-color:var(--ks-action);color:var(--ks-on-dark)}
+.saved-projects button[data-saved-delete]{color:var(--ks-danger);border-color:var(--ks-danger);text-decoration:underline;text-underline-offset:3px}
+.saved-projects button[data-saved-delete-confirm]{border-style:double;border-width:3px;background:var(--ks-danger);border-color:var(--ks-danger);color:var(--ks-on-dark);font-weight:700}
+.saved-projects .sp-note[data-tone=error]{border-inline-start:4px double var(--ks-danger);background:var(--ks-danger-soft);color:var(--ks-danger);padding:var(--ks-space-2)}
+.pr-backup[data-state=never],.pr-backup[data-state=changed]{border-inline-start:3px dashed var(--ks-attention);background:var(--ks-attention-soft);color:var(--ks-attention)}
+.pr-backup[data-state=current]{border-inline-start:4px double var(--ks-complete);background:var(--ks-complete-soft);color:var(--ks-complete)}
+.saved-projects li{min-inline-size:0}.saved-projects .sp-actions{flex-wrap:wrap}
+.saved-projects .sp-warn{color:var(--ks-danger);font-weight:700}

@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {makeChainExample,linkedReadingIndex,readChainRange} from '../public/kitchen-chain-model.js';
+import {readFileSync} from 'node:fs';
+const d=makeChainExample(),f=d.kitchen.features.find(x=>x.kind==='window'),index=linkedReadingIndex(d.room,f);
+assert(index>=0);assert.equal(d.room.workshop.chains[f.wall].rows[index].kind,'window');
+assert.equal(linkedReadingIndex(d.room,{...f,id:'manual-window'}),-1);
+assert.equal(linkedReadingIndex(d.room,{...f,kind:'door'}),-1);
+assert(readChainRange(d,f.wall));const view=readFileSync(new URL('../public/kitchen-view.js',import.meta.url),'utf8');
+assert(view.includes('correct-survey-reading')&&view.includes('preview-survey-feature'));
+console.log('Measured opening routes correction to the original row by stable ID and keeps a CAD alternative in preview.');

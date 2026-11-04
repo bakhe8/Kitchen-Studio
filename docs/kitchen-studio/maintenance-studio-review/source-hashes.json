@@ -1,0 +1,82 @@
+[
+  {
+    "path": "app/api/jobs/route.ts",
+    "sha256": "3b7f5fe76fe547d6be5b629387a281cad6557f759e9b6ee78376df8f6e6e2c67"
+  },
+  {
+    "path": "public/kitchen-maintenance-domain.js",
+    "sha256": "d325d67b00c2bc813b7f7da228bd94c413b8db45435c1b94e069521888c023b8"
+  },
+  {
+    "path": "public/kitchen-maintenance-drawing.js",
+    "sha256": "551b52405f354c95ace65a27364b7cfa3c97abc014544e2c29e7af6940ddcc0e"
+  },
+  {
+    "path": "public/kitchen-maintenance-draft.js",
+    "sha256": "3098eec949c03ab1e637657538229c31355fddab1cf124aa313d93afd78ef14d"
+  },
+  {
+    "path": "public/kitchen-maintenance-studio.js",
+    "sha256": "c5ead0ddc3ebf2b6cdbe050313c13acac202e54a9dde9cb3b2d4f4c73ea8f267"
+  },
+  {
+    "path": "public/kitchen-maintenance-studio.css",
+    "sha256": "56706493c1db855cdb18d9c72522e19792fbbbfc739837ff38b9121bd10b7e59"
+  },
+  {
+    "path": "public/kitchen-app.js",
+    "sha256": "3d08da80cac3c4b8fe1a3ac3f8bfea5235ee7ce1b75181eeb7c4cb3e546d5d5b"
+  },
+  {
+    "path": "public/kitchen-gateways.js",
+    "sha256": "810a094607479f8cc1e2d17ec2115c52d6e9028cb06d498129eb4657254ac352"
+  },
+  {
+    "path": "public/kitchen-gateways-ui.js",
+    "sha256": "57103bae8a56bcdc69a62ddb711c891eb5eb7f37699145cde847ba8b391b9e59"
+  },
+  {
+    "path": "public/kitchen-workshop-ui.js",
+    "sha256": "04e061a50f5c60968991230c39548b6eae50e71fec3ab138c335cd4bd3b4d539"
+  },
+  {
+    "path": "public/kitchen-role-pages.js",
+    "sha256": "cea64869b431a534770dbd09374a03f449ce382df40caea9efcaed1515bc9ecd"
+  },
+  {
+    "path": "public/kitchen-scoped-workspace.js",
+    "sha256": "8acc8695e459deb2dbf34b1118f901564246a686278673a1b1f9f74ea9bebf58"
+  },
+  {
+    "path": "public/kitchen-delivery-studio.js",
+    "sha256": "63f5dae89b89494724da37bbfb1d539f381d3de89307c7f9022a79f2bcf11130"
+  },
+  {
+    "path": "scripts/serve-maintenance-review.mjs",
+    "sha256": "1e4d4f07af936e58196b3e002c4b527f083e9ecdce91201207b8941cf306725d"
+  },
+  {
+    "path": "scripts/check-workshop-jobs.mjs",
+    "sha256": "2285239b8141a84752a9b1af7b0e8102fad99a7c231e2573f127640648133760"
+  },
+  {
+    "path": "tools/check-kitchen-maintenance-domain.mjs",
+    "sha256": "aabea33df308856ce2af00778ce29eb4aebb5151bb18d9cb4f69879a7e893af4"
+  },
+  {
+    "path": "tools/check-kitchen-maintenance-studio.mjs",
+    "sha256": "10697a102abda254dd394a313e119f9382b26102c1aa5c2723be3ddcc38b2a57"
+  },
+  {
+    "path": "tools/check-kitchen-gateways.mjs",
+    "sha256": "e3c7801105977446abcbc8238f838760aec63698932575aeab3919e3b7e203d2"
+  },
+  {
+    "path": "tools/check-kitchen-role-pages.mjs",
+    "sha256": "bf334fdcbdcf9234ea881b8db8e2c7b16ae820aa19b156d43af5ab39ba06770c"
+  },
+  {
+    "path": "tools/check-kitchen-workshop-navigation.mjs",
+    "sha256": "430d56331ad109cd43d870c77c40afc9a8f960b2759b0d0c73a428da7977fe1f"
+  }
+]

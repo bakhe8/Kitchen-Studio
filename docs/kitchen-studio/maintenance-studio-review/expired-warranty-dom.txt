@@ -1,0 +1,127 @@
+- link "انتقل إلى مساحة التصميم":
+  - /url: "#kitchen-workspace"
+- main:
+  - button "بوابات العمل"
+  - paragraph: استوديو المطابخ
+  - heading "إعداد الكتالوج" [level=1]
+  - navigation "أدوات الاستوديو":
+    - button "أدوات الصيانة وما بعد البيع":
+  - option "الصفّان" [selected]
+  - option "السفلي"
+  - option "العلوي"
+  - dialog "الصيانة وما بعد البيع":
+    - button "اختيار المرحلة":
+      - generic: المصنع · الصيانة وما بعد البيع
+      - strong: الصيانة وما بعد البيع
+    - button "دليل المشروع":
+      - generic: دليل المشروع
+    - button "الرجوع للرسم":
+    - paragraph: دفتر الخدمة · من البلاغ إلى رضا العميل
+    - heading "الصيانة وما بعد البيع" [level=2]
+    - button "تحديث سجل الخدمة"
+    - button "مشاريع الفريق والإيصالات"
+    - status: "حُفظ في سجل الخدمة: توثيق موافقة العميل."
+    - text: مشروع الفريق
+    - combobox "مشروع الفريق":
+      - option "اختر مشروع الفريق"
+      - option "اختبار محلي — تسليم واستلام المطبخ" [selected]
+    - text: إيصال التصنيع
+    - combobox "إيصال التصنيع":
+      - option "اختر إيصالًا وإصدارًا"
+      - option "إفراج كامل · إصدار 1 · 2026-11-04" [selected]
+    - text: الوحدة
+    - combobox "الوحدة":
+      - option "اختر الوحدة"
+      - option "خزانة تخزين · unit-2"
+      - option "خزانة تخزين · unit-3"
+      - option "خزانة تخزين · unit-4" [selected]
+      - option "خزانة تخزين · unit-5"
+      - option "وحدة حوض · unit-6"
+    - paragraph:
+      - text: إصدار الإيصال 1 · مالك المشروع ·
+      - generic: full:ae0072c2f81e498a…
+    - navigation "وحدات خدمة ما بعد البيع":
+      - heading "الوحدات والبلاغات" [level=3]
+      - button "خزانة تخزين unit-2 · استلام مثبت 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-2 · استلام مثبت
+        - generic: 0 بلاغات مفتوحة
+      - button "خزانة تخزين unit-3 · استلام مثبت 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-3 · استلام مثبت
+        - generic: 0 بلاغات مفتوحة
+      - button "خزانة تخزين unit-4 · استلام مثبت 0 بلاغات مفتوحة" [pressed]:
+        - generic: خزانة تخزين
+        - generic: unit-4 · استلام مثبت
+        - generic: 0 بلاغات مفتوحة
+      - button "خزانة تخزين unit-5 · بانتظار الاستلام 0 بلاغات مفتوحة":
+        - generic: خزانة تخزين
+        - generic: unit-5 · بانتظار الاستلام
+        - generic: 0 بلاغات مفتوحة
+      - button "وحدة حوض unit-6 · بانتظار الاستلام 0 بلاغات مفتوحة":
+        - generic: وحدة حوض
+        - generic: unit-6 · بانتظار الاستلام
+        - generic: 0 بلاغات مفتوحة
+    - main:
+      - heading "خزانة تخزين" [level=3]
+      - generic: 0 مفتوحة · استلام مثبت
+      - region "مخطط مواضع بلاغات الصيانة":
+        - figure "مخطط من أبعاد إيصال الإصدار؛ لا يعرض تفاصيل الواجهة أو الخامة. مواضع الملاحظات نسبية من أعلى يسار الجسم.":
+          - group "فحص خزانة تخزين من إيصال الإصدار":
+            - generic: جسم الوحدة · أبعاد الإيصال
+            - generic: "0"
+            - button "عرض الجسم · الاسمي ٥٠٠ مم" [pressed]:
+              - generic: عرض الجسم · ٥٠٠ مم
+            - button "ارتفاع الجسم · الاسمي ٨٦٠ مم":
+              - generic: ارتفاع الجسم · ٨٦٠ مم
+            - button "عمق الجسم · الاسمي ٦٠٠ مم":
+              - generic: عمق الجسم · ٦٠٠ مم
+          - generic: مخطط من أبعاد إيصال الإصدار؛ لا يعرض تفاصيل الواجهة أو الخامة. مواضع الملاحظات نسبية من أعلى يسار الجسم.
+        - generic "دليل بلاغات الصيانة":
+          - paragraph: نقاط البلاغات تخص هذه الوحدة من إيصال الإصدار؛ لا تغيّر أبعادها أو محضر استلامها.
+          - generic: لا توجد بلاغات مسجّلة لهذه الوحدة.
+      - button "＋ بلاغ على الوحدة"
+      - button "اختر بلاغًا للمتابعة" [disabled]
+      - button "إعادة فتح البلاغ" [disabled]
+      - heading "بلاغات هذه الوحدة" [level=3]
+      - text: العرض
+      - combobox "العرض":
+        - option "جميع البلاغات" [selected]
+        - option "المفتوحة فقط"
+      - paragraph: لا توجد بلاغات في هذا العرض.
+    - complementary:
+      - heading "خزانة تخزين" [level=3]
+      - paragraph: سجّل المشكلة في موضعها على الوحدة.
+      - paragraph: لا تعديلات على المسودة
+      - button "حفظ المسودة"
+      - button "تراجع" [disabled]
+      - button "إعادة" [disabled]
+      - button "إلغاء المسودة"
+      - heading "تسجيل البلاغ" [level=3]
+      - paragraph: انقر جسم الوحدة لتحديد الموضع، أو اختر فحصًا من الرسم.
+      - button "موضع في منتصف الجسم"
+      - button "ربط البلاغ بالفحص المحدد"
+      - text: عنوان البلاغ
+      - textbox "عنوان البلاغ"
+      - text: وصف المشكلة المشترك مع فريق الصيانة
+      - textbox "وصف المشكلة المشترك مع فريق الصيانة"
+      - text: الأولوية
+      - combobox "الأولوية":
+        - option "اعتيادي" [selected]
+        - option "عاجل"
+      - paragraph: لم يحدد موضع البلاغ · الفترة الموثقة منتهية. التغطية تُحسم بعد التشخيص.
+      - button "تسجيل البلاغ في سجل الخدمة"
+    - article:
+      - heading "محضر تسليم الوحدة" [level=3]
+      - paragraph: استلام مثبت · 2026-11-04 · الحدث 5
+      - paragraph: "المستلم: Synthetic maintenance customer"
+      - paragraph: Synthetic customer acceptance; no real customer transaction.
+      - button "فتح محضر التسليم"
+    - article:
+      - heading "الضمان · الفترة الموثقة منتهية" [level=3]
+      - paragraph: Synthetic service provider · SYNTHETIC-WARRANTY-EXPIRED
+      - paragraph: 2025-09-30 ← 2026-11-03
+      - paragraph: Synthetic workmanship coverage requiring an explicit owner review for each ticket.
+      - paragraph: "الاستثناءات: Synthetic misuse exclusion; this is test data."
+      - generic: سجل الضمان 6 · القرارات السابقة تحتفظ بنسختها
+      - button "توثيق تحديث شروط الضمان"

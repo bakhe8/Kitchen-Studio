@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {checkedPortableArchive} from '../../../public/kitchen-archive-validation.js';
+import {buildFactoryQuote} from '../../../public/kitchen-workshop-factory.js';
+import {approvalState} from '../../../public/kitchen-workshop-state.js';
+const read=async name=>JSON.parse(await readFile(new URL(name,import.meta.url),'utf8'));
+const input=(await read('input-project.json')).design,archive=await read('project-export.json'),saved=archive.design;
+assert(checkedPortableArchive(archive).doc,'export is an accepted project archive');
+assert.equal(saved.room.projectId,input.room.projectId);
+assert.deepEqual(saved.room.workshop.chains,input.room.workshop.chains,'site measurements and attestations are untouched');
+assert.deepEqual(saved.kitchen.runs,input.kitchen.runs);
+assert.deepEqual(saved.kitchen.features,input.kitchen.features);
+assert.deepEqual(saved.room.workshop.rows,input.room.workshop.rows,'factory manifests preserved');
+assert.equal(saved.kitchen.units.length,13);
+for(const unit of saved.kitchen.units){const before=input.kitchen.units.find(u=>u.id===unit.id);assert(before);assert.deepEqual(unit,unit.id==='unit-2'?{...before,frontColor:'#263e56'}:before);}
+assert.equal(saved.room.workshop.finishes.units['unit-2'].frontSku,'FACE-6-NAVY');
+assert.deepEqual(saved.room.workshop.finishes.partUnits['unit-2'],{body:'BODY-BLUE',handle:'PULL-BRASS'});
+assert.equal(Object.keys(saved.room.workshop.finishes.units).length,1);
+assert.equal(Object.keys(saved.room.workshop.finishes.partUnits).length,1);
+const quote=buildFactoryQuote(saved),approval=await approvalState(saved);
+assert.equal(quote.materialValue,2133);assert.equal(quote.total,3141);assert.equal(approval.valid.structure,true);
+assert(quote.fitoutPending.length,'existing unresolved release requirements stay visible');
+const evidence={projectId:saved.room.projectId,units:13,measurementsAndAttestationsUnchanged:true,factoryRowsUnchanged:true,onlyUnit:'unit-2',finishes:saved.room.workshop.finishes,materials:quote.materialValue,total:quote.total,validStructure:approval.valid.structure,fitoutPending:quote.fitoutPending};
+await writeFile(new URL('export-verification.json',import.meta.url),JSON.stringify(evidence,null,2));
+console.log('PASS: real browser export preserves measured site and CAD, selected unit finishes, approval and exact quote.');

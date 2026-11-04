@@ -1,0 +1,31 @@
+.sp-viewbar{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:8px 17px;border-top:1px solid var(--ks-line);background:var(--ks-surface-1);font-size:12px;line-height:1.35;color:var(--ks-action)}
+.sp-viewbar button{margin:0;border:0;border-radius:var(--ks-radius-control);display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:31px;background:transparent;color:var(--ks-ink);font-weight:600;line-height:1.4;font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.sp-viewbar button:focus-visible{outline:3px solid var(--ks-focus-ring);outline-offset:2px}
+.sp-viewbar svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sp-view-tabs,.sp-view-zoom{display:inline-flex;align-items:center;gap:2px;padding:2px;border-radius:var(--ks-radius-group);border:1px solid var(--ks-line);background:var(--ks-surface-2)}
+.sp-view-tabs button{padding-inline:8px}.sp-view-tabs button[aria-pressed=true]{background:var(--ks-action);color:var(--ks-surface-1);box-shadow:none}
+.sp-view-options{display:flex;align-items:center;gap:7px}.sp-view-options[hidden]{display:none}
+.sp-viewbar .sp-orbit-btn{padding:4px 9px;border:1px solid var(--ks-line);background:var(--ks-surface-1)}
+.sp-viewbar .sp-orbit-btn[aria-pressed=true]{color:var(--ks-surface-1);background:var(--ks-action);border-color:var(--ks-action)}
+.sp-view-zoom{direction:ltr;gap:0;padding:1px;background:var(--ks-surface-1)}.sp-view-zoom button{min-width:28px;min-height:29px;padding:2px 5px;font-weight:600}.sp-view-zoom #shelf-view-home{min-width:43px;color:var(--ks-ink);font-size:11px}
+.sp-viewbar button:hover:not([aria-pressed=true]):not(:disabled){background:var(--ks-surface-inset)}.sp-viewbar button:disabled{opacity:.42;cursor:default}
+.sp-view-depth{margin-inline-start:auto;font-size:12px;color:var(--ks-ink);font-variant-numeric:tabular-nums}
+body[data-view-orbit=true] #shelf-canvas-mat .shc-board,body[data-view-orbit=true] #shelf-canvas-mat .shc-board *,body[data-view-orbit=true] .sp-compare-frame{cursor:grab!important;touch-action:none}
+body[data-camera-drag=true] #shelf-canvas-mat *{cursor:grabbing!important}
+body[data-space-view=volume] #shelf-canvas-mat{background:var(--ks-surface-inset)}body[data-space-view=volume] .shc-board{background:var(--ks-surface-inset)}
+@media(max-width:650px){.sp-viewbar{gap:6px;padding:8px}.sp-view-depth{display:none}.sp-view-tabs button,.sp-viewbar .sp-orbit-btn{padding-inline:5px}.sp-viewbar svg{width:14px;height:14px}.sp-view-zoom button{min-width:23px}.sp-view-zoom #shelf-view-home{min-width:35px}}
+/* Leave the context hint and live measurement visible under the drawing. */
+@media(min-width:850px) and (min-height:620px){
+ body[data-space-view=volume] #shelf-workspace #shelf-scene .shc-board{max-height:clamp(300px,calc(100dvh - 330px),900px)}
+}
+/* The whole-room view has its own orbit/pick surface. Furniture edit tools
+   reappear on returning to its wall; the property panel remains an overlay. */
+.shelf-planner[data-space-view=room]{--desk-right:var(--desk-left);--overlay-room:calc(100vw - 2 * var(--overlay-left))}
+body[data-space-view=room] #shelf-dock,body[data-space-view=room] .sp-stage-mode,body[data-space-view=room] #shelf-tool-hint,body[data-space-view=room] #shelf-property-tabs,body[data-space-view=room] #shelf-panel-dimensions .sp-inspector-section:not([data-form-for=room]),body[data-space-view=room] #shelf-comparison,body[data-space-view=room] #shelf-compare-stage,body[data-space-view=room] #shelf-scene{display:none!important}
+body[data-space-view=room] #shelf-canvas-mat{background:var(--ks-surface-2)}
+.sp-room-form-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.sp-room-form-actions .sp-neutral{padding:6px 8px;font-size:11px}
+#shelf-room-form-status:empty{display:none}
+
+/* Measured Workshop: local spatial interaction contracts. */
+.sp-viewbar button,.sp-view-zoom button,.sp-view-zoom #shelf-view-home{min-block-size:var(--ks-target);min-inline-size:var(--ks-target)}
+.sp-view-tabs button[aria-pressed=true]{background:var(--ks-action-soft);color:var(--ks-action);text-decoration:underline;text-underline-offset:4px}
