@@ -7,6 +7,7 @@ import {makeVisitExample} from './fixture-kitchen-visit-example.mjs';
 import {proposeWholeKitchen} from '../public/kitchen-whole-plan.js';
 import {proposalUnits} from '../public/kitchen-proposal-presentation.js';
 import {flushUnsavedWork} from '../public/kitchen-unsaved-work.js';
+import {workshopPartTarget} from '../public/kitchen-sheet-target.js';
 
 class Store{
  data=new Map();get length(){return this.data.size;}key(i){return [...this.data.keys()][i]??null;}
@@ -31,12 +32,12 @@ const source=structuredClone(generated.candidates[0].doc);source.room.projectId=
 const units=proposalUnits(source),rice=units.find(u=>u.family==='rice'),storage=units.find(u=>u.runId===rice.runId&&u.family==='storage');
 assert(rice&&storage);assert.equal(rice.widthMm,600);assert.equal(storage.widthMm,900);
 
-function fixture(initial=source,{resume=false,store=new Store(),writable=true}={}){
+function fixture(initial=source,{resume=false,store=new Store(),writable=true,returnFocus}={}){
  globalThis.localStorage=store;
  let live=structuredClone(initial),saves=0,markup='',input=null,dispose,back=null,forward=null,renders=0;
- const listeners=new Map(),notices=[],historyCalls=[],nodes=new Map(),captures=new Set(),svgAttrs=new Map();
+ const listeners=new Map(),notices=[],historyCalls=[],advances=[],nodes=new Map(),captures=new Set(),svgAttrs=new Map(),dom={activeElement:null};
  const plainNode=()=>({hidden:false,textContent:'',style:{setProperty(){}},classList:{add(){},remove(){},toggle(){},contains(){return false;}},
-  focus(){this.focused=true;},select(){},scrollIntoView(){},setAttribute(){},getAttribute(){return null;},removeAttribute(){},querySelector(){return null;},querySelectorAll(){return [];},getBoundingClientRect(){return {left:0,top:0,width:900,height:500,right:900,bottom:500};}});
+  isConnected:true,focus(){dom.activeElement=this;},select(){},scrollIntoView(){},setAttribute(){},getAttribute(){return null;},removeAttribute(){},querySelector(){return null;},querySelectorAll(){return [];},getBoundingClientRect(){return {left:0,top:0,width:900,height:500,right:900,bottom:500};}});
  const svg={...plainNode(),dataset:{},isConnected:true,
   getAttribute:key=>svgAttrs.get(key),setAttribute:(key,value)=>svgAttrs.set(key,String(value)),getScreenCTM:()=>({inverse:()=>identity}),
   createSVGPoint:()=>new DOMPoint(),contains:target=>target===svg||target?.canvas===canvas};
@@ -45,6 +46,7 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
   set innerHTML(value){this.markup=value;svgAttrs.set('viewBox',value.match(/viewBox="([^"]+)"/)?.[1]);},get innerHTML(){return this.markup;}};
  const form={matches:selector=>selector==='[data-width-change]',elements:{namedItem:name=>name==='widthMm'?input:null}};
  const host={
+  ownerDocument:dom,
   contains:target=>target===input||target===svg||target===canvas||target?.canvas===canvas,
   setPointerCapture:id=>captures.add(id),hasPointerCapture:id=>captures.has(id),releasePointerCapture:id=>captures.delete(id),
   addEventListener(type,fn,options){
@@ -58,11 +60,15 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
    if(selector==='[name="widthMm"]'||selector==='input[name="widthMm"]')return input;
    if(selector==='[data-width-change]')return input?form:null;
    if(selector==='[data-plan-controls]'||selector==='.pd-compare[open]')return null;
-   if(!nodes.has(selector))nodes.set(selector,plainNode());return nodes.get(selector);
+   if(!nodes.has(selector)){
+    const node=plainNode(),attrs=attributes(selector);node.dataset=dataset(attrs);
+    node.matches=s=>s===selector;node.closest=s=>s==='button'&&attrs['data-wp']?node:null;
+    node.hasAttribute=key=>Object.hasOwn(attrs,key);nodes.set(selector,node);
+   }return nodes.get(selector);
   },
   querySelectorAll(){return [];},
   set innerHTML(value){
-   renders++;markup=value;if(input)input.isConnected=false;
+   renders++;markup=value;if(input)input.isConnected=false;for(const node of nodes.values())node.isConnected=false;nodes.clear();
    const attrs=[...value.matchAll(/<input\b([^>]*)>/g)].map(m=>attributes(m[1])).find(a=>a.name==='widthMm');
    input=attrs?{...plainNode(),value:attrs.value,name:'widthMm',tagName:'INPUT',isConnected:true,
     matches:selector=>['[name="widthMm"]','input[name="widthMm"]','input,select,textarea'].includes(selector),closest:()=>null}:null;
@@ -96,7 +102,7 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
   const preview=rect(rice.id);
   await fire(end,end==='lostpointercapture'?canvas:g.target,{pointerType,clientX:g.dx*factor,clientY:g.dy*factor});flushFrames();return preview;
  }
- const options={getDoc:()=>live,canEdit:()=>writable,apply(next){back=live;forward=null;live=next;saves++;return {ok:true,saved:true};},tell:message=>notices.push(message),onAdvance(){},
+ const options={getDoc:()=>live,canEdit:()=>writable,apply(next){back=live;forward=null;live=next;saves++;return {ok:true,saved:true};},tell:message=>notices.push(message),onAdvance:(step,focus)=>advances.push({step,focus}),
   canHistory:next=>!!(next?forward:back),onHistory(next){
    historyCalls.push(next);if(next&&forward){back=live;live=forward;forward=null;}else if(!next&&back){forward=live;live=back;back=null;}
    // The real workshop refreshes the designer after its project-history owner
@@ -104,9 +110,9 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
    dispose();dispose=mountWholePlan(host,{...options,focus:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'}});
    return {ok:true,saved:true};
   },
-  focus:resume?{}:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'}};
+  focus:returnFocus||(resume?{}:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'})};
  dispose=mountWholePlan(host,options);
- return {host,canvas,svg,listeners,nodes,notices,historyCalls,store,fire,action,view,choose,type,rect,grip,drag,
+ return {host,canvas,svg,listeners,nodes,notices,historyCalls,advances,dom,store,fire,action,view,choose,type,rect,grip,drag,
   submit:()=>fire('submit',form),get input(){return input;},get live(){return live;},get saves(){return saves;},get controller(){return dispose;},
   get renders(){return renders;},set writable(value){writable=value;},destroy(){dispose();}};
 }
@@ -228,3 +234,74 @@ const cleanReopen=fixture(savedSource,{store:cancelStore,resume:true});await Pro
 assert(!cleanReopen.controller.hasPending(),'a cancelled raw preview cannot revive when the saved project reopens');
 assert.equal(cleanReopen.live.kitchen.units.find(u=>u.id===rice.id).width,70);assert.equal(cleanReopen.saves,0);cleanReopen.destroy();
 console.log('Designer recovery: readonly opening preserves but does not replay drafts; cancelling a raw preview removes recovery state before reopening.');
+
+// These cases exercise real controller transitions. Losing a selection, restoring
+// the wrong viewBox, or focusing a detached opener must fail independently.
+const contextFailures=[];
+async function contextCheck(name,run){try{await run();console.log('PASS context: '+name);}catch(error){contextFailures.push(error);console.error('FAIL context: '+name+' — '+error.message);}}
+await contextCheck('detail close restores the selected object, original view and rebuilt opener',async()=>{
+ const f=fixture(),before=JSON.stringify(f.live),opener=f.host.querySelector('[data-wp="details"]');opener.focus();
+ await f.fire('click',opener);assert.equal(f.dom.activeElement,f.host.querySelector('[data-pd-open]'));
+ await f.view('plan');await f.action('close-sheet');
+ assert.equal(f.controller.selectionForReturn()?.unitId,rice.id);
+ assert.equal(f.controller.selectionForReturn()?.proposalView,'back','closing details restores its originating view');
+ assert.equal(f.dom.activeElement,f.host.querySelector('[data-wp="details"]'),'focus returns to the rebuilt opener');
+ assert.equal(JSON.stringify(f.live),before);assert.equal(f.saves,0);f.destroy();
+});
+await contextCheck('interior entry and return restore object identity, view, camera and focus',async()=>{
+ const f=fixture();await f.choose(storage.id);await f.fire('keydown',f.svg,{key:'+'});f.svg.focus();
+ const before=f.svg.getAttribute('viewBox'),pick={canvas:f.canvas,dataset:{sheetUnit:storage.id,sheetPart:'inside'},
+  closest(selector){return selector==='[data-wp-canvas]'?f.canvas:selector.includes('[data-sheet-unit]')?this:null;}};
+ await f.fire('click',pick);await f.action('edit-part');
+ assert.equal(f.advances.length,1);assert.equal(workshopPartTarget(f.live,f.advances[0].step,f.advances[0].focus).route,'unit-interior');
+ const returnFocus=f.controller.selectionForReturn();assert.equal(returnFocus.unitId,storage.id);f.destroy();
+ const returned=fixture(source,{returnFocus});assert.equal(returned.controller.selectionForReturn()?.unitId,storage.id);
+ assert.equal(returned.controller.selectionForReturn()?.proposalView,'back');assert.equal(returned.svg.getAttribute('viewBox'),before);
+ assert.equal(returned.dom.activeElement,returned.svg,'interior return focuses the originating drawing');returned.destroy();
+});
+await contextCheck('drawing feature details restore the originating unit, view and drawing focus',async()=>{
+ const f=fixture(),feature=source.kitchen.features.find(item=>item.wall==='back'),before=f.svg.getAttribute('viewBox');f.svg.focus();
+ const pick={canvas:f.canvas,dataset:{sheetFeature:feature.id},getAttribute:key=>key==='data-sheet-feature'?feature.id:null,
+  closest(selector){return selector==='[data-wp-canvas]'?f.canvas:selector==='[data-sheet-feature]'||selector.includes(',')&&selector.includes('[data-sheet-feature]')?this:null;}};
+ await f.fire('click',pick);await f.view('plan');await f.action('close-sheet');
+ assert.equal(f.controller.selectionForReturn()?.proposalView,'back','drawing detail uses the same return context as a panel button');
+ assert.equal(f.controller.selectionForReturn()?.unitId,rice.id);assert.equal(f.svg.getAttribute('viewBox'),before);assert.equal(f.dom.activeElement,f.svg);f.destroy();
+});
+await contextCheck('return context carries the current keyboard opener instead of a stale prior opener',async()=>{
+ const f=fixture();f.input.focus();const returnFocus=f.controller.selectionForReturn();f.destroy();
+ const returned=fixture(source,{returnFocus});assert.equal(returned.dom.activeElement,returned.input,'a rebuilt input can receive the return focus');returned.destroy();
+});
+await contextCheck('switching walls and drawing views preserves stable unit selection',async()=>{
+ const twoWalls=structuredClone(source);twoWalls.kitchen.runs.push({...twoWalls.kitchen.runs[0],id:'context-right',wall:'right'});
+ const f=fixture(twoWalls);await f.view('right');
+ assert.equal(f.controller.selectionForReturn()?.unitId,rice.id,'an offscreen unit remains selected by stable identity');
+ assert.equal(f.controller.selectionForReturn()?.proposalView,'right');
+ await f.view('volume');await f.view('plan');await f.view('back');assert.equal(f.controller.selectionForReturn()?.unitId,rice.id);f.destroy();
+});
+await contextCheck('each view restores its own camera, volume rotation and framing across a return',async()=>{
+ const f=fixture();await f.fire('keydown',f.svg,{key:'+'});const back=f.svg.getAttribute('viewBox');
+ await f.view('volume');await f.action('rotate');await f.action('framing');await f.fire('keydown',f.svg,{key:'+'});const volume=f.svg.getAttribute('viewBox');
+ await f.view('plan');await f.fire('keydown',f.svg,{key:'-'});const plan=f.svg.getAttribute('viewBox');
+ await f.view('back');assert.equal(f.svg.getAttribute('viewBox'),back,'returning to the elevation restores its camera');
+ const returnFocus=f.controller.selectionForReturn();f.destroy();const returned=fixture(source,{returnFocus});
+ await returned.view('volume');assert.equal(returned.svg.getAttribute('viewBox'),volume,'volume frame and camera survive interior return');
+ assert.equal(returned.controller.selectionForReturn().yaw,108);assert.equal(returned.controller.selectionForReturn().frameUnits,false);
+ await returned.view('plan');assert.equal(returned.svg.getAttribute('viewBox'),plan);returned.destroy();
+});
+await contextCheck('detail close restores the original volume rotation and frame after visiting another view',async()=>{
+ const f=fixture();await f.view('volume');await f.fire('keydown',f.svg,{key:'+'});const before=f.svg.getAttribute('viewBox');
+ await f.action('details');await f.action('rotate');await f.action('framing');await f.view('plan');await f.action('close-sheet');
+ const context=f.controller.selectionForReturn();assert.equal(context.proposalView,'volume');
+ assert.equal(context.yaw,18,'a remembered volume view cannot override the detail origin');assert.equal(context.frameUnits,true);
+ assert.equal(f.svg.getAttribute('viewBox'),before);f.destroy();
+});
+await contextCheck('Escape closes transient details before clearing selection or surrounding navigation',async()=>{
+ const f=fixture();await f.action('details');
+ const first=await f.fire('keydown',f.host.querySelector('[data-pd-open]'),{key:'Escape'});
+ assert(first.defaultPrevented&&first.stopped,'the first Escape is consumed by the transient panel');
+ assert.equal(f.controller.selectionForReturn()?.unitId,rice.id,'first Escape keeps the object selected');
+ const second=await f.fire('keydown',f.svg,{key:'Escape'});assert(second.defaultPrevented&&second.stopped);
+ assert.equal(f.controller.selectionForReturn(),null,'second Escape clears selection');
+ const third=await f.fire('keydown',f.svg,{key:'Escape'});assert(!third.defaultPrevented,'surrounding navigation can handle the next Escape');f.destroy();
+});
+assert.equal(contextFailures.length,0,contextFailures.map(error=>error.message).join('\n'));

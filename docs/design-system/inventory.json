@@ -23878,8 +23878,8 @@
       "family": "design",
       "migrationWave": 4,
       "status": "legacy",
-      "bytes": 6222,
-      "sha256": "f050643a2f80db266718951ce8fef22d4a39331e09e7c75400ba3c86a3a5080c",
+      "bytes": 7385,
+      "sha256": "7aa18baf24a941d8f76ee7b3bfc47dc99bdb78fb8c43c98e75790c36297d3146",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -27861,8 +27861,8 @@
       "family": "design",
       "migrationWave": 4,
       "status": "legacy",
-      "bytes": 64382,
-      "sha256": "795a6770a86eef751e29545a1a2149abbcf651c3f795b439ae81f5ab72955864",
+      "bytes": 66497,
+      "sha256": "d9dae89596f18c0ce1f2de4d804297c72907d1e4a969fb6381e7da2231fb9647",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [

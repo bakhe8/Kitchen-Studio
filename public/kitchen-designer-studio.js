@@ -5,6 +5,26 @@ import {studioIcon} from './kitchen-tool-icons.js';
 
 const button=(action,label,extra='')=>'<button type="button" data-wp="'+action+'" '+extra+'>'+label+'</button>';
 
+// Render replaces the controls, so keep both the live opener and its semantic
+// address. Only the address crosses a workspace return; no project is copied.
+export function captureDesignerOpener(host,element=host.ownerDocument?.activeElement){
+ let selector='[data-wp-canvas] svg';
+ if(element?.matches?.('[name="widthMm"]'))selector='[name="widthMm"]';
+ else for(const [key,attr] of [['wpView','data-wp-view'],['wpTier','data-wp-tier'],['wp','data-wp']]){
+  if(element?.dataset?.[key]){
+   selector='['+attr+'="'+String(element.dataset[key]).replace(/["\\]/g,'\\$&')+'"]';
+   if(element.dataset.wp==='ds-unit')selector+='[data-unit="'+String(element.dataset.unit).replace(/["\\]/g,'\\$&')+'"]';
+   break;
+  }
+ }
+ return {element:selector==='[data-wp-canvas] svg'?host.querySelector(selector):element,selector};
+}
+export function restoreDesignerOpener(host,opener){
+ const element=opener?.element,selector=typeof opener==='string'?opener:opener?.selector;
+ const target=element?.isConnected!==false&&host.contains?.(element)?element:selector&&host.querySelector(selector);
+ (target||host.querySelector('[data-wp-canvas] svg'))?.focus?.({preventScroll:true});
+}
+
 // A presentation of the actual proposal controller, never a second project or draft.
 export function decorateDesignerStudio(host,{doc,units,selected,face,measured,applied,persisted,canUndo,canRedo,redoDraft,editable,sheet}){
  const root=host.querySelector('.proposal-studio'),dom=host.ownerDocument;

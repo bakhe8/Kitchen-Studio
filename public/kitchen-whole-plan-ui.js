@@ -15,7 +15,7 @@ import {proposeWholeKitchen,reviewWholeProposal} from './kitchen-whole-plan.js';
 import {previewKitchenUnitMove,snapFactoryWidthMm} from './kitchen-proposal-change.js';
 import {createInteractionSession,previewInteractionIntent,commitInteractionPreview} from './kitchen-interaction-intent.js';
 import {mountDesignerPrecision} from './kitchen-designer-precision.js';
-import {decorateDesignerStudio,positionDesignerHud} from './kitchen-designer-studio.js';
+import {decorateDesignerStudio,positionDesignerHud,captureDesignerOpener,restoreDesignerOpener} from './kitchen-designer-studio.js';
 import {budgetHold} from './kitchen-layout-brief.js';
 import {buildFactoryQuote} from './kitchen-workshop-factory.js';
 import {proposalUnits,proposalScene,proposalComparisons,alternativeStrip,proposalNumber as n,proposalPrice,escapeProposalText as esc,wallFacts,customerReport,changeTable,priceDifference,purchaseNote,distributionTable} from './kitchen-proposal-presentation.js';
@@ -48,6 +48,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  let pending=false,epoch=0,error='',pick=null,volumeTarget=null,drag=null,dragged=false,questionList=[],computed=null,rotationFrame=0;
  let draftTimer=0,draftSaved=true,resuming=false,discarded=false,widthPreview=null,redos=[],precision=null,resizeObserver=null;
  let widthInteraction=null;
+ const viewStates=new Map();let activeView='',renderedYaw=s.yaw,renderedFrame=s.frameUnits,detailContext=null,selectionOpener=null;
  function cancelWidthInteraction(){widthInteraction?.cancel();widthInteraction=null;}
  function widthIntent(source,objectId,delta,{edge=null,inputKind='number',withEffects=true}={}){
   if(widthInteraction?.baseRevision!==source){cancelWidthInteraction();widthInteraction=createInteractionSession(source);}
@@ -85,14 +86,21 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const getSvg=()=>getCanvas()?.querySelector?.('svg');
  const view=mountDrawingViewport(host,{getSvg,canNavigate:()=>!drag,cancelGesture:cancelDrag,onViewChange:()=>positionDesignerHud(host)});
  const menu=mountDrawingContext(host,{getSvg,actionsAt:contextActions,cancelGesture:cancelDrag});
+ const viewId=()=>s.face==='plan'?'plan/'+s.planTier:s.face;
+ const cameraKey=()=>[epoch,s.alternative,viewId()].join('/');
+ function rememberView(){if(activeView)viewStates.set(activeView,{camera:view.readCamera(),yaw:renderedYaw,frameUnits:renderedFrame});}
  function paintScene(d=drawing()){
   const canvas=host.querySelector('[data-wp-canvas]');if(!canvas)return;
   const site=inspectedFeature(),p=!site&&s.sheet!=='part'&&usable()?s.part:null,editableUnit=canEdit()&&!s.sheet&&p&&(d===drawing()?facts().units:proposalUnits(d)).find(u=>u.id===p);
   if(!['volume','plan'].includes(s.face)&&!viewChoices(d).some(w=>w.id===s.face))s.face='volume';
+  const key=cameraKey(),changed=key!==activeView;if(changed)rememberView();
+  const saved=changed&&viewStates.get(key);
+  if(saved&&s.face==='volume'){s.yaw=saved.yaw;s.frameUnits=saved.frameUnits;}
   const scene=proposalScene(d,s.face,'view-proposal',{units:ready()&&d===drawing()&&s.face!=='volume'?facts().units:undefined,yaw:s.yaw,selectedId:site?.id||p,editableUnit,tier:ready()?s.planTier:undefined,interactive:true,frameUnits:ready()&&s.frameUnits});pick=scene.hitTest;volumeTarget=scene.partTarget;
   canvas.innerHTML=scene.html;
   const svg=getSvg();
-  if(svg){svg.setAttribute('tabindex','0');view.sync(svg,svg.getAttribute('viewBox'),[epoch,s.alternative,s.face,s.face==='plan'?s.planTier:'',s.frameUnits&&ready()].join('/'));}
+  if(svg){svg.setAttribute('tabindex','0');view.sync(svg,svg.getAttribute('viewBox'),[key,s.frameUnits&&ready()].join('/'));if(saved)view.restoreCamera(saved.camera);}
+  activeView=key;renderedYaw=s.yaw;renderedFrame=s.frameUnits;
   if(site&&s.face!=='volume')for(const el of canvas.querySelectorAll('[data-sheet-feature]'))if(el.dataset.sheetFeature===site.id)el.classList.add('pd-site-selected');
   if(p&&s.face!=='volume')for(const el of canvas.querySelectorAll('[data-sheet-unit]'))if(el.dataset.sheetUnit===p&&(!s.pickedPart?!el.dataset.sheetPart:el.dataset.sheetPart===s.pickedPart.focus.part&&(!s.pickedPart.focus.index||Number(el.dataset.sheetIndex)===s.pickedPart.focus.index)))el.classList.add(el.dataset.sheetPart?'pd-selected-component':'pd-selected-shape');
   const hudWidth=host.querySelector('.ds-hud-heading span');if(hudWidth&&editableUnit)hudWidth.textContent=n(editableUnit.widthMm)+' مم'+(d!==drawing()?' · معاينة':'');
@@ -342,6 +350,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   finally{if(!signal.aborted&&t===epoch){pending=false;render();}}
  }
  function openStored(selectedId=''){
+  detailContext=null;
   const quote=buildFactoryQuote(s.base),qs=reviewWholeProposal(s.base,unique(s.base.kitchen.runs.map(r=>r.wall).filter(Boolean)),quote);
   s.generatedSettings=s.settings;s.requestFailed=false;
   s.model={stored:true,candidates:[{doc:s.base,quote,total:quote.total,reasons:[],questions:qs}]};s.alternative=0;s.histories=[];redos=[];s.applied=true;s.sheet='';s.issue=null;s.part=selectedId;computed=null;
@@ -382,11 +391,24 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   dragged=false;s.face=face;
   const unit=s.part&&ready()?facts().units.find(u=>u.id===s.part):null;
   if(unit&&face==='plan')s.planTier=unit.tier==='upper'?'upper':'base';
-  else if(unit&&face!=='volume'&&unit.wall!==face){s.part='';s.pickedPart=null;error='';}
   render(face==='volume'||face==='plan'||viewChoices(drawing()).length===1?'[data-wp-view="'+face+'"]':'[data-wp-elevation]');}
- function openPanel(key){
+ function closePanel(){
+  const context=detailContext;detailContext=null;s.sheet='';s.siteFeature='';
+  if(context){
+   s.part=facts().units.some(u=>u.id===context.unitId)?context.unitId:'';s.pickedPart=context.pickedPart;
+   s.face=context.face;s.planTier=context.planTier;s.yaw=context.yaw;s.frameUnits=context.frameUnits;
+   viewStates.set(cameraKey(),{camera:context.camera,yaw:context.yaw,frameUnits:context.frameUnits});
+   render();view.restoreCamera(context.camera);restoreDesignerOpener(host,context.opener);
+  }else{s.pickedPart=null;render();restoreDesignerOpener(host,selectionOpener);}
+ }
+ function rememberDetail(opener){
+  if(!detailContext)detailContext={unitId:s.part,face:s.face,planTier:s.planTier,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera(),pickedPart:s.pickedPart,opener:captureDesignerOpener(host,opener)};
+ }
+ function openPanel(key,opener){
   if(rawBlocked())return;
-  s.sheet=s.sheet===key?'':key;render(s.sheet?'[data-pd-open]':key==='feature'?'[data-wp-canvas] svg':'[data-wp="'+key+'"]');
+  if(s.sheet===key){closePanel();return;}
+  rememberDetail(opener);
+  s.sheet=key;render('[data-pd-open]');
   if(s.sheet)host.querySelector('[data-pd-open]')?.scrollIntoView({block:'nearest'});
  }
  host.addEventListener('submit',e=>{
@@ -420,9 +442,9 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    if(canPick()&&!dragged&&!e.defaultPrevented){
     const hit=hitAt(e);
     if(s.sheet&&!['feature','part'].includes(s.sheet)){if(hit.unit&&['changes','details'].includes(s.sheet))selectUnit(hit.unit.id);return;}
-    if(hit.target&&hit.target.route!=='unit-part'){s.pickedPart=hit.target;s.sheet='part';render('[data-pd-open]');}
-    else if(hit.unit){s.sheet='';inspectUnit(hit.unit.id,hit.target);}
-    else if(hit.feature){s.pickedPart=null;s.siteFeature=hit.feature.id;s.sheet='feature';render('[data-pd-open]');}
+    if(hit.target&&hit.target.route!=='unit-part'){rememberDetail(e.target);s.pickedPart=hit.target;s.sheet='part';render('[data-pd-open]');}
+    else if(hit.unit){s.sheet='';detailContext=null;inspectUnit(hit.unit.id,hit.target);}
+    else if(hit.feature){rememberDetail(e.target);s.pickedPart=null;s.siteFeature=hit.feature.id;s.sheet='feature';render('[data-pd-open]');}
    }
    return;
   }
@@ -441,7 +463,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    case 'focus-width':host.querySelector('[name="widthMm"]')?.focus();host.querySelector('[name="widthMm"]')?.select?.();break;
    case 'design-undo':travelDesign(false);break;
    case 'design-redo':travelDesign(true);break;
-   case 'ds-unit':if(canPick()){s.sheet='';inspectUnit(b.dataset.unit);}break;
+   case 'ds-unit':if(canPick()){s.sheet='';detailContext=null;inspectUnit(b.dataset.unit);}break;
    case 'ds-wall':if(s.measured.includes(b.dataset.wall)&&viewChoices(drawing()).some(w=>w.id===b.dataset.wall))selectView(b.dataset.wall);else onAdvance('survey',{wall:b.dataset.wall});break;
    case 'ds-source':onAdvance('survey',{wall:b.dataset.wall});break;
    case 'move-before':case 'move-after':{
@@ -451,9 +473,9 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    case 'restore':if(s.generatedSettings&&!stale()){s.settings=s.generatedSettings;s.requestFailed=false;s.issue=null;s.sheet='';computed=null;render();}break;
    case 'generate':void generate();break;
    case 'cancel':clearInteraction();render();break;
-   case 'settings':case 'details':case 'questions':case 'changes':openPanel(b.dataset.wp);break;
+   case 'settings':case 'details':case 'questions':case 'changes':openPanel(b.dataset.wp,b);break;
    case 'clear-unit':clearUnit('[data-wp-unit]');break;
-   case 'close-sheet':if(s.sheet){const key=s.sheet;if(key==='part')s.pickedPart=null;openPanel(key);}break;
+   case 'close-sheet':if(s.sheet)closePanel();break;
    case 'plus':adjust(100,'[data-wp="plus"]');break;
    case 'minus':adjust(-100,'[data-wp="minus"]');break;
    case 'undo':if(onHistory)travelDesign(false);else legacyUndo();break;
@@ -534,7 +556,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    return {title:kitchenFeatureSpecs[hit.feature.kind]?.label||'عنصر الجدار',actions:[...actions,fit]};
   }
   if(!p)return {title:'الرسم',actions:[fit,{label:s.face==='volume'?'عرض المسقط':'عرض المنظور',run:()=>selectView(s.face==='volume'?'plan':'volume')}]};
-  const select=fn=>()=>{if(!valid())return;if(['feature','part'].includes(s.sheet))s.sheet='';if(inspectUnit(p.id))fn();};
+  const select=fn=>()=>{if(!valid())return;if(['feature','part'].includes(s.sheet)){s.sheet='';detailContext=null;}if(inspectUnit(p.id))fn();};
   const actions=[];
   if(p.resizable)actions.push({label:'كتابة العرض بالملليمتر',run:select(()=>{const input=host.querySelector('[name="widthMm"]');input?.focus();input?.select?.();})});
   if(canSetUsage(p)){
@@ -647,9 +669,10 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(e.key!=='Escape'||e.defaultPrevented)return;
   if(drag){e.preventDefault();e.stopPropagation();cancelDrag();return;}
   if(widthPreview){e.preventDefault();e.stopPropagation();cancelWidth();return;}
+  if(s.sheet){e.preventDefault();e.stopPropagation();closePanel();return;}
   const comparison=e.target.closest?.('.pd-compare[open]');
   if(comparison){e.preventDefault();comparison.open=false;comparison.querySelector('summary').focus();return;}
-  if(!s.sheet&&s.part&&!e.target.matches?.('input,select,textarea')){e.preventDefault();clearUnit('[data-wp-unit]');}
+  if(!s.sheet&&s.part&&!e.target.matches?.('input,select,textarea')){e.preventDefault();e.stopPropagation();clearUnit('[data-wp-unit]');}
  },{signal});
  host.addEventListener('pointerleave',()=>{if(!dragged&&!drag?.edge)cancelDrag(false);},{signal});
  globalThis.window?.addEventListener?.('blur',cancelDrag,{signal});
@@ -721,11 +744,13 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const restore=focus.unitId&&focus.projectId===s.base.room.projectId&&s.base.kitchen.units.find(u=>u.id===focus.unitId&&u.runId===focus.runId);
  if(restore){
   const wall=s.base.kitchen.runs.find(r=>r.id===restore.runId)?.wall;
-  s.face=focus.proposalView==='volume'||focus.proposalView==='plan'?focus.proposalView:wall||'plan';
+  s.face=['volume','plan'].includes(focus.proposalView)||walls().some(w=>w.id===focus.proposalView)?focus.proposalView:wall||'plan';
   if(Number.isFinite(focus.yaw))s.yaw=focus.yaw;
   s.frameUnits=focus.frameUnits!==false;
+  for(const [id,state] of Object.entries(focus.views||{}))viewStates.set([epoch,s.alternative,id].join('/'),state);
   openStored(restore.id);
   if(s.face===focus.proposalView)view.restoreCamera(focus.camera);
+  selectionOpener={selector:focus.opener||'[data-wp-canvas] svg'};restoreDesignerOpener(host,selectionOpener);
  }else if(focus.unitId&&focus.projectId===s.base.room.projectId&&s.base.kitchen.units.length){
   openStored();
  }else{render();void resumeDesignDraft();}
@@ -740,7 +765,8 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  dispose.selectionForReturn=()=>{
   if(!usable()||!s.applied||!s.persisted||s.sheet||widthPreview||drag)return null;
   const unit=getDoc().kitchen.units.find(u=>u.id===s.part);
-  return unit?{unitId:unit.id,runId:unit.runId,projectId:s.base.room.projectId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera()}:null;
+  rememberView();const prefix=[epoch,s.alternative,''].join('/'),views=Object.fromEntries([...viewStates].filter(([key])=>key.startsWith(prefix)).map(([key,state])=>[key.slice(prefix.length),state]));
+  return unit?{unitId:unit.id,runId:unit.runId,projectId:s.base.room.projectId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera(),views,opener:captureDesignerOpener(host).selector}:null;
  };
  dispose.commandContext=()=>{
   const savedDesign=s.applied&&s.persisted&&!stale()&&!pending&&!outdated()&&!s.sheet&&!widthPreview&&!drag;
