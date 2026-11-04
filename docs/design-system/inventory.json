@@ -27876,8 +27876,8 @@
       "family": "design",
       "migrationWave": 4,
       "status": "legacy",
-      "bytes": 66598,
-      "sha256": "db0ad7493f9c6d7b0cd3ad684ede03df43b10527ef3ac8550cef765239b1d737",
+      "bytes": 66773,
+      "sha256": "873442760c0c288d7705c21a79288c79d80ffbc387b2a30eecc1ae755fbb3725",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [

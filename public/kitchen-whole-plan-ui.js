@@ -549,7 +549,14 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   }
   if(hit.target){
    const t=hit.target,actions=[];
-   if(s.applied||!ready())actions.push({label:'تحرير '+partTitle(t),run:()=>{if(valid())onAdvance(t.route,t.focus);}});
+   if(s.applied||!ready())actions.push({label:'تحرير '+partTitle(t),run:()=>{
+    if(!valid())return;
+    if(t.route==='unit-part'&&p){
+     s.sheet='';detailContext=null;if(!inspectUnit(p.id,t))return;
+     getSvg()?.focus?.({preventScroll:true});
+    }
+    onAdvance(t.route,t.focus);
+   }});
    actions.push(fit);return {title:partTitle(t),actions};
   }
   if(hit.feature){
