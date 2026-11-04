@@ -37,7 +37,7 @@ export function previewInteractionIntent(doc,intent,session){
   affectedObjects:affected,protectedObjects:(out.protectedUnits||[]).map(u=>({objectId:u.unitId,...u})),
   changedProperties:changes.flatMap(c=>[['widthMm',c.beforeWidthMm,c.afterWidthMm],['startMm',c.beforeStartMm,c.afterStartMm]]
    .filter(([,before,after])=>before!==after).map(([property,before,after])=>({objectId:c.unitId,property,before,after}))),
-  protectedProperties:(out.protectedUnits||[]).map(u=>({objectId:u.unitId,properties:['widthMm','startMm']})),
+  protectedProperties:(out.protectedProperties||[]).map(({unitId,properties})=>({objectId:unitId,properties})),
   constraintReasons:out.ok?[]:[out.reason],unresolvedEvidence:out.notes||[],
   catalogRevision:String(getFactoryCatalog(doc).layoutRevision),
   measurementRevision:stableHash(JSON.stringify([doc.room.fieldRegister||[],doc.room.workshop?.chains||{}])),

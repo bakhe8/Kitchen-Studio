@@ -7,6 +7,7 @@ import {cleanIdea} from '../public/kitchen-ideas.js';
 import {approvalState} from '../public/kitchen-workshop-state.js';
 import {riceSiteKey,currentRiceWarnings} from '../public/kitchen-production-row-rice.js';
 import {describeProposalChange,previewKitchenWidthChange} from '../public/kitchen-proposal-change.js';
+import {createInteractionSession,previewInteractionIntent} from '../public/kitchen-interaction-intent.js';
 
 const doc=makeChainExample(),catalog=seedCatalog();catalog.approved=true;
 for(const item of catalog.items)item.price=item.kind==='panel'?100:10;
@@ -65,6 +66,25 @@ const relay=setup([['target',600],['keep-width',500,{width:true}],['near',450],[
 const take=previewKitchenWidthChange(relay,'target',100);assert(take.ok,take.reason);
 assert.deepEqual(take.donors.map(d=>d.unitId),['near']);assert.equal(take.changes.find(c=>c.unitId==='keep-width').deltaWidthMm,0);
 assert(!take.changes.some(c=>c.unitId==='far'));
+// Catch conflating a personal target override with protected neighbour widths.
+const personal=setup([['target',600,{width:true,position:true}],['keep-width',500,{width:true}],['donor',800]]);
+const personalChange=previewKitchenWidthChange(personal,'target',100,{explicitUserChange:true});
+assert(personalChange.ok,personalChange.reason);
+assert.deepEqual(personalChange.protectedProperties,[
+ {unitId:'target',properties:['startMm']},{unitId:'keep-width',properties:['widthMm']}
+]);
+assert.deepEqual(personalChange.donors.map(d=>d.unitId),['donor']);
+assert.deepEqual(personalChange.doc.room.workshop.rows.R.units.map(e=>[e.id,e.startMm,e.widthMm]),
+ [['target',0,700],['keep-width',700,500],['donor',1200,700]]);
+assert.deepEqual(personalChange.protectedUnits.map(e=>e.unitId),['target'],'position-preservation presentation stays separate');
+for(const inputKind of ['number','grip','button']){
+ const session=createInteractionSession(personal),preview=previewInteractionIntent(personal,{sessionId:session.sessionId,baseRevision:personal,
+  objectId:'target',property:'widthMm',requestedValue:700,referenceEdge:'end',inputKind,explicitUserChange:true},session);
+ assert(preview.ok,preview.reason);
+ assert.deepEqual(preview.protectedProperties,[
+  {objectId:'target',properties:['startMm']},{objectId:'keep-width',properties:['widthMm']}
+ ]);
+}
 const gap=setup([['target',600],['across',900,{},50]]);
 const impossible=previewKitchenWidthChange(gap,'target',100);assert(!impossible.ok);assert.equal(impossible.doc,gap);assert.match(impossible.reason,/100.*مم/);
 const locked=setup([['target',600],['pinned',600,{position:true}],['far',600]]);assert(!previewKitchenWidthChange(locked,'target',100).ok);

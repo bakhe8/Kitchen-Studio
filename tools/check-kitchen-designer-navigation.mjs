@@ -108,3 +108,27 @@ for(const initialSelection of ['another-unit','none'])try{
  returned.close();console.log('PASS drawing context interior: '+initialSelection+' -> cabinet B -> actual unit return, selection/view/cameras/frame/focus.');
 }catch(error){menuFailures.push(error);console.error('FAIL drawing context interior '+initialSelection+': '+error.message);}
 assert.equal(menuFailures.length,0,menuFailures.map(error=>error.message).join('\n'));
+
+// Catch restoring the scene's alternative-specific frame after its toolbar
+// has already rendered with the other alternative's label and pressed state.
+location.href='https://example.test/?panel=workshop&step=whole';assert(saveProject(source));
+{
+ const f=fixture();f.workshop.open('whole');await f.ready();await f.click('[data-wp="generate"]');
+ for(let i=0;i<200&&!f.query('[data-wp-alt="1"]');i++)await new Promise(resolve=>setTimeout(resolve,2));
+ await f.click('[data-wp-view="volume"]');
+ assert(f.query('[data-wp-alt="1"]'),'the real generator offers a second alternative');
+ const cabinetFrame=f.query('[data-wp-canvas] svg').getAttribute('viewBox');
+ await f.click('[data-wp-alt="1"]');await f.click('[data-wp="framing"]');
+ const roomFrame=f.query('[data-wp-canvas] svg').getAttribute('viewBox');
+ const roomScene=f.query('[data-wp-canvas]').innerHTML;
+ for(const alternative of [0,1,0]){
+  await f.click('[data-wp-alt="'+alternative+'"]');
+  const framing=f.query('[data-wp="framing"]');
+  assert.equal(framing.getAttribute('aria-pressed'),alternative===0?'true':'false');
+  assert.equal(framing.getAttribute('aria-label'),alternative===0?'إظهار الغرفة كاملة':'تقريب الدواليب');
+  assert.equal(framing.getAttribute('title'),framing.getAttribute('aria-label'));
+  assert.equal(f.query('[data-wp-canvas] svg').getAttribute('viewBox'),alternative===0?cabinetFrame:roomFrame);
+  if(alternative===1)assert.equal(f.query('[data-wp-canvas]').innerHTML,roomScene);
+ }
+ f.close();console.log('PASS alternative volume frames: scene, framing label/title and pressed state restore together.');
+}

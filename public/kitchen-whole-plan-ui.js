@@ -89,13 +89,17 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const viewId=()=>s.face==='plan'?'plan/'+s.planTier:s.face;
  const cameraKey=()=>[epoch,s.alternative,viewId()].join('/');
  function rememberView(){if(activeView)viewStates.set(activeView,{camera:view.readCamera(),yaw:renderedYaw,frameUnits:renderedFrame});}
+ function resolveViewPresentation(d=drawing()){
+  if(!['volume','plan'].includes(s.face)&&!viewChoices(d).some(w=>w.id===s.face))s.face='volume';
+  const saved=cameraKey()!==activeView&&viewStates.get(cameraKey());
+  if(saved&&s.face==='volume'){s.yaw=saved.yaw;s.frameUnits=saved.frameUnits;}
+  return saved;
+ }
  function paintScene(d=drawing()){
   const canvas=host.querySelector('[data-wp-canvas]');if(!canvas)return;
   const site=inspectedFeature(),p=!site&&s.sheet!=='part'&&usable()?s.part:null,editableUnit=canEdit()&&!s.sheet&&p&&(d===drawing()?facts().units:proposalUnits(d)).find(u=>u.id===p);
-  if(!['volume','plan'].includes(s.face)&&!viewChoices(d).some(w=>w.id===s.face))s.face='volume';
+  const saved=resolveViewPresentation(d);
   const key=cameraKey(),changed=key!==activeView;if(changed)rememberView();
-  const saved=changed&&viewStates.get(key);
-  if(saved&&s.face==='volume'){s.yaw=saved.yaw;s.frameUnits=saved.frameUnits;}
   const scene=proposalScene(d,s.face,'view-proposal',{units:ready()&&d===drawing()&&s.face!=='volume'?facts().units:undefined,yaw:s.yaw,selectedId:site?.id||p,editableUnit,tier:ready()?s.planTier:undefined,interactive:true,frameUnits:ready()&&s.frameUnits});pick=scene.hitTest;volumeTarget=scene.partTarget;
   canvas.innerHTML=scene.html;
   const svg=getSvg();
@@ -265,6 +269,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    const units=facts().units,tiers=units.map(u=>u.tier==='upper'?'upper':'base');
    if(!tiers.includes(s.planTier))s.planTier=tiers[0]||'base';
   }
+  resolveViewPresentation();
   const {tools,editor}=support();
   const side=editor||(usable()?inspector():'');
   const actions=!editor||outdated()?(ready()?resultActions():introActions()):'';

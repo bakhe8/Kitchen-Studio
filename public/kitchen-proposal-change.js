@@ -172,11 +172,17 @@ export function previewKitchenWidthChange(doc,unitId,deltaMm,{withEffects=true,e
  if(anchored(doc,e,target))return fail(doc,'هذا حيز جهاز أو مجلى محجوز بمكانه ومقاسه.');
  if(e.locks.width&&!explicitUserChange)return fail(doc,'عرض هذه الوحدة مثبّت. عدّله من أداة العرض الصريحة أو اسمح بإعادة توزيعه أولًا.');
  const g=kitchenGeometry(doc.kitchen,doc.room),geo=new Map(g.units.map(u=>[u.id,u]));
- const protectedUnits=[];
+ const protectedUnits=[],protectedProperties=[];
  for(const m of members){
   const u=units.get(m.id),f=catalog.families[keyFamily(m,run)],geom=geo.get(m.id);
   if(!u||u.runId!==run.id||!f||!geom||Math.abs(u.u*10-m.startMm)>.001||Math.abs(u.width*10-m.widthMm)>.001||!checkFactorySize(f,m.widthMm,mm(geom.height*10),mm(geom.depth*10)))return fail(doc,'تحتاج إحدى وحدات الصف إلى مطابقة الرسم مع وصفة المصنع. راجع الصف قبل التعديل.');
   if(anchored(doc,m,u)||m.locks.width&&m.locks.position)protectedUnits.push({unitId:m.id,label:label(u,m),startMm:m.startMm,widthMm:m.widthMm});
+  // A personal width lock excludes automatic donation, but the target's
+  // explicit edit overrides that property alone. Position stays protected.
+  const fixed=anchored(doc,m,u),properties=[];
+  if(fixed||m.locks.width&&!(m.id===unitId&&explicitUserChange))properties.push('widthMm');
+  if(fixed||m.locks.position)properties.push('startMm');
+  if(properties.length)protectedProperties.push({unitId:m.id,properties});
  }
  const f=catalog.families[keyFamily(e,run)],width=e.widthMm+deltaMm;
  if(width<200||width>2400||!priceableWidth(f,width))return fail(doc,'عرض '+width+' مم خارج مقاسات '+f.label+'؛ النطاق '+f.minMm+'–'+f.maxMm+' مم بخطوة '+f.stepMm+' مم.');
@@ -216,9 +222,9 @@ export function previewKitchenWidthChange(doc,unitId,deltaMm,{withEffects=true,e
    out.doc={...out.doc,room:{...out.doc.room,workshop:{...out.doc.room.workshop,rows:{...out.doc.room.workshop.rows,
     [run.id]:{...changed,units:changed.units.map(m=>m.id===unitId?{...m,locks:{...m.locks,width:true}}:m)}}}}};
   }
-  if(!withEffects)return out; // During a grip gesture only validate and draw geometry.
+  if(!withEffects)return {...out,protectedProperties}; // During a grip gesture only validate and draw geometry.
   const summary=describeProposalChange(doc,out.doc);
-  return {...out,unitId,...summary,donors:summary.changes.filter(c=>c.unitId!==unitId&&c.deltaWidthMm<0).map(c=>({unitId:c.unitId,label:c.label,amountMm:-c.deltaWidthMm})),protectedUnits};
+  return {...out,unitId,...summary,donors:summary.changes.filter(c=>c.unitId!==unitId&&c.deltaWidthMm<0).map(c=>({unitId:c.unitId,label:c.label,amountMm:-c.deltaWidthMm})),protectedUnits,protectedProperties};
  }
  if(limits.exhausted||alternatives.length>32)return fail(doc,'انتهى حد البحث المحلي دون إثبات تعديل صالح. راجع توزيع الوحدات المجاورة.');
  return fail(doc,reason||'لا يمكن توزيع هذا الفرق بخطوات مقاسات المصنع مع الحفاظ على المواضع المثبّتة والفراغات.');
