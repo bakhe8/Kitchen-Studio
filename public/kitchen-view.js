@@ -16,7 +16,8 @@ import {surveyDoorMark,surveyFloorPointMark,surveyPlanBounds,surveyWallBand} fro
 import {kitchenRoom,kitchenRunPoint,kitchenRunLocal,kitchenRunPolygon,transformFreeRun,createKitchen,kitchenGeometry,kitchenUnitSpecs,kitchenFeatureSpecs,kitchenWallPoint,kitchenWallLocal,addRun,updateRun,addUnit,updateUnit,addFeature,updateFeature,removeKitchenItem,suggestKitchenFix} from './kitchen-model.js';
 import {cadPartTarget,faceComponent,openDrawerIndex} from './kitchen-cad-parts.js';
 import {mountKitchenCreative} from './kitchen-creative.js';
-import {previewKitchenWidthChange,snapFactoryWidthMm,factoryWidthEditable,factoryGeometryReason} from './kitchen-proposal-change.js';
+import {snapFactoryWidthMm,factoryWidthEditable,factoryGeometryReason} from './kitchen-proposal-change.js';
+import {createInteractionSession,previewInteractionIntent,commitInteractionPreview,cancelInteractionSession} from './kitchen-interaction-intent.js';
 import {kitchenFrontFinishes,kitchenWorktopFinishes} from './kitchen-materials.js';
 import {onHorizontal,onWall,onRunAxis,pickVolume,volumeEditOverlay} from './kitchen-volume-edit.js';
 import {renderKitchenRoom} from './kitchen-render.js';
@@ -121,7 +122,8 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  const geom=(k,r)=>{if(geoK!==k||r!==geoRoom){geoCache=kitchenGeometry(k,r);geoK=k;geoRoom=r;}return geoCache;};
  const lookup=(g,s=selected)=>s?(s.kind==='unit'?g.units:s.kind==='feature'?g.features:g.runs).find(x=>x.id===s.id):null;
  const nameOf=(s,e)=>!e?'التفاصيل':s.kind==='unit'?uLabel(e.kind):s.kind==='feature'?featLabel(e.kind):free(e)?runTitle(e,geom(current(),room()).runs):'صف '+tierName(e.tier)+' · '+wn(e.wall);
- const setSelection=(kind,id,show=true)=>{if(factoryPreview?.change.unitId!==id)factoryPreview=null;if(kind!=='unit'||id!==inspectInteriorId)inspectInteriorId=null;selected=id?{kind,id}:null;opened=!!selected&&show;panelStamp='';};
+ function clearFactoryPreview(){if(factoryPreview)cancelInteractionSession(factoryPreview.session);factoryPreview=null;}
+ const setSelection=(kind,id,show=true)=>{if(kind!=='unit'||factoryPreview?.change.unitId!==id)clearFactoryPreview();if(kind!=='unit'||id!==inspectInteriorId)inspectInteriorId=null;selected=id?{kind,id}:null;opened=!!selected&&show;panelStamp='';};
  const pointEvent=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const a=p.matrixTransform(m.inverse());return Number.isFinite(a.x+a.y)?{x:a.x,z:a.y}:null;};
  const nearest=(r,p)=>{const scores=roomArchitecture(r).walls.map(edge=>{const w=edge.id,l=kitchenWallLocal(r,w,p);return {wall:w,...l,dist:Math.hypot(l.d,l.u-clamp(l.u,edge.start,edge.end))};}).sort((a,b)=>a.dist-b.dist);return scores[0];};
  const placeRun=(g,r,p,kind,desired=null)=>{const pool=g.runs.filter(v=>(!kind||kitchenUnitAllowed(kind,v))&&(!desired||v.tier===desired)&&(layer==='all'||v.tier===layer));let best=null;
@@ -399,10 +401,10 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  }
  if(full){quickUI(g,r);panelUI(g,r,k);creative?.refresh(visible&&opened&&tool==='select');}
  }
- function refresh(show=true){syncCreationDefaults();visible=!!show;host.hidden=!visible;if(!visible){testSource=testKitchen=null;contextMenu.close();clearGhost();cancelGesture();creative?.refresh(false);return;}const k=current(),R=room(),rk=[R.width,R.length,R.height,JSON.stringify(R.architecture||null)].join('/');if(k!==prevKitchen||rk!==previousRoomSize){contextMenu.close();if(prevKitchen)ruler=null;clearGhost();prevKitchen=k;previousRoomSize=rk;panelStamp='';}paint(k);}
+ function refresh(show=true){syncCreationDefaults();visible=!!show;host.hidden=!visible;if(!visible){testSource=testKitchen=null;contextMenu.close();clearGhost();cancelGesture();clearFactoryPreview();creative?.refresh(false);return;}if(factoryPreview&&factoryPreview.source!==getProject?.()){clearFactoryPreview();panelStamp='';}if(gesture?.widthSession&&gesture.source!==getProject?.())cancelGesture();const k=current(),R=room(),rk=[R.width,R.length,R.height,JSON.stringify(R.architecture||null)].join('/');if(k!==prevKitchen||rk!==previousRoomSize){contextMenu.close();if(prevKitchen)ruler=null;clearGhost();prevKitchen=k;previousRoomSize=rk;panelStamp='';}paint(k);}
  function drawSoon(){if(!frame)frame=win.requestAnimationFrame(()=>{frame=0;paint(gesture?.result?.ok?gesture.result.kitchen:current(),false);});}
  function endDrag(){const d=gesture;gesture=null;if(rulerMoveFrame)win.cancelAnimationFrame(rulerMoveFrame);rulerMoveFrame=0;rulerPointer=null;delete root.dataset.kDrag;if(frame)win.cancelAnimationFrame(frame);frame=0;if(d)try{if(svg.hasPointerCapture(d.id))svg.releasePointerCapture(d.id);}catch{}return d;}
- function cancelGesture(){clearGhost();if(!gesture)return;const prior=endDrag();lastScene=null;if(visible){paint();if(prior.moved&&prior.kind!=='orbit')note('أُلغي السحب. بقي التصميم كما كان.');}}
+ function cancelGesture(){clearGhost();if(!gesture)return false;const prior=endDrag();if(prior.widthSession)cancelInteractionSession(prior.widthSession);lastScene=null;if(visible){paint();if(prior.moved&&prior.kind!=='orbit')note('أُلغي السحب. بقي التصميم كما كان.');}return true;}
  function reject(reason){const text='لم يُعتمد التغيير: '+(reason||'لا يمكن تنفيذ هذا التعديل هنا.');note(text,'warn');onReject?.(text);return false;}
  function commitKitchenOnly(next,message){
    const issue=factoryGeometryReason(getProject?.(),next);
@@ -425,7 +427,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  commit(res,message,'run',true);
  }
  function foldSmallPalette(){if(win.matchMedia?.('(max-width:650px)')?.matches)q('.kit-palette').open=false;}
- function mode(next){contextMenu.close();if(tool!==next){ruler=null;testSource=testKitchen=null;factoryPreview=null;}foldSmallPalette();clearGhost();cancelGesture();orbit=false;inspectInteriorId=null;tool=next;opened=false;if(next==='test'){selected=null;layer='all';}else if(next==='run'||next==='unit'||next==='feature'){selected=null;layer=next==='run'?tier:next==='unit'?(kitchenUnitAllowed(unitKind,tier)?tier:(kitchenUnitSpecs[unitKind]?.tiers||['base'])[0]):'all';}
+ function mode(next){contextMenu.close();if(tool!==next){ruler=null;testSource=testKitchen=null;clearFactoryPreview();}foldSmallPalette();clearGhost();cancelGesture();orbit=false;inspectInteriorId=null;tool=next;opened=false;if(next==='test'){selected=null;layer='all';}else if(next==='run'||next==='unit'||next==='feature'){selected=null;layer=next==='run'?tier:next==='unit'?(kitchenUnitAllowed(unitKind,tier)?tier:(kitchenUnitSpecs[unitKind]?.tiers||['base'])[0]):'all';}
  else if(next==='select')layer='all';else if(next==='measure')selected=null;
  quickStamp='';panelStamp='';lastScene=null;paint();if(next==='run')note(runPlacement==='free'?'اسحب على الأرض لرسم الجزيرة وتعبئتها، أو أدخل مقاسها في الخصائص.':'اسحب على الجدار من بداية الصف إلى نهايته لتعبئته، أو أدخل المقاس في الخصائص.');if(next==='measure')note(view==='volume'?'اسحب من سطح ظاهر إلى سطح آخر لقياس المسافة.':'اسحب بين نقطتين في المسقط لقياس المسافة الأفقية.');if(next==='test')note('اختر واجهة من الصف العلوي أو السفلي لاختبار الفتح. يمكنك ترك أكثر من واجهة مفتوحة وملاحظة التداخل.');}
  function toggleUnit(u){
@@ -488,10 +490,10 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
    const rawWidth=d.entity.width+loc.u-d.local;
    if(factoryMember(d.entity)){
      if(scoped)return {ok:false,reason:scopedRowReason};
-     const doc=getProject(),widthMm=snapFactoryWidthMm(doc,d.entity.id,rawWidth*10),width=widthMm/10;
+     const doc=d.source,widthMm=snapFactoryWidthMm(doc,d.entity.id,rawWidth*10),width=widthMm/10;
      if(d.factoryDoc===doc&&d.widthMm===widthMm)return d.result;
      d.factoryDoc=doc;d.widthMm=widthMm;
-     const delta=widthMm-Math.round(d.entity.width*10),out=delta?previewKitchenWidthChange(doc,d.entity.id,delta,{withEffects:false,edge:'end'}):{ok:true,doc};
+     const out=previewInteractionIntent(doc,{objectId:d.entity.id,property:'width',requestedValue:widthMm,referenceEdge:'end',explicitUserChange:true,inputKind:'grip'},d.widthSession,{withEffects:false});
      return packageProposal({...out,kitchen:out.doc.kitchen},'unit',out.ok?{...d.entity,...out.doc.kitchen.units.find(u=>u.id===d.entity.id)}:{...d.entity,width},r,k);
    }
    const width=round(rawWidth);return packageProposal(updateUnit(k,r,d.entity.id,{width}),'unit',{...d.entity,width},r,k);}
@@ -700,6 +702,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  }
  function armPointer(e,d,k,q){
    clearGhost();gesture={...d,k,source:getProject?.(),surveyed:d.kind==='move-feature'&&linkedReadingIndex(getRoom?.()||room(),d.entity)>=0,id:e.pointerId,cx:e.clientX,cy:e.clientY,threshold:e.pointerType==='touch'?8:4,q,lastQ:q,last:d.origin||d.anchor||q,moved:false};
+   if(d.kind==='resize'&&factoryMember(d.entity)&&!scoped){clearFactoryPreview();gesture.widthSession=createInteractionSession(gesture.source);}
    try{svg.setPointerCapture(e.pointerId);}catch{}svg.focus?.({preventScroll:true});e.preventDefault();
    if(d.kind==='measure')paintRuler();
    if(d.kind==='place'){const r=room();showGhost(placementAt(k,r,geom(k,r),d.scene||null,q));}
@@ -707,7 +710,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  const withinCanvas=e=>{const b=svg.getBoundingClientRect?.();return !b||!Number.isFinite(b.right)||e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom;};
  function readDrag(d,e){
  if((d.kind==='place'||d.kind==='run-depth'||d.kind==='site-point'||d.kind==='move-feature')&&!withinCanvas(e)){d.outsideStage=true;d.result=null;clearGhost();return;}d.outsideStage=false;
- if(d.k!==current()){cancelGesture();return;}const q=pointEvent(e);if(!q){d.result=null;return;}d.lastQ=q;
+ if(d.k!==current()||d.widthSession&&d.source!==getProject?.()){cancelGesture();return;}const q=pointEvent(e);if(!q){d.result=null;return;}d.lastQ=q;
  const dx=e.clientX-d.cx,dy=e.clientY-d.cy;if(!d.moved&&Math.hypot(dx,dy)<d.threshold)return;d.moved=true;root.dataset.kDrag=d.kind;
  if(d.kind==='inspect-part')return;
  if(d.kind==='measure'){d.b=withinCanvas(e)?measureHit(d.scene||null,q,room()):null;paintRuler();return;}
@@ -929,6 +932,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  on(svg,'pointerup',e=>{
  if(!gesture||gesture.id!==e.pointerId)return;if(!simple(e)||e.buttons!==0){cancelGesture();return;}
  readDrag(gesture,e);const d=endDrag();clearGhost();if(!d)return;const k=current(),r=room(),g=geom(k,r);e.preventDefault();lastScene=null;
+ if(d.widthSession&&(!d.moved||d.invalid||!d.result?.ok))cancelInteractionSession(d.widthSession);
  if(!d.moved&&d.inspect){if(!d.source||getProject?.()===d.source)inspectPicked(d.inspect);return;}
  if(d.kind==='inspect-part')return;
  if(d.kind==='site-point'){
@@ -967,7 +971,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  }
  if(d.moved){if(d.invalid){reject(d.notice);paint();return;}
  if(d.result){if(!d.result.ok){reject(d.notice||d.result.reason);paint();return;}
- if(d.factoryDoc){previewFactoryWidth(d.entity,d.widthMm,'end');return;}
+ if(d.factoryDoc){previewFactoryWidth(d.entity,d.widthMm,'end',d.widthSession);return;}
  if(d.kind==='island-draw'||d.kind==='run')finishNewRow(d.result);
  else {setSelection(d.s.kind,d.s.id,true);commit(d.result,d.run?.autoFill&&['resize','move-unit'].includes(d.kind)?'ثُبّت تخصيص الوحدة وأُعيد توزيع الباقي.':d.kind==='run-depth'?'حُفظ عمق الصف ال'+tierName(d.run.tier)+': '+cm(d.depthValue)+'.':d.kind==='resize'?'تغيّر عرض الوحدة ضمن الفراغ المتاح.':d.kind==='island-move'?'نُقلت الجزيرة بوحداتها وسطحها.':d.kind==='island-rotate'?'دارت الجزيرة ووحداتها حول مركزها.':'نُقلت القطعة إلى موضعها الجديد.');}return;}
  paint();return;
@@ -1010,20 +1014,20 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  const which=e.target.dataset.kChoice,val=e.target.value;if(!which)return;contextMenu.close();clearGhost();
  if(which==='run-placement'){runPlacement=val==='free'?'free':'wall';if(runPlacement==='free')tier='base';layer=tier;setSelection(null);note(runPlacement==='free'?'اسحب في أرضية الغرفة لرسم الجزيرة بأي اتجاه.':'اسحب على امتداد الجدار لتحديد الصف.');}else if(which==='wall-depth'){const v=e.target.valueAsNumber;if(!Number.isFinite(v)||v<15||v>150){note('عمق الصف بين ١٥ و١٥٠ سم.','warn');e.target.value=String(wallDepth[tier]);return;}wallDepth[tier]=v;}else if(which==='island-depth'){const v=e.target.valueAsNumber;if(!Number.isFinite(v)||v<15||v>150){note('اختر عمقًا بين ١٥ و١٥٠ سم.','warn');e.target.value=String(freeDepth);return;}freeDepth=v;}else if(which==='tier'){tier=val;layer=val;}else if(which==='unit-tier'){tier=val;layer=val;}else if(which==='unit'){unitKind=val;if(!kitchenUnitAllowed(val,layer))tier=layer=(kitchenUnitSpecs[val]?.tiers||['base'])[0];wantWidth=null;}else if(which==='width'){const w=e.target.valueAsNumber;if(!Number.isFinite(w)||w<20||w>240){note('أدخل عرضًا بين ٢٠ و٢٤٠ سم.','warn');return;}wantWidth=w;}
  else if(which==='feature')featKind=val;else if(which==='test-layer'){layer=ownKey(layerNames,val)?val:'all';selected=null;opened=false;note((view==='volume'?'طبقة الاختبار: ':'الطبقة المعروضة للاختبار: ')+layerNames[layer]+'.');}else if(which==='layer')layer=val;quickStamp='';panelStamp='';paint();});
- function previewFactoryWidth(unit,widthMm,edge){
+ function previewFactoryWidth(unit,widthMm,edge,session=null){
    if(scoped){reject(scopedRowReason);return;}
-   const source=getProject(),delta=widthMm-Math.round(unit.width*10);
-   factoryPreview=null;panelStamp='';
+   const source=getProject(),active=session||createInteractionSession(source);
+   clearFactoryPreview();panelStamp='';
    setSelection('unit',unit.id,true);
-   if(!delta){paint();note('هذا هو العرض المحفوظ.');return;}
-   const change=previewKitchenWidthChange(source,unit.id,delta,{edge,explicitUserChange:true,inputKind:edge?'grip':'number'});
-   if(!change.ok){paint();reject(change.reason);return;}
-   factoryPreview={source,change};paint();note('راجع الوحدات المتأثرة ثم طبّق التعديل.');
+   const change=previewInteractionIntent(source,{objectId:unit.id,property:'width',requestedValue:widthMm,referenceEdge:edge??null,explicitUserChange:true,inputKind:edge?'grip':'number'},active);
+   if(!change.ok){cancelInteractionSession(active);paint();reject(change.reason);return;}
+   if(!change.changed){cancelInteractionSession(active);paint();note('هذا هو العرض المحفوظ.');return;}
+   factoryPreview={source,change,session:active};paint();note('راجع الوحدات المتأثرة ثم طبّق التعديل.');
  }
  on(body,'input',e=>{
    if(ghost)clearGhost();
    if(factoryPreview&&e.target?.name==='widthMm'){
-     factoryPreview=null;
+     clearFactoryPreview();
      const confirm=body.querySelector('[data-k-act="confirm-factory-width"]');
      if(confirm)confirm.closest('section')?.remove();
    }
@@ -1125,14 +1129,22 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
   note('تُزال القراءة من ورقة الجدار حتى تتحدّث الفتحة وحصرها معًا.');onSurveyReading?.(obj.wall,obj.id);return;
  }
  if(act==='factory-row'&&factoryMember(obj)){if(scoped)scopedLayouts();else onFactoryRow?.(obj.runId);return;}
- if(act==='cancel-factory-width'){factoryPreview=null;panelStamp='';paint();return;}
+ if(act==='cancel-factory-width'){clearFactoryPreview();panelStamp='';paint();return;}
  if(act==='confirm-factory-width'){
    if(scoped){reject(scopedRowReason);return;}
-   if(!factoryPreview||factoryPreview.source!==getProject()||factoryPreview.change.unitId!==obj?.id){factoryPreview=null;panelStamp='';paint();reject('تغيّر المشروع. أعد معاينة عرض الوحدة.');return;}
+   if(!factoryPreview||factoryPreview.source!==getProject()||factoryPreview.change.unitId!==obj?.id){clearFactoryPreview();panelStamp='';paint();reject('تغيّر المشروع. أعد معاينة عرض الوحدة.');return;}
    if(factoryPreview.change.hold){reject(factoryPreview.change.hold);return;}
-   const next=factoryPreview.change.doc,out=onCommitProject(next,'حُفظ مقاس الوحدة والوحدات المتأثرة وحصر صف المصنع.');
-   if(out?.ok===false){reject(out.reason);return;}
-   factoryPreview=null;panelStamp='';paint();note('حُفظ مقاس الوحدة وأُعيد حساب صف المصنع.');return;
+   const pending=factoryPreview,accepted=commitInteractionPreview(pending.change,pending.session,getProject());
+   if(!accepted.ok){clearFactoryPreview();panelStamp='';paint();reject(accepted.reason);return;}
+   const out=onCommitProject(accepted.doc,'حُفظ مقاس الوحدة والوحدات المتأثرة وحصر صف المصنع.');
+   if(out?.ok===false){
+    // Persistence is a separate transaction. A failed save may be retried only
+    // after rebuilding a fresh preview on the still-current source document.
+    clearFactoryPreview();
+    if(getProject()===pending.source){const session=createInteractionSession(pending.source),change=previewInteractionIntent(pending.source,pending.change.intent,session);if(change.ok)factoryPreview={source:pending.source,change,session};else cancelInteractionSession(session);}
+    panelStamp='';paint();reject(out.reason);return;
+   }
+   clearFactoryPreview();panelStamp='';paint();note('حُفظ مقاس الوحدة وأُعيد حساب صف المصنع.');return;
  }
  if(act==='window-upstand'&&selected?.kind==='feature'&&obj?.kind==='window'){
   const form=body.querySelector('[data-k-form="site-feature"],[data-k-form="survey-feature"],[data-k-form="preview-survey-feature"]');
@@ -1166,8 +1178,13 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  if(act==='add-in-run'){if(requireSurvey?.())return;tier=obj.tier;mode('unit');layer=obj.tier;if(!kitchenUnitAllowed(unitKind,tier))unitKind=Object.keys(kitchenUnitSpecs).find(k=>kitchenUnitAllowed(k,tier))||'storage';wantWidth=null;quickStamp='';paint();return;}
  if(act==='remove'){const name=nameOf(selected,obj),held=selected.kind==='unit'&&g.runs.find(row=>row.id===obj.runId)?.autoFill,a=removeKitchenItem(k,obj.id,r);if(!a.ok){reject(a.reason);return;}cancelGesture();setSelection(null);commit(a,'حُذف '+name+(held?' وتُرك مكانها فارغًا.':'.')+' يمكن التراجع عن الحذف.');}
  });
- on(root,'keydown',e=>{if(e.key==='Escape'&&(ghost||hoverFrame||previewNote&&!previewNote.hidden))clearGhost();});
- on(svg,'keydown',e=>{if(e.key==='Escape'){cancelGesture();if(orbit){orbit=false;quickStamp='';lastScene=null;}opened=false;panel.hidden=true;paint();return;}if(!gesture&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&['+','=','-','0'].includes(e.key)){
+ on(root,'keydown',e=>{
+  if(e.key!=='Escape'||e.defaultPrevented)return;
+  if(gesture){e.preventDefault();cancelGesture();return;}
+  if(factoryPreview){e.preventDefault();clearFactoryPreview();panelStamp='';paint();note('أُلغيت معاينة المقاس. بقي التصميم كما كان.');return;}
+  if(ghost||hoverFrame||previewNote&&!previewNote.hidden)clearGhost();
+ });
+ on(svg,'keydown',e=>{if(e.key==='Escape'){e.preventDefault();if(cancelGesture())return;if(factoryPreview){clearFactoryPreview();panelStamp='';paint();note('أُلغيت معاينة المقاس. بقي التصميم كما كان.');return;}if(orbit){orbit=false;quickStamp='';lastScene=null;paint();return;}opened=false;panel.hidden=true;paint();return;}if(!gesture&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&['+','=','-','0'].includes(e.key)){
    e.preventDefault();if(e.key==='0')viewport.reset();else viewport.zoomBy(e.key==='-'?1/1.25:1.25);return;
  }if(view!=='volume')return;const s=e.shiftKey?30:10,d={ArrowRight:[s,0],ArrowLeft:[-s,0],ArrowUp:[0,s],ArrowDown:[0,-s]}[e.key];if(!d&&e.key!=='Home')return;e.preventDefault();cancelGesture();camera=d?{yaw:(camera.yaw+d[0]+360)%360,pitch:clamp(camera.pitch+d[1],-60,72)}:{yaw:32,pitch:25};lastScene=null;paint();});
  function resetKitchen(){emptyRequest=null;check.hidden=true;cancelGesture();setSelection(null);mode('select');onCommit(createKitchen(getPlan(),'empty'),'بدأ مطبخ فارغ.');paint();}

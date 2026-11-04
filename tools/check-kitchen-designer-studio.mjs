@@ -7,6 +7,8 @@ import {makeVisitExample} from './fixture-kitchen-visit-example.mjs';
 import {proposeWholeKitchen} from '../public/kitchen-whole-plan.js';
 import {proposalUnits} from '../public/kitchen-proposal-presentation.js';
 import {flushUnsavedWork} from '../public/kitchen-unsaved-work.js';
+import {addRun,addKitchenUnitRaw} from '../public/kitchen-model.js';
+import {sheetSelector} from '../public/kitchen-sheet-target.js';
 
 class Store{
  data=new Map();get length(){return this.data.size;}key(i){return [...this.data.keys()][i]??null;}
@@ -31,12 +33,12 @@ const source=structuredClone(generated.candidates[0].doc);source.room.projectId=
 const units=proposalUnits(source),rice=units.find(u=>u.family==='rice'),storage=units.find(u=>u.runId===rice.runId&&u.family==='storage');
 assert(rice&&storage);assert.equal(rice.widthMm,600);assert.equal(storage.widthMm,900);
 
-function fixture(initial=source,{resume=false,store=new Store(),writable=true}={}){
+function fixture(initial=source,{resume=false,store=new Store(),writable=true,returnFocus=null}={}){
  globalThis.localStorage=store;
- let live=structuredClone(initial),saves=0,markup='',input=null,dispose,back=null,forward=null,renders=0;
- const listeners=new Map(),notices=[],historyCalls=[],nodes=new Map(),captures=new Set(),svgAttrs=new Map();
+ let live=structuredClone(initial),saves=0,markup='',input=null,dispose,back=null,forward=null,renders=0,focused=null;
+ const listeners=new Map(),notices=[],historyCalls=[],advances=[],nodes=new Map(),captures=new Set(),svgAttrs=new Map();
  const plainNode=()=>({hidden:false,textContent:'',style:{setProperty(){}},classList:{add(){},remove(){},toggle(){},contains(){return false;}},
-  focus(){this.focused=true;},select(){},scrollIntoView(){},setAttribute(){},getAttribute(){return null;},removeAttribute(){},querySelector(){return null;},querySelectorAll(){return [];},getBoundingClientRect(){return {left:0,top:0,width:900,height:500,right:900,bottom:500};}});
+  focus(){this.focused=true;focused=this;},select(){},scrollIntoView(){},setAttribute(){},getAttribute(){return null;},removeAttribute(){},querySelector(){return null;},querySelectorAll(){return [];},getBoundingClientRect(){return {left:0,top:0,width:900,height:500,right:900,bottom:500};}});
  const svg={...plainNode(),dataset:{},isConnected:true,
   getAttribute:key=>svgAttrs.get(key),setAttribute:(key,value)=>svgAttrs.set(key,String(value)),getScreenCTM:()=>({inverse:()=>identity}),
   createSVGPoint:()=>new DOMPoint(),contains:target=>target===svg||target?.canvas===canvas};
@@ -58,6 +60,8 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
    if(selector==='[name="widthMm"]'||selector==='input[name="widthMm"]')return input;
    if(selector==='[data-width-change]')return input?form:null;
    if(selector==='[data-plan-controls]'||selector==='.pd-compare[open]')return null;
+   if(selector==='[data-pd-open]'&&!markup.includes('data-pd-open'))return null;
+   const action=selector.match(/^\[data-wp="([^"]+)"\]$/)?.[1];if(action&&!markup.includes('data-wp="'+action+'"'))return null;
    if(!nodes.has(selector))nodes.set(selector,plainNode());return nodes.get(selector);
   },
   querySelectorAll(){return [];},
@@ -78,6 +82,8 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
  const action=wp=>fire('click',button({wp}));
  const view=wpView=>fire('click',button({wpView}));
  const choose=id=>fire('change',{value:id,closest:()=>null,matches:selector=>selector==='[data-wp-unit]'});
+ const artwork=attrs=>fire('click',{canvas,dataset:attrs,getAttribute:key=>Object.entries(attrs).find(([name])=>'data-'+name.replace(/[A-Z]/g,c=>'-'+c.toLowerCase())===key)?.[1],
+  closest(selector){return selector==='[data-wp-canvas]'?canvas:selector===sheetSelector?this:null;}});
  async function type(raw){assert(input,'selected editable unit supplies a real width field');input.value=raw;await fire('input',input);flushFrames();}
  function rect(id){
   const tag=[...canvas.markup.matchAll(/<rect\b([^>]*)>/g)].map(m=>attributes(m[1])).find(a=>a['data-sheet-unit']===id&&a['data-sheet-tier']);
@@ -96,23 +102,26 @@ function fixture(initial=source,{resume=false,store=new Store(),writable=true}={
   const preview=rect(rice.id);
   await fire(end,end==='lostpointercapture'?canvas:g.target,{pointerType,clientX:g.dx*factor,clientY:g.dy*factor});flushFrames();return preview;
  }
- const options={getDoc:()=>live,canEdit:()=>writable,apply(next){back=live;forward=null;live=next;saves++;return {ok:true,saved:true};},tell:message=>notices.push(message),onAdvance(){},
-  canHistory:next=>!!(next?forward:back),onHistory(next){
+ const options={getDoc:()=>live,canEdit:()=>writable,apply(next){back=live;forward=null;live=next;saves++;return {ok:true,saved:true};},tell:message=>notices.push(message),onAdvance(step,focus){advances.push({step,focus,origin:dispose.selectionForReturn()});},
+  canHistory:next=>!!(next?forward:back),onHistory(next,origin){
    historyCalls.push(next);if(next&&forward){back=live;live=forward;forward=null;}else if(!next&&back){forward=live;live=back;back=null;}
    // The real workshop refreshes the designer after its project-history owner
    // changes the document. Keep that lifecycle boundary in this host too.
-   dispose();dispose=mountWholePlan(host,{...options,focus:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'}});
+   dispose();dispose=mountWholePlan(host,{...options,focus:origin||{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'}});
    return {ok:true,saved:true};
   },
-  focus:resume?{}:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'}};
+  focus:returnFocus||(resume?{}:{unitId:rice.id,runId:rice.runId,projectId:live.room.projectId,proposalView:'back'})};
  dispose=mountWholePlan(host,options);
- return {host,canvas,svg,listeners,nodes,notices,historyCalls,store,fire,action,view,choose,type,rect,grip,drag,
+ return {host,canvas,svg,listeners,nodes,notices,historyCalls,advances,store,fire,action,view,choose,artwork,type,rect,grip,drag,
   submit:()=>fire('submit',form),get input(){return input;},get live(){return live;},get saves(){return saves;},get controller(){return dispose;},
-  get renders(){return renders;},set writable(value){writable=value;},destroy(){dispose();}};
+  get renders(){return renders;},get focused(){return focused;},set writable(value){writable=value;},destroy(){dispose();}};
 }
 
 // Missing preview routing fails on geometry, rather than a CSS/snapshot check.
 const f=fixture(),baseline=JSON.stringify(f.live),baseRect=f.rect(rice.id),otherRect=f.rect(storage.id);
+const widthPin=(doc,id=rice.id)=>doc.room.workshop.rows[rice.runId].units.find(u=>u.id===id).locks.width;
+assert.equal(widthPin(f.live),false);
+await f.type('600');await f.submit();assert(!f.controller.hasPending());assert.equal(JSON.stringify(f.live),baseline,'an unchanged value creates neither a pin nor a draft transaction');
 await f.type('٧٠٠');
 assert(f.rect(rice.id).width>baseRect.width,'raw numeric input previews the changed unit geometry before submission');
 assert(f.rect(storage.id).width<otherRect.width,'the preview uses the real factory neighbour transfer');
@@ -130,14 +139,52 @@ for(const raw of ['', 'خطأ', '٦٥٥', '9000']){
  await f.action('apply');assert.equal(f.saves,0);await f.action('design-undo');assert.equal(f.historyCalls.length,0);
  await f.action('cancel-width');assert.equal(f.input.value,'600');assert.deepEqual(f.rect(rice.id),baseRect);
 }
+await f.type('700');await f.type('655');await f.submit();
+assert.deepEqual(f.rect(rice.id),baseRect,'an invalid request replaces the older valid geometry');
+await f.type('800');await f.submit();assert.equal(f.input.value,'800','a failed stage remains correctable within the same edit');
+await f.action('design-undo');assert.equal(f.input.value,'600');assert(!f.controller.hasPending(),'correction contributes exactly one history entry');
+await f.type('700');await f.type('600');await f.submit();
+assert(!f.controller.hasPending());assert.deepEqual(f.rect(rice.id),baseRect,'returning to the current value cancels the older valid candidate');
+assert.equal(JSON.stringify(f.live),baseline);
 await f.type('700');await f.submit();assert.equal(f.input.value,'700');assert(f.controller.hasPending());assert.equal(f.saves,0);
 await f.action('design-undo');assert.equal(f.input.value,'600');assert(!f.controller.hasPending());assert.equal(f.historyCalls.length,0);
 await f.action('design-redo');assert.equal(f.input.value,'700');assert(f.controller.hasPending());assert.equal(f.saves,0);
 await f.action('apply');assert.equal(f.saves,1);assert.equal(f.live.kitchen.units.find(u=>u.id===rice.id).width,70);assert(!f.controller.hasPending());
+assert.equal(widthPin(f.live),true);assert.equal(widthPin(f.live,storage.id),false,'a dependent neighbour remains automatic');
 await f.action('design-undo');assert.deepEqual(f.historyCalls,[false],'saved history is delegated to its authoritative owner');assert.equal(f.live.kitchen.units.find(u=>u.id===rice.id).width,60);
+assert.equal(widthPin(f.live),false,'undo restores the original pin together with the geometry');
 await f.action('design-redo');assert.deepEqual(f.historyCalls,[false,true]);assert.equal(f.live.kitchen.units.find(u=>u.id===rice.id).width,70);
+assert.equal(widthPin(f.live),true);
 f.destroy();assert([...f.listeners.values()].every(list=>!list.length),'destruction removes both controller and drawing listeners');
 console.log('Designer controller: raw preview, invalid input and transition guards, cancel, local undo/redo, explicit apply and persisted-history delegation.');
+
+const width=fixture(),widthBase=width.rect(rice.id),widthSource=JSON.stringify(width.live);
+const zeroGrip=width.grip('end');await width.fire('pointerdown',zeroGrip.target);
+await width.fire('pointermove',zeroGrip.target,{clientX:zeroGrip.dx/6,clientY:zeroGrip.dy/6});flushFrames();
+assert.equal(width.rect(rice.id).width,70);
+await width.fire('pointermove',zeroGrip.target,{clientX:0,clientY:0});flushFrames();
+await width.fire('pointerup',zeroGrip.target,{clientX:0,clientY:0});
+assert.deepEqual(width.rect(rice.id),widthBase);assert(!width.controller.hasPending());assert.equal(JSON.stringify(width.live),widthSource,'a width grip returned to its origin is a no-op');
+const firstWidthPreview=await width.drag('end',1/6);
+assert.deepEqual(width.rect(rice.id),firstWidthPreview,'release accepts the geometry shown during the width grip');assert.equal(width.input.value,'700');
+for(const end of ['pointercancel','Escape','lostpointercapture']){
+ const grip=width.grip('end');await width.fire('pointerdown',grip.target);
+ await width.fire('pointermove',grip.target,{clientX:grip.dx/7,clientY:grip.dy/7});flushFrames();
+ assert.equal(width.rect(rice.id).width,80,'the already-pinned width remains explicitly editable in its live preview');
+ if(end==='Escape')await width.fire('keydown',width.svg,{key:'Escape'});
+ else await width.fire(end,end==='lostpointercapture'?width.canvas:grip.target);
+ assert.deepEqual(width.rect(rice.id),firstWidthPreview,end+' discards the active width session');
+ await width.fire('pointerup',grip.target,{clientX:grip.dx/7,clientY:grip.dy/7});
+ assert.equal(width.input.value,'700','a late release cannot revive the cancelled width');
+}
+const secondWidthPreview=await width.drag('end',1/7);assert.deepEqual(width.rect(rice.id),secondWidthPreview);assert.equal(width.input.value,'800');
+assert.equal(width.saves,0);assert.equal(JSON.stringify(width.live),widthSource);
+await width.action('design-undo');assert.equal(width.input.value,'700');
+await width.action('design-undo');assert.equal(width.input.value,'600');assert(!width.controller.hasPending(),'each completed width grip creates one transaction; cancellations create none');
+await width.action('design-redo');await width.action('design-redo');await width.action('apply');
+assert.equal(width.saves,1);assert.equal(width.live.kitchen.units.find(u=>u.id===rice.id).width,80);
+assert.equal(widthPin(width.live),true);assert.equal(widthPin(width.live,storage.id),false);
+width.destroy();console.log('Designer width grips: no-op, explicit pinned preview, cancel and late release, one transaction per drag, atomic width/pin application.');
 
 const m=fixture(),moveBase=m.rect(rice.id),moveOriginal=JSON.stringify(m.live);
 const preview=await m.drag('move',1.25,{end:'pointercancel'});assert(preview.x>moveBase.x,'moving the unit previews a real reorder');
@@ -228,3 +275,39 @@ const cleanReopen=fixture(savedSource,{store:cancelStore,resume:true});await Pro
 assert(!cleanReopen.controller.hasPending(),'a cancelled raw preview cannot revive when the saved project reopens');
 assert.equal(cleanReopen.live.kitchen.units.find(u=>u.id===rice.id).width,70);assert.equal(cleanReopen.saves,0);cleanReopen.destroy();
 console.log('Designer recovery: readonly opening preserves but does not replay drafts; cancelling a raw preview removes recovery state before reopening.');
+
+const context=fixture(),contextSource=JSON.stringify(context.live);
+await context.fire('keydown',context.svg,{key:'+'});
+const elevationContext=context.controller.selectionForReturn();assert(elevationContext.camera.zoom>1);
+await context.action('details');assert(context.host.innerHTML.includes('data-pd-open'));assert.equal(context.focused,context.host.querySelector('[data-pd-open]'));
+await context.action('close-sheet');assert.equal(context.focused,context.host.querySelector('[data-wp="details"]'),'closing a detail sheet returns keyboard focus to its opener');
+assert.deepEqual(context.controller.selectionForReturn(),elevationContext,'opening details does not change selection or camera');
+await context.artwork({sheetWorktop:rice.runId});assert(context.host.innerHTML.includes('data-pd-open'));
+await context.action('close-sheet');assert.equal(context.focused,context.svg,'a detail opened from artwork returns focus to the drawing instead of a missing toolbar control');
+await context.action('details');await context.fire('keydown',context.host.querySelector('[data-pd-open]'),{key:'Escape'});
+assert(!context.host.innerHTML.includes('data-pd-open'),'Escape closes one open detail layer');
+assert.equal(context.controller.selectionForReturn().unitId,rice.id,'closing the layer preserves the selected object');
+assert.equal(context.focused,context.host.querySelector('[data-wp="details"]'));
+await context.fire('keydown',context.svg,{key:'Escape'});assert.equal(context.controller.selectionForReturn(),null,'the next Escape clears the selection');
+await context.choose(rice.id);
+await context.view('plan');assert.equal(context.controller.selectionForReturn().unitId,rice.id);
+await context.fire('keydown',context.svg,{key:'+'});await context.fire('keydown',context.svg,{key:'+'});
+const planContext=context.controller.selectionForReturn();assert(planContext.camera.zoom>elevationContext.camera.zoom);
+await context.view('back');assert.deepEqual(context.controller.selectionForReturn().camera,elevationContext.camera,'returning to the elevation restores its zoom and pan');
+await context.view('plan');assert.deepEqual(context.controller.selectionForReturn().camera,planContext.camera,'each projection retains an independent camera');
+await context.view('volume');await context.action('rotate');await context.action('framing');await context.fire('keydown',context.svg,{key:'+'});
+await context.artwork({sheetUnit:storage.id,sheetPart:'inside'});await context.action('edit-part');
+const interior=context.advances.at(-1);assert.equal(interior.step,'unit-part');assert.equal(interior.focus.part,'inside');assert.equal(interior.origin.unitId,storage.id);
+const returnContext=interior.origin;assert.equal(returnContext.proposalView,'volume');assert.equal(returnContext.frameUnits,false);assert.equal(returnContext.yaw,108);
+const returned=fixture(context.live,{returnFocus:returnContext});
+assert.deepEqual(returned.controller.selectionForReturn(),returnContext,'returning from the interior restores the object, projection, framing and camera');
+assert(returned.focused===returned.input||returned.focused===returned.svg,'the returned object receives a usable keyboard focus');
+await returned.view('back');assert.deepEqual(returned.controller.selectionForReturn().camera,elevationContext.camera,'the return snapshot also keeps other view cameras');
+returned.destroy();assert.equal(JSON.stringify(context.live),contextSource);assert.equal(context.saves,0);context.destroy();
+
+const frontRun=addRun(source.kitchen,source.room,{id:'context-front',wall:'front',tier:'base',start:100,end:160,depth:60,height:86});assert(frontRun.ok,frontRun.reason);
+const frontUnit=addKitchenUnitRaw(frontRun.kitchen,source.room,{id:'context-front-unit',runId:'context-front',kind:'storage',u:100,width:60});assert(frontUnit.ok,frontUnit.reason);
+const multiple=fixture({...source,kitchen:frontUnit.kitchen});await multiple.view('front');
+assert.equal(multiple.input,null,'an elevation never shows editing controls for an object on another wall');
+await multiple.view('back');assert.equal(multiple.controller.selectionForReturn().unitId,rice.id,'returning to the source wall restores its selected object');
+multiple.destroy();console.log('Designer context: detail focus, staged Escape, stable object identity, per-view cameras and interior-return snapshots.');

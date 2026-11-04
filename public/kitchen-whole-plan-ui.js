@@ -12,7 +12,8 @@ import {savedProjectText} from './kitchen-project.js';
 import {writeDraft,readDraft,clearDraft} from './kitchen-draft-store.js';
 import {registerUnsavedWork} from './kitchen-unsaved-work.js';
 import {proposeWholeKitchen,reviewWholeProposal} from './kitchen-whole-plan.js';
-import {previewKitchenWidthChange,previewKitchenUnitMove,snapFactoryWidthMm} from './kitchen-proposal-change.js';
+import {previewKitchenUnitMove,snapFactoryWidthMm} from './kitchen-proposal-change.js';
+import {createInteractionSession,previewInteractionIntent,commitInteractionPreview,cancelInteractionSession} from './kitchen-interaction-intent.js';
 import {mountDesignerPrecision} from './kitchen-designer-precision.js';
 import {decorateDesignerStudio,positionDesignerHud} from './kitchen-designer-studio.js';
 import {budgetHold} from './kitchen-layout-brief.js';
@@ -46,6 +47,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const s=newSession(getDoc());
  let pending=false,epoch=0,error='',pick=null,volumeTarget=null,drag=null,dragged=false,questionList=[],computed=null,rotationFrame=0;
  let draftTimer=0,draftSaved=true,resuming=false,discarded=false,widthPreview=null,redos=[],precision=null,resizeObserver=null;
+ const viewContexts=new Map();let paintedView=null,paintedScope=null,sheetOpener=null;
  const stale=()=>s.base!==getDoc();
  const candidate=()=>s.model?.candidates[s.alternative],history=()=>s.histories[s.alternative]||[],last=()=>history().at(-1);
  const drawing=()=>last()?.doc||candidate()?.doc||s.base;
@@ -76,6 +78,30 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const getSvg=()=>getCanvas()?.querySelector?.('svg');
  const view=mountDrawingViewport(host,{getSvg,canNavigate:()=>!drag,cancelGesture:cancelDrag,onViewChange:()=>positionDesignerHud(host)});
  const menu=mountDrawingContext(host,{getSvg,actionsAt:contextActions,cancelGesture:cancelDrag});
+ const contextKey=(face=s.face,tier=s.planTier,frameUnits=s.frameUnits)=>JSON.stringify([face,face==='plan'?tier:null,face==='volume'?frameUnits&&ready():null]);
+ const visibleInView=(unit,face=s.face,tier=s.planTier)=>!!unit&&(face==='volume'||face==='plan'?(face!=='plan'||(unit.tier==='upper'?'upper':'base')===tier):unit.wall===face);
+ function rememberView(){if(paintedView)viewContexts.set(paintedView,{camera:view.readCamera(),unitId:s.part||null});}
+ function restoreViewSelection(){
+  const saved=viewContexts.get(contextKey()),unit=saved&&facts().units.find(u=>u.id===saved.unitId&&visibleInView(u));
+  s.part=unit?.id||'';s.pickedPart=null;error='';
+ }
+ function restoreViewContexts(saved){
+  if(!Array.isArray(saved))return;
+  const valid=new Set([contextKey('volume','base',true),contextKey('volume','base',false),contextKey('plan','base'),contextKey('plan','upper'),...walls().map(w=>contextKey(w.id))]);
+  for(const entry of saved.slice(0,40)){
+   if(!entry||!valid.has(entry.key)||![entry.camera?.zoom,entry.camera?.x,entry.camera?.y].every(Number.isFinite))continue;
+   const unit=facts().units.find(u=>u.id===entry.unitId);
+   viewContexts.set(entry.key,{camera:{zoom:entry.camera.zoom,x:entry.camera.x,y:entry.camera.y},unitId:unit?.id||null});
+  }
+ }
+ function objectContext(unit){
+  rememberView();return {unitId:unit.id,runId:unit.runId,projectId:s.base.room.projectId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera(),
+   views:[...viewContexts].map(([key,value])=>({key,camera:{...value.camera},unitId:value.unitId||null}))};
+ }
+ function focusControl(selector){
+  const target=host.querySelector(selector),available=target&&!target.disabled&&!target.hidden&&target.isConnected!==false&&(!target.getClientRects||target.getClientRects().length);
+  (available?target:getSvg())?.focus?.({preventScroll:true});
+ }
  function paintScene(d=drawing()){
   const canvas=host.querySelector('[data-wp-canvas]');if(!canvas)return;
   const site=inspectedFeature(),p=!site&&s.sheet!=='part'&&usable()?s.part:null,editableUnit=canEdit()&&!s.sheet&&p&&(d===drawing()?facts().units:proposalUnits(d)).find(u=>u.id===p);
@@ -83,7 +109,14 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   const scene=proposalScene(d,s.face,'view-proposal',{units:ready()&&d===drawing()&&s.face!=='volume'?facts().units:undefined,yaw:s.yaw,selectedId:site?.id||p,editableUnit,tier:ready()?s.planTier:undefined,interactive:true,frameUnits:ready()&&s.frameUnits});pick=scene.hitTest;volumeTarget=scene.partTarget;
   canvas.innerHTML=scene.html;
   const svg=getSvg();
-  if(svg){svg.setAttribute('tabindex','0');view.sync(svg,svg.getAttribute('viewBox'),[epoch,s.alternative,s.face,s.face==='plan'?s.planTier:'',s.frameUnits&&ready()].join('/'));}
+  if(svg){
+   const scope=epoch+'/'+s.alternative,key=contextKey();
+   if(scope!==paintedScope){viewContexts.clear();paintedView=null;paintedScope=scope;}
+   if(paintedView&&paintedView!==key)viewContexts.set(paintedView,{...viewContexts.get(paintedView),camera:view.readCamera()});
+   svg.setAttribute('tabindex','0');view.sync(svg,svg.getAttribute('viewBox'),scope+'/'+key);
+   if(paintedView!==key)view.restoreCamera(viewContexts.get(key)?.camera);
+   paintedView=key;
+  }
   if(site&&s.face!=='volume')for(const el of canvas.querySelectorAll('[data-sheet-feature]'))if(el.dataset.sheetFeature===site.id)el.classList.add('pd-site-selected');
   if(p&&s.face!=='volume')for(const el of canvas.querySelectorAll('[data-sheet-unit]'))if(el.dataset.sheetUnit===p&&(!s.pickedPart?!el.dataset.sheetPart:el.dataset.sheetPart===s.pickedPart.focus.part&&(!s.pickedPart.focus.index||Number(el.dataset.sheetIndex)===s.pickedPart.focus.index)))el.classList.add(el.dataset.sheetPart?'pd-selected-component':'pd-selected-shape');
   const hudWidth=host.querySelector('.ds-hud-heading span');if(hudWidth&&editableUnit)hudWidth.textContent=n(editableUnit.widthMm)+' مم'+(d!==drawing()?' · معاينة':'');
@@ -257,10 +290,11 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    '<div class="pd-layout'+(side?'':' pd-overview')+'"><div class="pd-mainarea">'+stage(tools)+'</div>'+(side?'<aside class="pd-side">'+side+'</aside>':'')+'</div></section>';
   decorateDesignerStudio(host,{doc:drawing(),units:facts().units,selected:s.part,face:s.face,measured:s.measured,applied:s.applied,persisted:s.persisted,editable:usable()&&canEdit(),sheet:s.sheet,canUndo:historyAvailable(false),canRedo:historyAvailable(true),redoDraft:!!redos[s.alternative]?.length});
   observeDesignerSize();
-  paintScene();if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
+  paintScene();if(focusSelector)focusControl(focusSelector);
   if(unapplied())scheduleDesignDraft();
  }
- function clearInteraction(){pending=false;epoch++;error='';widthPreview=null;cancelDrag(false);dragged=false;computed=null;}
+ function clearWidthPreview(){if(widthPreview)cancelInteractionSession(widthPreview.session);widthPreview=null;}
+ function clearInteraction(){pending=false;epoch++;error='';clearWidthPreview();cancelDrag(false);dragged=false;computed=null;}
  function observeDesignerSize(){if(!resizeObserver)return;resizeObserver.disconnect();resizeObserver.observe(host);const wrap=host.querySelector('.ds-canvas-wrap');if(wrap)resizeObserver.observe(wrap);}
  function rawBlocked(){
   if(!widthPreview)return false;
@@ -269,12 +303,21 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function showEditError(message){
   error=message;const node=host.querySelector('[data-edit-error]');if(node){node.hidden=!message;node.textContent=message;}
  }
+ const widthIntent=(part,value,edge=null,inputKind='button')=>({objectId:part,property:'width',requestedValue:value,referenceEdge:edge,inputKind,explicitUserChange:true});
+ function acceptWidth(doc,part,delta,edge=null,inputKind='button',session=createInteractionSession(doc)){
+  const unit=doc.kitchen.units.find(u=>u.id===part),next=unit?Math.round(unit.width*10)+delta:NaN;
+  const preview=previewInteractionIntent(doc,widthIntent(part,next,edge,inputKind),session);
+  return preview.ok?commitInteractionPreview(preview,session,doc):preview;
+ }
  function inputWidth(input){
   if(input!==host.querySelector('[name="widthMm"]')||!canEdit()||!usable()||s.sheet)return;
   const p=facts().units.find(u=>u.id===s.part);if(!p?.resizable)return;
-  const next=assistNumber(input.value),same=Number.isSafeInteger(next)&&next===p.widthMm;
-  const out=same?{ok:true,doc:drawing()}:Number.isSafeInteger(next)?previewKitchenWidthChange(drawing(),p.id,next-p.widthMm,{withEffects:false,explicitUserChange:true,inputKind:'number'}):{ok:false,reason:'أدخل عرضًا صحيحًا بالملليمتر.'};
-  widthPreview=same?null:{part:p.id,source:drawing(),raw:input.value,next,valid:out.ok};
+  const source=drawing(),next=assistNumber(input.value),same=Number.isSafeInteger(next)&&next===p.widthMm;
+  if(widthPreview&&(widthPreview.part!==p.id||widthPreview.source!==source))clearWidthPreview();
+  const session=widthPreview?.session||createInteractionSession(source);
+  const out=previewInteractionIntent(source,widthIntent(p.id,next,null,'number'),session,{withEffects:false});
+  if(same){cancelInteractionSession(session);widthPreview=null;}
+  else widthPreview={part:p.id,source,raw:input.value,next,valid:out.ok,session};
   showEditError(out.ok?'':out.reason);paintScene(out.ok?out.doc:drawing());
   const exact=host.querySelector('[data-wp-exact]');if(exact)exact.hidden=same;
   const cancel=host.querySelector('[data-ds-cancel]');if(cancel)cancel.hidden=same;
@@ -282,7 +325,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   scheduleDesignDraft();
  }
  function cancelWidth(){
-  if(!widthPreview||!canEdit())return;precision?.cancel();widthPreview=null;showEditError('');render('[name="widthMm"]');writeDesignDraft();sayGesture('أُلغيت معاينة المقاس وبقيت المسودة السابقة.');
+  if(!widthPreview||!canEdit())return;precision?.cancel();clearWidthPreview();showEditError('');render('[name="widthMm"]');writeDesignDraft();sayGesture('أُلغيت معاينة المقاس وبقيت المسودة السابقة.');
  }
  function historyAvailable(forward){
   if(!canEdit()||pending||stale()||widthPreview||drag)return false;
@@ -293,7 +336,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function travelDesign(forward){
   if(rawBlocked()||!historyAvailable(forward))return;
   if(s.applied&&onHistory&&!(forward&&redos[s.alternative]?.length)){
-   const u=facts().units.find(u=>u.id===s.part),focus={projectId:s.base.room.projectId,unitId:u?.id,runId:u?.runId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits};
+   const u=facts().units.find(u=>u.id===s.part),focus=u?objectContext(u):{projectId:s.base.room.projectId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits};
    const result=onHistory(forward,focus);if(result?.ok===false)tell(result.reason);return;
   }
   if(s.applied&&!forward){legacyUndo();return;}
@@ -310,7 +353,8 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function stageChange(out,before,args,focus){
   if(!canEdit())return false;
   if(!out.ok){showEditError(out.reason);return false;}
-  widthPreview=null;error='';redos[s.alternative]=[];(s.histories[s.alternative]??=[]).push({...out,before,args});s.applied=false;s.sheet='';computed=null;render(focus);tell(args.kind==='move'?'ثُبّت ترتيب الوحدة في المسودة. احفظ التوزيع لكتابته في المشروع.':'ثُبّت المقاس في المسودة. احفظ التوزيع لكتابته في المشروع.');return true;
+  if(out.changed===false)return false;
+  clearWidthPreview();error='';redos[s.alternative]=[];(s.histories[s.alternative]??=[]).push({...out,before,args});s.applied=false;s.sheet='';computed=null;render(focus);tell(args.kind==='move'?'ثُبّت ترتيب الوحدة في المسودة. احفظ التوزيع لكتابته في المشروع.':'ثُبّت المقاس في المسودة. احفظ التوزيع لكتابته في المشروع.');return true;
  }
  function moveUnit(targetId){
   if(!canEdit()||rawBlocked()||!s.part||!usable()||s.sheet)return;
@@ -350,15 +394,16 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(onHistory){const quote=buildFactoryQuote(s.base);s.model={stored:true,candidates:[{doc:s.base,quote,total:quote.total,reasons:[],questions:reviewWholeProposal(s.base,storedWalls(),quote)}]};s.alternative=0;s.histories=[];computed=null;}
   clearTimeout(draftTimer);draftTimer=0;clearDraft('design',s.base.room.projectId);render();return true;
  }
- function adjust(delta,focus,edge=null){
+ function adjust(delta,focus,edge=null,session=null,inputKind=edge?'grip':'button'){
   if(!canEdit()||!s.part||!usable()||s.sheet)return;
   if(stale()){tell('تغيّر الرسم. احسب المقترح مجددًا.');return;}
-  const before=drawing(),out=previewKitchenWidthChange(before,s.part,delta,{edge,explicitUserChange:true,inputKind:edge?'grip':'button'});
+  const before=drawing(),out=acceptWidth(before,s.part,delta,edge,inputKind,session||createInteractionSession(before));
   stageChange(out,before,{part:s.part,delta,edge},focus);
  }
  function selectUnit(id,focus,part=null){
   if(rawBlocked()||!usable())return;
   const unit=facts().units.find(u=>u.id===id);if(!unit)return;
+  rememberView();
   s.part=id;s.pickedPart=part;
   if(s.face==='plan')s.planTier=unit.tier==='upper'?'upper':'base';
   else if(s.face!=='volume'&&s.face!==unit.wall)s.face=unit.wall||'plan';
@@ -366,20 +411,24 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  }
  function clearUnit(focus){
   if(rawBlocked())return;
+  for(const [key,value] of viewContexts)if(value.unitId===s.part)viewContexts.set(key,{...value,unitId:null});
   s.part='';s.pickedPart=null;error='';render(focus);
  }
  function selectView(face){
   if(rawBlocked())return;
+  rememberView();
   dragged=false;s.face=face;
   const unit=s.part&&ready()?facts().units.find(u=>u.id===s.part):null;
   if(unit&&face==='plan')s.planTier=unit.tier==='upper'?'upper':'base';
-  else if(unit&&face!=='volume'&&unit.wall!==face){s.part='';s.pickedPart=null;error='';}
+  if(!visibleInView(unit))restoreViewSelection();
   render(face==='volume'||face==='plan'||viewChoices(drawing()).length===1?'[data-wp-view="'+face+'"]':'[data-wp-elevation]');}
  function openPanel(key){
   if(rawBlocked())return;
-  s.sheet=s.sheet===key?'':key;render(s.sheet?'[data-pd-open]':key==='feature'?'[data-wp-canvas] svg':'[data-wp="'+key+'"]');
+  const closing=s.sheet===key,fallback=['feature','part'].includes(key)?'[data-wp-canvas] svg':'[data-wp="'+key+'"]',opener=closing?(sheetOpener||fallback):fallback;
+  s.sheet=closing?'':key;sheetOpener=closing?null:opener;render(s.sheet?'[data-pd-open]':opener);
   if(s.sheet)host.querySelector('[data-pd-open]')?.scrollIntoView({block:'nearest'});
  }
+ function closePanel(){if(!s.sheet)return;const key=s.sheet;if(key==='part')s.pickedPart=null;openPanel(key);}
  host.addEventListener('submit',e=>{
   e.preventDefault();
   if(e.target.matches('[data-plan-controls]')){void generate();return;}
@@ -387,7 +436,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    const p=facts().units.find(u=>u.id===s.part),next=assistNumber(new FormData(e.target).get('widthMm'));
    if(!p||!Number.isSafeInteger(next)){showEditError('أدخل عرضًا صحيحًا بالملليمتر.');return;}
    if(widthPreview&&(widthPreview.part!==p.id||widthPreview.source!==drawing()||!usable())){tell('تغيّر مصدر المعاينة. ألغها وافتح التصميم الحالي.');return;}
-   if(next===p.widthMm)return;adjust(next-p.widthMm,'[name="widthMm"]');
+   if(next===p.widthMm)return;adjust(next-p.widthMm,'[name="widthMm"]',null,widthPreview?.session,'number');
   }
  },{signal});
  host.addEventListener('input',e=>{
@@ -411,9 +460,9 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    if(canPick()&&!dragged&&!e.defaultPrevented){
     const hit=hitAt(e);
     if(s.sheet&&!['feature','part'].includes(s.sheet)){if(hit.unit&&['changes','details'].includes(s.sheet))selectUnit(hit.unit.id);return;}
-    if(hit.target&&hit.target.route!=='unit-part'){s.pickedPart=hit.target;s.sheet='part';render('[data-pd-open]');}
+    if(hit.target&&hit.target.route!=='unit-part'){s.pickedPart=hit.target;s.sheet='part';sheetOpener='[data-wp-canvas] svg';render('[data-pd-open]');}
     else if(hit.unit){s.sheet='';inspectUnit(hit.unit.id,hit.target);}
-    else if(hit.feature){s.pickedPart=null;s.siteFeature=hit.feature.id;s.sheet='feature';render('[data-pd-open]');}
+    else if(hit.feature){s.pickedPart=null;s.siteFeature=hit.feature.id;s.sheet='feature';sheetOpener='[data-wp-canvas] svg';render('[data-pd-open]');}
    }
    return;
   }
@@ -423,7 +472,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(b.hasAttribute('data-wp-view')){selectView(b.dataset.wpView);return;}
   if(b.hasAttribute('data-wp-tier')){
    const tier=b.dataset.wpTier;if(tier===s.planTier)return;
-   s.planTier=tier;s.part='';s.pickedPart=null;error='';render('[data-wp-tier="'+tier+'"]');return;
+   rememberView();s.planTier=tier;restoreViewSelection();render('[data-wp-tier="'+tier+'"]');return;
   }
   if(b.hasAttribute('data-wp-alt')){if(!usable()||s.sheet)return;s.alternative=Number(b.dataset.wpAlt);s.pickedPart=null;s.applied=drawing()===getDoc();s.part='';s.sheet='';error='';computed=null;render('.pd-compare summary');return;}
   if(b.hasAttribute('data-wp-question')){const q=questionList[Number(b.dataset.wpQuestion)];if(q&&(!usable()||s.applied||applyDraft()))onAdvance(q.step,q.focus);return;}
@@ -444,7 +493,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    case 'cancel':clearInteraction();render();break;
    case 'settings':case 'details':case 'questions':case 'changes':openPanel(b.dataset.wp);break;
    case 'clear-unit':clearUnit('[data-wp-unit]');break;
-   case 'close-sheet':if(s.sheet){const key=s.sheet;if(key==='part')s.pickedPart=null;openPanel(key);}break;
+   case 'close-sheet':closePanel();break;
    case 'plus':adjust(100,'[data-wp="plus"]');break;
    case 'minus':adjust(-100,'[data-wp="minus"]');break;
    case 'undo':if(onHistory)travelDesign(false);else legacyUndo();break;
@@ -455,7 +504,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
     break;
    }
    case 'fit':view.reset();break;
-   case 'framing':s.frameUnits=!s.frameUnits;render('[data-wp="framing"]');break;
+   case 'framing':rememberView();s.frameUnits=!s.frameUnits;render('[data-wp="framing"]');break;
    case 'rotate':s.yaw=(s.yaw+90)%360;paintScene();break;
    case 'usage':openUsage(facts().units.find(u=>u.id===s.part),b.dataset.useId);break;
    case 'apply':if(!s.sheet)applyDraft();break;
@@ -544,10 +593,14 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function sayGesture(message){
   const output=host.querySelector('[data-wp-gesture]');if(output)output.textContent=message;
  }
- function cancelDrag(repaint=true){
+ function releaseDrag(){
   const was=drag;drag=null;
   if(rotationFrame){cancelAnimationFrame(rotationFrame);rotationFrame=0;}
   if(was?.canvas?.hasPointerCapture?.(was.id))was.canvas.releasePointerCapture(was.id);
+  return was;
+ }
+ function cancelDrag(repaint=true){
+  const was=releaseDrag();if(was?.session)cancelInteractionSession(was.session);
   if(was?.edge&&repaint){
    paintScene();sayGesture('أُلغي السحب وبقيت المقاسات السابقة.');
   }
@@ -561,7 +614,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function previewWidth(d,delta){
   if(d.delta===delta)return;
   d.delta=delta;
-  const out=delta?previewKitchenWidthChange(d.source,d.unit.id,delta,{withEffects:false,edge:d.edge}):{ok:true,doc:d.source};
+  const out=previewInteractionIntent(d.source,widthIntent(d.unit.id,d.unit.widthMm+delta,d.edge,'grip'),d.session,{withEffects:false});
   paintScene(out.ok?out.doc:d.source);
   sayGesture(n(d.unit.widthMm+delta)+' مم · '+(out.ok?'أفلت لتثبيت العرض في المسوّدة.':out.reason));
  }
@@ -588,7 +641,8 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    const dx=Number(grip.dataset.axisX),dy=Number(grip.dataset.axisY);
    if(!(grip.dataset.wpGrip==='move'?unit?.movable:unit?.resizable)||!matrix||!(Math.hypot(dx,dy)>0))return;
    e.preventDefault();const inverse=matrix.inverse(),origin=new DOMPoint(e.clientX,e.clientY).matrixTransform(inverse);
-   drag={canvas,id:e.pointerId,x:e.clientX,y:e.clientY,source:drawing(),unit,edge:grip.dataset.wpGrip,dx,dy,inverse,origin};
+   const source=drawing(),edge=grip.dataset.wpGrip;
+   drag={canvas,id:e.pointerId,x:e.clientX,y:e.clientY,source,unit,edge,dx,dy,inverse,origin,session:edge==='move'?null:createInteractionSession(source)};
    getSvg()?.focus?.({preventScroll:true});canvas.setPointerCapture?.(e.pointerId);sayGesture(grip.dataset.wpGrip==='move'?'اسحب باتجاه الصف لإعادة ترتيب الوحدة.':n(unit.widthMm)+' مم · اسحب الحافة لتغيير العرض.');return;
   }
   if(s.face==='volume')drag={canvas,id:e.pointerId,x:e.clientX,y:e.clientY,yaw:s.yaw};
@@ -613,7 +667,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  },{signal});
  host.addEventListener('pointerup',e=>{
   if(!drag||drag.id!==e.pointerId)return;
-  const d=drag;cancelDrag(false);
+  const d=releaseDrag();
   if(!d.edge){if(dragged)paintScene();return;}
   if(d.edge==='move'){
    const target=moveTarget(e,d);paintScene();
@@ -621,8 +675,8 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
    return;
   }
   const delta=widthDelta(e,d);
-  if(!dragged||!delta||!usable()||drawing()!==d.source){paintScene();sayGesture('لم يتغيّر العرض.');return;}
-  paintScene();adjust(delta,undefined,d.edge);
+  if(!canEdit()||!dragged||!delta||!usable()||drawing()!==d.source){cancelInteractionSession(d.session);paintScene();sayGesture('لم يتغيّر العرض.');return;}
+  paintScene();adjust(delta,undefined,d.edge,d.session,'grip');cancelInteractionSession(d.session);
   if(error)sayGesture(error);
  },{signal});
  host.addEventListener('pointercancel',e=>{if(drag?.id===e.pointerId)cancelDrag();},{signal});
@@ -639,6 +693,8 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(widthPreview){e.preventDefault();e.stopPropagation();cancelWidth();return;}
   const comparison=e.target.closest?.('.pd-compare[open]');
   if(comparison){e.preventDefault();comparison.open=false;comparison.querySelector('summary').focus();return;}
+  if(s.sheet){e.preventDefault();e.stopPropagation();closePanel();return;}
+  if(s.pickedPart){e.preventDefault();e.stopPropagation();s.pickedPart=null;render('[data-wp-canvas] svg');return;}
   if(!s.sheet&&s.part&&!e.target.matches?.('input,select,textarea')){e.preventDefault();clearUnit('[data-wp-unit]');}
  },{signal});
  host.addEventListener('pointerleave',()=>{if(!dragged&&!drag?.edge)cancelDrag(false);},{signal});
@@ -687,8 +743,9 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
     for(const raw of list.slice(0,40)){
      const a=cleanEdit(raw);if(!a)break;
      const before=s.histories[i]?.at(-1)?.doc||s.model.candidates[i].doc;
-     const out=a.kind==='move'?previewKitchenUnitMove(before,a.part,a.targetId):previewKitchenWidthChange(before,a.part,a.delta,{edge:a.edge});
+     const out=a.kind==='move'?previewKitchenUnitMove(before,a.part,a.targetId):acceptWidth(before,a.part,a.delta,a.edge,a.edge?'grip':'button');
      if(!out.ok)break;
+     if(out.changed===false)continue;
      (s.histories[i]??=[]).push({...out,before,args:a});
     }
    });
@@ -715,13 +772,15 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(Number.isFinite(focus.yaw))s.yaw=focus.yaw;
   s.frameUnits=focus.frameUnits!==false;
   openStored(restore.id);
+  restoreViewContexts(focus.views);
   if(s.face===focus.proposalView)view.restoreCamera(focus.camera);
+  focusControl('[name="widthMm"]');
  }else if(focus.unitId&&focus.projectId===s.base.room.projectId&&s.base.kitchen.units.length){
   openStored();
  }else{render();void resumeDesignDraft();}
  const dispose=()=>{
   precision?.destroy();resizeObserver?.disconnect();writeDesignDraft();stopGuarding();globalThis.document?.removeEventListener?.('visibilitychange',hideDesignDraft);globalThis.removeEventListener?.('pagehide',writeDesignDraft);
-  epoch++;cancelDrag(false);menu.destroy();view.destroy();controller.abort();
+  epoch++;clearWidthPreview();cancelDrag(false);menu.destroy();view.destroy();controller.abort();
  };
  // The person chose to leave without applying: the copy kept for a reload goes too.
  dispose.discardDraft=()=>{discarded=true;clearTimeout(draftTimer);draftTimer=0;clearDraft('design',projectKey());};
@@ -730,7 +789,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  dispose.selectionForReturn=()=>{
   if(!usable()||!s.applied||!s.persisted||s.sheet||widthPreview||drag)return null;
   const unit=getDoc().kitchen.units.find(u=>u.id===s.part);
-  return unit?{unitId:unit.id,runId:unit.runId,projectId:s.base.room.projectId,proposalView:s.face,yaw:s.yaw,frameUnits:s.frameUnits,camera:view.readCamera()}:null;
+  return unit?objectContext(unit):null;
  };
  dispose.commandContext=()=>{
   const savedDesign=s.applied&&s.persisted&&!stale()&&!pending&&!outdated()&&!s.sheet&&!widthPreview&&!drag;

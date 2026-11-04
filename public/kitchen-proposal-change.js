@@ -144,11 +144,16 @@ function sideChoices(chain,side,sign,limits){
  return {max:max[0],get:n=>find(0,n)};
 }
 const cost=(a,b)=>a.touch-b.touch||a.resizes-b.resizes||a.travel-b.travel;
-function rearrange(doc,run,row,moves){
+function rearrange(doc,run,row,moves,pinWidthId=null){
  const changes=new Map(moves.map(m=>[m.id,m]));
  const units=doc.kitchen.units.map(u=>{const m=changes.get(u.id);return m?{...u,u:m.startMm/10,width:m.widthMm/10}:u;});
  const kitchen={...doc.kitchen,units};
- const w=doc.room.workshop,rows={...w.rows,[run.id]:{...row,units:row.units.map(e=>{const m=changes.get(e.id);return m?{...e,widthMm:m.widthMm,startMm:m.startMm}:e;})}};
+ // Only an explicit width target gains a pin in this candidate. Automatic
+ // donors and whole-unit moves retain their existing property constraints.
+ const w=doc.room.workshop,rows={...w.rows,[run.id]:{...row,units:row.units.map(e=>{
+  const m=changes.get(e.id);return m?{...e,widthMm:m.widthMm,startMm:m.startMm,
+   ...(e.id===pinWidthId?{locks:{...e.locks,width:true}}:{})}:e;
+ })}};
  const room={...doc.room,workshop:{...w,rows}},proposed={...doc,kitchen,room};
  const checked=validateKitchenChange(doc.kitchen,doc.room,kitchen,room);if(!checked.ok)return fail(doc,checked.reason);
  const envelopes=optionEnvelopes(proposed),expanded={...kitchen,features:[...kitchen.features,...envelopes]};
@@ -210,7 +215,7 @@ export function previewKitchenWidthChange(doc,unitId,deltaMm,{withEffects=true,e
  for(const a of alternatives.slice(0,32)){
   const moves=[{id:unitId,startMm:a.targetStart,widthMm:width}];
   for(const side of [a.left,a.right])for(let link=side;link.move;link=link.next)moves.push(link.move);
-  const out=rearrange(doc,run,row,moves);if(!out.ok){reason=out.reason;continue;}
+  const out=rearrange(doc,run,row,moves,explicitUserChange?unitId:null);if(!out.ok){reason=out.reason;continue;}
   if(!withEffects)return out; // During a grip gesture only validate and draw geometry.
   const summary=describeProposalChange(doc,out.doc);
   return {...out,unitId,...summary,donors:summary.changes.filter(c=>c.unitId!==unitId&&c.deltaWidthMm<0).map(c=>({unitId:c.unitId,label:c.label,amountMm:-c.deltaWidthMm})),protectedUnits};

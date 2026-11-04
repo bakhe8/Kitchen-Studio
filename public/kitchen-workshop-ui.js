@@ -363,7 +363,8 @@ export function mountWorkshop(el,{getDoc,apply,tell,closeOthers,opener,onExterna
    const external=['defaults','assist','field','placement','cad-run','cad-material','top-detail','unit-interior','room-finish','field-part','floor-point'].includes(step);
    if(!canOpenWorkshopPage(currentRole(),external?step:resolveStep(step,focus))){notify('هذه الصفحة خارج صلاحيتك الحالية.');navigate(roleHome(currentRole()));return;}
    if(['defaults','assist','field','placement','cad-run','cad-material','top-detail','unit-interior','room-finish','field-part','floor-point'].includes(step)&&onExternalStep){
-     hide(false);onExternalStep(step,focus);return;
+     const origin=step==='unit-interior'&&active==='whole'?dispose?.selectionForReturn?.():null;
+     hide(false);if(origin)onExternalStep(step,focus,origin);else onExternalStep(step,focus);return;
    }
    navigate(step,focus);
  }

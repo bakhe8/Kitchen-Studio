@@ -71,4 +71,39 @@ const locked=setup([['target',600],['pinned',600,{position:true}],['far',600]]);
 const custom=setup([['target',600],['inside',600]]);custom.room.workshop.rows.R.units[1].use='قدور طويلة';
 assert(!previewKitchenWidthChange(custom,'target',100).ok);custom.room.workshop.rows.R.units[0].locks.width=true;
 assert.match(previewKitchenWidthChange(custom,'target',100).reason,/مثبّت/);
-console.log('Local proposal edits: 600→700 and 900→800; pinned sink/DW fixed, rice fronts 560→660, measured 530 not reused, approvals expire; priced −100 / +100 / 0 vs unknown, two-sided donation, locked-width relay, explicit gap, custom interior and rollback.');
+
+// An intentional width edit becomes the user's constraint; an automatic edit
+// stays automatic. Pin only the target and preserve its other property locks.
+const automatic=setup([['target',600,{position:true,usage:true,finish:true}],['donor',900]]),automaticStamp=JSON.stringify(automatic);
+const explicit=previewKitchenWidthChange(automatic,'target',100,{explicitUserChange:true,inputKind:'number'});
+assert(explicit.ok,explicit.reason);
+assert.deepEqual(explicit.doc.room.workshop.rows.R.units.map(e=>[e.id,e.startMm,e.widthMm,e.locks]),[
+ ['target',0,700,{width:true,position:true,usage:true,finish:true}],
+ ['donor',700,800,{width:false,position:false,usage:false,finish:false}]
+]);
+const geometryOnly=previewKitchenWidthChange(automatic,'target',100,{withEffects:false,explicitUserChange:true,inputKind:'grip'});
+assert(geometryOnly.ok,geometryOnly.reason);assert.deepEqual(geometryOnly.doc,explicit.doc);
+const automaticChange=previewKitchenWidthChange(automatic,'target',100);
+assert(automaticChange.ok,automaticChange.reason);assert.equal(automaticChange.doc.room.workshop.rows.R.units[0].locks.width,false);
+assert.equal(JSON.stringify(automatic),automaticStamp);
+const pinnedStamp=JSON.stringify(explicit.doc),blockedAutomatic=previewKitchenWidthChange(explicit.doc,'target',-100);
+assert(!blockedAutomatic.ok);assert.equal(blockedAutomatic.doc,explicit.doc);
+const editPinned=previewKitchenWidthChange(explicit.doc,'target',-100,{explicitUserChange:true});
+assert(editPinned.ok,editPinned.reason);assert.equal(editPinned.doc.room.workshop.rows.R.units[0].widthMm,600);
+assert.equal(editPinned.doc.room.workshop.rows.R.units[0].locks.width,true);assert.equal(JSON.stringify(explicit.doc),pinnedStamp);
+for(const step of [0,-1000,55,10.5,Infinity]){
+ const rejected=previewKitchenWidthChange(automatic,'target',step,{explicitUserChange:true});
+ assert(!rejected.ok);assert.equal(rejected.doc,automatic);assert.equal(JSON.stringify(automatic),automaticStamp);
+}
+for(const withEffects of [true,false])for(const id of [dw.id,sink.id]){
+ const protectedEdit=previewKitchenWidthChange(orig,id,50,{withEffects,explicitUserChange:true});
+ assert(!protectedEdit.ok);assert.equal(protectedEdit.doc,orig);
+}
+const protectedRelay=previewKitchenWidthChange(relay,'target',100,{explicitUserChange:true});
+assert(protectedRelay.ok,protectedRelay.reason);
+assert.deepEqual(protectedRelay.donors.map(d=>[d.unitId,d.amountMm]),[['near',100]]);
+assert.equal(protectedRelay.doc.room.workshop.rows.R.units.find(e=>e.id==='keep-width').widthMm,500);
+assert.equal(protectedRelay.doc.room.workshop.rows.R.units.find(e=>e.id==='near').locks.width,false);
+const blockedExplicit=previewKitchenWidthChange(gap,'target',100,{explicitUserChange:true});
+assert(!blockedExplicit.ok);assert.equal(blockedExplicit.doc,gap);assert.equal(gap.room.workshop.rows.R.units[0].locks.width,false);
+console.log('Local proposal edits: 600→700 and 900→800; explicit edits pin only their target, geometry-only and full previews match, automatic edits respect pins, no-op/error keep source, sink/DW and donor locks stay protected; rice fronts 560→660, measured 530 not reused, approvals expire; priced −100 / +100 / 0 vs unknown, two-sided donation, locked-width relay, explicit gap, custom interior and rollback.');

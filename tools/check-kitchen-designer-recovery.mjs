@@ -24,9 +24,9 @@ source.room.projectId='K-1234567890ABCDEF';
 const rice=proposalUnits(source).find(u=>u.family==='rice');assert(rice);
 const changedSettings={walls:['back'],sink:false,rice:false,dishwasher:false};
 
-function mount({store=new Store(),resume=false}={}){
+function mount({store=new Store(),resume=false,initial=source}={}){
  globalThis.localStorage=store;
- let live=structuredClone(source),saves=0,controls=null;
+ let live=structuredClone(initial),saves=0,controls=null;
  const events={},notices=[],node={focus(){},scrollIntoView(){},removeAttribute(){}};
  const canvas={innerHTML:'',querySelectorAll:()=>[]};
  const host={innerHTML:'',addEventListener(type,handler){events[type]=handler;},querySelector(selector){
@@ -57,7 +57,9 @@ function mount({store=new Store(),resume=false}={}){
 // Before the fix this exact transition returned pending=true, warns=false and
 // no draft record: the old usable() check dropped work when settings changed.
 const f=mount(),before=JSON.stringify(f.live),initialWidth=f.width();
+assert.equal(f.live.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).locks.width,false);
 await f.action('plus');assert.equal(f.width(),initialWidth+10);
+await f.action('plus');assert.equal(f.width(),initialWidth+20);
 await f.action('settings');f.settings();
 assert(f.dispose.hasPending(),'changed settings keep the accepted width edit pending');
 assert.match(f.host.innerHTML,/تغيّرت بيانات التوزيع/);
@@ -67,22 +69,35 @@ assert(record,'outdated drawing still saves its valid recipe before reload');
 assert.deepEqual(record.payload.pendingSettings,changedSettings);
 assert.equal(record.payload.edits[0][0].part,rice.id);
 assert.equal(record.payload.edits[0][0].delta,100);
+assert.equal(record.payload.edits[0].length,2,'both explicit edits must survive recovery');
 assert.equal(hasUnsavedWork(),false,'successful recipe persistence makes reload recoverable');
 assert.equal(JSON.stringify(f.live),before,'a recovery record is not a project write');
 f.dispose();
 
 const restored=mount({store:f.store,resume:true});
-assert(restored.dispose.hasPending());assert.equal(restored.width(),initialWidth+10);
+assert(restored.dispose.hasPending());assert.equal(restored.width(),initialWidth+20);
 assert.match(restored.host.innerHTML,/تغيّرت بيانات التوزيع/,'recovery preserves the pending choices as well as the prior geometry');
 await restored.action('apply');assert.equal(restored.saves,0,'outdated choices never become an implicit project commit');
 await restored.action('restore');restored.choose(rice.id);
-assert.match(restored.host.innerHTML,/value="700" aria-label="عرض الوحدة/);
+assert.match(restored.host.innerHTML,/value="800" aria-label="عرض الوحدة/);
 await restored.action('apply');assert.equal(restored.saves,1);
-assert.equal(restored.live.kitchen.units.find(u=>u.id===rice.id).width,70);
-assert.equal(restored.live.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).widthMm,700);
+assert.equal(restored.live.kitchen.units.find(u=>u.id===rice.id).width,80);
+assert.equal(restored.live.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).widthMm,800);
+assert.equal(restored.live.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).locks.width,true,'the recovered explicit value retains its width pin');
 assert.equal(readDraft('design',source.room.projectId),null,'explicit successful apply clears the recovery recipe');
 restored.dispose();assert.equal(hasUnsavedWork(),false);
-console.log('PASS staged width plus changed distribution settings survives flush/reopen, blocks premature save and applies CAD/recipe together.');
+console.log('PASS two staged width edits plus changed settings survive flush/reopen, block premature save and apply CAD/recipe/pin together.');
+
+const pinned=structuredClone(source);pinned.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).locks.width=true;
+const pinnedDraft=mount({initial:pinned});await pinnedDraft.action('plus');assert.equal(pinnedDraft.width(),initialWidth+10);
+flushUnsavedWork();pinnedDraft.dispose();
+const pinnedRestored=mount({store:pinnedDraft.store,resume:true,initial:pinned});
+assert.equal(pinnedRestored.width(),initialWidth+10,'replay treats an already-pinned target as an explicit user edit');
+assert.equal(pinnedRestored.saves,0);await pinnedRestored.action('apply');
+assert.equal(pinnedRestored.live.kitchen.units.find(u=>u.id===rice.id).width,70);
+assert.equal(pinnedRestored.live.room.workshop.rows[rice.runId].units.find(u=>u.id===rice.id).locks.width,true);
+pinnedRestored.dispose();
+console.log('PASS a width edit on an already-pinned unit restores without dropping its first operation.');
 
 const failing=mount();await failing.action('plus');await failing.action('settings');failing.settings();failing.store.failed=true;
 flushUnsavedWork();

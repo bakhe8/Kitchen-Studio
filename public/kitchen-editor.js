@@ -15,7 +15,7 @@ import {mountKitchenPhoto} from './kitchen-photo.js';
 import {textureMap} from './kitchen-studio-room.js';
 import {mountKitchenIdeas} from './kitchen-ideas.js';
 import {mountPlacementReview} from './kitchen-placement-review.js';
-import {readKitchenViewport,rememberKitchenViewport} from './kitchen-viewport.js';
+import {readKitchenViewport,rememberKitchenViewport,rememberDesignerReturn,takeDesignerReturn} from './kitchen-viewport.js';
 import {kitchenFrontFinishes,kitchenWorktopFinishes} from './kitchen-materials.js';
 import {kitchenRunPoint} from './kitchen-model.js';
 import {mountKitchenView} from './kitchen-view.js';
@@ -115,14 +115,16 @@ function applyCad(next,msg){
  if(reason){tell(reason);return {ok:false,changed:false,saved:false,reason};}
  return apply(next,msg);
 }
-function editUnit(id){
+function editUnit(id,designerContext=null){
  if(!permitted('unit-interior',true))return;
  const u=doc.kitchen.units.find(v=>v.id===id),g=kitchenGeometry(doc.kitchen,rp).units.find(v=>v.id===id);
  if(!u||!g||!shapeForUnit(u,g)){tell('لا تتّسع هذه الوحدة لتقسيم داخلي قابل للتحرير.');return;}
  if(projectChangedElsewhere()){tell(staleProjectMessage);return;}
  if(!saveProject(doc)){tell('تعذّر حفظ المطبخ قبل فتح الوحدة.');return;}
  const pose=rememberKitchenViewport(kit.getState());
- location.assign(kitchenProjectURL('kitchen-unit',id,pose));
+ const url=new URL(kitchenProjectURL('kitchen-unit',id,pose)),token=rememberDesignerReturn(doc,designerContext?.unitId===id?designerContext:null);
+ if(token)url.searchParams.set('designerReturn',token);else url.searchParams.delete('designerReturn');
+ location.assign(url.href);
 }
 function inspectPart(route,focus={}){
  const dest=workshopPartTarget(doc,route,focus);
@@ -150,6 +152,8 @@ function inspectPart(route,focus={}){
  }
 }
 const entry=new URLSearchParams(location.search);
+const designerReturn=takeDesignerReturn(doc,entry);
+if(entry.has('designerReturn')){const url=new URL(location.href);url.searchParams.delete('designerReturn');history.replaceState(history.state,'',url.href);entry.delete('designerReturn');}
 kit=mountKitchenView($('#shelf-kitchen-host'),{getProject:()=>doc,onCommitProject:apply,onInspectPart:inspectPart,onFactoryRow:runId=>workshop?.open('row',{runId}),initialViewport:readKitchenViewport(entry),getPlan:()=>rp,getRoom:()=>doc.room,getKitchen:()=>doc.kitchen,getPhotos:()=>photos,onCommit:(k,message)=>applyCad({...doc,kitchen:k},message),requireSurvey,onReject:tell,onEditUnit:editUnit,onRoomDimensions:dims,onSurveyPoint:id=>survey?.open('points',id),onSurveyReading:editWallItem,onReadingPhoto:(wall,photoId)=>workshop?.open('photo',{wall,photoId}),onWindowUpstand:(wall,windowId)=>workshop?.open('assembly',{section:'stone',wall,windowId}),onLayouts:()=>panels.open('layouts'),onLibrary:()=>panels.open('library'),onUndo:undo,canUndo:()=>!!kitchenHistory().length});
 // Undo and redo sit at the end of the drawing's command row, one tap away on a tablet; the project menu keeps them too.
 const historyGroup=document.createElement('div');historyGroup.className='kit-history';historyGroup.setAttribute('role','group');historyGroup.setAttribute('aria-label','التراجع والإعادة');
@@ -247,7 +251,8 @@ workshop=mountWorkshop(el,{getDoc:()=>doc,apply,tell,opener:workshopButton,onHis
    guideEntry.setAttribute('aria-label','دليل المشروع · '+preview.label+' · '+preview.text);
    guideEntry.title=preview.text;
  },
- onExternalStep(step,focus){
+ onExternalStep(step,focus,origin){
+   if(step==='unit-interior'){editUnit(focus.unitId,origin);return;}
    if(!['defaults','assist','field'].includes(step)){inspectPart(step,focus);return;}
    panels.close(false);shutPanels();fieldFromGuide=true;
    fieldReg.open({...focus,fromGuide:true,mode:step==='field'?'records':step==='defaults'?'defaults':'assist'});
@@ -302,7 +307,9 @@ document.addEventListener('keydown',e=>{
  e.preventDefault();travel(command==='redo');
 });
 workshopButton.addEventListener('click',()=>{showCommands(false);workshop.open('whole');});
-if(entry.get('panel')==='libraries'){
+if(designerReturn){
+ workshop.open('whole',designerReturn);
+}else if(entry.get('panel')==='libraries'){
  workshop.open('libraries');
 }else if(entry.get('panel')==='workshop'){
  const step=entry.get('step')||'guide',review=step==='survey'&&entry.get('survey')==='review';

@@ -443,27 +443,53 @@ Object.assign(catalog.terms,{worktop:'separate',labor:100,installation:50,delive
 visit.room.workshop.catalog=catalog;
 const savedRow=planWorkshopRow(visit,{...readChainRange(visit,'back'),tier:'base',wanted:{sink:true,rice:true,dishwasher:true},riceMode:'bags'});
 assert(savedRow.ok,savedRow.reason);
-let project=savedRow.doc;
+let project=savedRow.doc,rejectNextSave=false;
 const owner=project.kitchen.runs[0],rice=project.room.workshop.rows[owner.id].units[0],baseQuote=buildFactoryQuote(project);
 const getPlan=()=>scenePlan(project.room,project.kitchen);
 const cad=mountKitchenView(host,{getPlan,getKitchen:()=>project.kitchen,getRoom:()=>project.room,getProject:()=>project,
- onCommitProject:(next)=>{const res=commitProject(project,next);if(res.ok)project=next;return res;},
+ onCommitProject:(next)=>{if(rejectNextSave){rejectNextSave=false;return {ok:false,reason:'تعذّر الحفظ التجريبي. أعد المحاولة.'};}const res=commitProject(project,next);if(res.ok)project=next;return res;},
  onCommit:()=>assert.fail('factory width must never commit only a kitchen'),onReject:()=>{}});
 cad.refresh();cad.inspectItem('unit',rice.id);
 const factoryBody=nodes.get('[data-k-panel-body]');
 assert.match(factoryBody.innerHTML,/name="widthMm"/);
 const submitMm=valueAsNumber=>{const form={dataset:{kForm:'factory-width'},closest:()=>form,querySelectorAll:()=>[{dataset:{kField:'widthMm'},valueAsNumber}]};factoryBody.fire('submit',{target:form});};
 const verifyCandidate=(delta)=>{
- const expected=previewKitchenWidthChange(project,rice.id,delta);assert(expected.ok,expected.reason);
+ const before=project,expected=previewKitchenWidthChange(project,rice.id,delta,{explicitUserChange:true});assert(expected.ok,expected.reason);
+ assert.equal(before.room.workshop.rows[owner.id].units[0].locks.width,false,'the target begins flexible');
  assert.match(factoryBody.innerHTML,/data-k-act="confirm-factory-width"/);
  assert.equal(project.kitchen.units.find(u=>u.id===rice.id).width*10,600);
  btn({kAct:'confirm-factory-width'});assert.deepEqual(project.kitchen.units,expected.doc.kitchen.units);assert.deepEqual(project.room.workshop.rows,expected.doc.room.workshop.rows);
+ assert.equal(project.room.workshop.rows[owner.id].units[0].locks.width,true,'an explicit CAD edit pins only its target width');
  assert.equal(buildFactoryQuote(restoreProject()).total,expected.price.afterSar);assert.equal(kitchenHistory().length,1);
  project=undoProject(project).next;assert.equal(buildFactoryQuote(project).total,baseQuote.total);assert.equal(project.room.workshop.rows[owner.id].units[0].widthMm,600);assert.equal(kitchenHistory().length,0);
+ assert.deepEqual(project.kitchen.units,before.kitchen.units);assert.deepEqual(project.room.workshop.rows,before.room.workshop.rows,'one undo restores geometry and every lock');
+ assert.equal(project.room.workshop.rows[owner.id].units[0].locks.width,false);
  cad.refresh();cad.inspectItem('unit',rice.id);
 };
+submitMm(600);assert(!factoryBody.innerHTML.includes('confirm-factory-width'));assert.equal(kitchenHistory().length,0);assert.equal(project.room.workshop.rows[owner.id].units[0].locks.width,false,'no-op does not pin');
+submitMm(700);svg.fire('keydown',{key:'Escape'});assert(!factoryBody.innerHTML.includes('confirm-factory-width'));assert.equal(panel.hidden,false,'first Escape cancels preview and retains the inspector');assert.equal(kitchenHistory().length,0);
+svg.fire('keydown',{key:'Escape'});assert.equal(panel.hidden,true,'next Escape closes the inspector');cad.inspectItem('unit',rice.id);
+submitMm(700);root.fire('keydown',{key:'Escape',target:factoryBody});assert(!factoryBody.innerHTML.includes('confirm-factory-width'));assert.equal(panel.hidden,false,'Escape from the inspector cancels the same preview');assert.equal(kitchenHistory().length,0);
 submitMm(500);verifyCandidate(-100);
 const gr=new N('[data-k-handle]',{kHandle:'width',kOwner:rice.id});go([190,40],[200,40],gr);verifyCandidate(100);
+// Personal pins allow the same live grip preview as the final explicit edit.
+{
+ const original=project;project=structuredClone(project);project.room.workshop.rows[owner.id].units[0].locks.width=true;
+ cad.refresh();cad.inspectItem('unit',rice.id);const source=project;
+ send('pointerdown',[190,40],gr);send('pointermove',[200,40],gr);withFrame();
+ const livePreview=nodes.get('[data-k-preview-layer]').innerHTML;
+ assert.match(livePreview,/data-k-proposal="valid"/,'the pinned target visibly previews a legal width before release');
+ const previewXs=livePreview.match(/points="([^"]+)"/)[1].split(' ').map(point=>Number(point.split(',')[0]));
+ assert.equal(Math.max(...previewXs)-Math.min(...previewXs),70,'the visible preview is 700 mm wide');assert.equal(project,source);
+ svg.fire('keydown',{key:'Escape'});send('pointerup',[200,40],gr);
+ assert.equal(panel.hidden,false,'cancelling a grip does not close its context');assert.equal(project,source);assert.equal(kitchenHistory().length,0);assert(!factoryBody.innerHTML.includes('confirm-factory-width'));
+ // A non-geometric source change also invalidates the gesture.
+ send('pointerdown',[190,40],gr);send('pointermove',[200,40],gr);withFrame();
+ project={...source,room:{...source.room,name:'تحديث أثناء السحب'}};send('pointermove',[205,40],gr);send('pointerup',[205,40],gr);
+ assert.equal(kitchenHistory().length,0);assert.equal(project.room.workshop.rows[owner.id].units[0].widthMm,600);assert(!factoryBody.innerHTML.includes('confirm-factory-width'));
+ project=original;cad.refresh();cad.inspectItem('unit',rice.id);
+}
+submitMm(700);rejectNextSave=true;btn({kAct:'confirm-factory-width'});assert.equal(kitchenHistory().length,0);assert.match(factoryBody.innerHTML,/data-k-act="confirm-factory-width"/,'failed persistence restages a retryable preview');verifyCandidate(100);
 submitMm(500);project={...project,room:{...project.room,name:'مراجعة جديدة'}};btn({kAct:'confirm-factory-width'});assert.equal(kitchenHistory().length,0);assert.equal(project.room.name,'مراجعة جديدة');
 project={...project,room:{...project.room,workshop:{...project.room.workshop,layoutBrief:{mode:'fixed',capSar:1,extraSar:0,scope:'المطبخ كاملًا',reference:'مشروع العينة',weights:{contract:1}}}}};
 cad.refresh();cad.inspectItem('unit',rice.id);submitMm(500);btn({kAct:'confirm-factory-width'});assert.equal(kitchenHistory().length,0,'fixed budget holds the CAD commit as it does in proposals');
