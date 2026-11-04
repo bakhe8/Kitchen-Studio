@@ -8,7 +8,7 @@
   ],
   "entry": {
     "path": "public/index.html",
-    "sha256": "5954daa7f94b3e9bdf89328758ec7f82ba4c24d91e0f4fc184af955ae33a6ed4",
+    "sha256": "61d7a3ed08ea09b5de42fedac987046ea75f1a9820b34011fc684f549b63b79c",
     "references": [
       "public/kitchen-app.js",
       "public/kitchen-chain.css",
@@ -54,19 +54,19 @@
     ]
   },
   "counts": {
-    "files": 362,
+    "files": 363,
     "stylesheets": 64,
-    "scripts": 298,
+    "scripts": 299,
     "routes": 48,
     "screens": 43,
     "components": 1580
   },
   "coverage": {
-    "totalFiles": 362,
-    "classifiedFiles": 362,
+    "totalFiles": 363,
+    "classifiedFiles": 363,
     "unclassifiedFiles": 0,
     "percent": 100,
-    "entryReachableFiles": 331,
+    "entryReachableFiles": 332,
     "unlinkedFiles": 31,
     "systemNativeFiles": 0
   },
@@ -450,6 +450,7 @@
         "public/kitchen-gateways.js",
         "public/kitchen-history-shortcut.js",
         "public/kitchen-ideas.js",
+        "public/kitchen-interaction-intent.js",
         "public/kitchen-library-catalog.js",
         "public/kitchen-library-defs.js",
         "public/kitchen-library-seeds.js",
@@ -539,9 +540,9 @@
         "unsupported-small-device"
       ],
       "counts": {
-        "files": 127,
+        "files": 128,
         "stylesheets": 26,
-        "scripts": 101,
+        "scripts": 102,
         "screens": 10,
         "components": 852
       }
@@ -22995,8 +22996,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 24477,
-      "sha256": "005503e6eefd08ed117b79ab4e45a728546b32380ec2481c1ac1dd5e8eae22a5",
+      "bytes": 24325,
+      "sha256": "c69b0528a03c51f519d9af455bc34e853da8385d2db6acaa3eb9996ac8f19eba",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -23626,8 +23627,8 @@
       "family": "operations",
       "migrationWave": 5,
       "status": "legacy",
-      "bytes": 34365,
-      "sha256": "1a23031538c4891670bbcea438eb2d2ff20a96f34b4cb13ee52edb1c7ff4125b",
+      "bytes": 34200,
+      "sha256": "5af7ed1aa820f3a7ba2b2491a6b7a3721e28a8f9ac90304c0f8a028fef9f49f8",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -23720,8 +23721,8 @@
       "family": "presentation",
       "migrationWave": 7,
       "status": "legacy",
-      "bytes": 30716,
-      "sha256": "3deed7423a1d6ca027a2b7260e5670f7d89bd4027afd3af4a341a2df2d3e9a53",
+      "bytes": 30548,
+      "sha256": "23341300b182ea912379b50982aeb8a78c93810bd94c6ecdacc7e0605a941d91",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -24092,8 +24093,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 31569,
-      "sha256": "30c8cf4850b739bf5a9e46ab75dcfcdb550356f9e5d29d07759b5609b64a5378",
+      "bytes": 31253,
+      "sha256": "161c9619348b5d2b81f190db2fab05bf72297fd5a2ef01e9116d8ecb0b128179",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -24376,8 +24377,8 @@
       "family": "field",
       "migrationWave": 3,
       "status": "legacy",
-      "bytes": 30690,
-      "sha256": "3363065f074e4fa65237a514ab674cfcc95f5f2819c4b9805d91245c25ede3c3",
+      "bytes": 30477,
+      "sha256": "513de262bef9f8cf3957cb13fadc023f646e20721905b81d4d177705b23181f6",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -24562,8 +24563,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 7829,
-      "sha256": "97604613570db58411f875595e92fda80915e6998328e1cdf865b33d8371fe08",
+      "bytes": 7745,
+      "sha256": "651bfab26a68f1d4284f0db9c349eee5a397e5125618685b37f9c6b9be336df4",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -24726,6 +24727,23 @@
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [],
+      "inlineStyleFragments": 0
+    },
+    {
+      "path": "public/kitchen-interaction-intent.js",
+      "type": "js",
+      "family": "operations",
+      "migrationWave": 8,
+      "status": "legacy",
+      "bytes": 4691,
+      "sha256": "967b28289b5413797acf7766ec550c1701f6b607940988d73cf0f983bb4d8775",
+      "entryLinked": false,
+      "reachableFromEntry": true,
+      "references": [
+        "public/kitchen-measurement-identity.js",
+        "public/kitchen-proposal-change.js",
+        "public/kitchen-workshop-factory.js"
+      ],
       "inlineStyleFragments": 0
     },
     {
@@ -26058,8 +26076,8 @@
       "family": "presentation",
       "migrationWave": 7,
       "status": "legacy",
-      "bytes": 19351,
-      "sha256": "0d4d1abfc6460377840b9c0a0a39a77b6c763d64b5559b779dc712bbeb727540",
+      "bytes": 19663,
+      "sha256": "48a16e342636db7b79eb7fec5665d02ccca824adbf1c0c2af3414c6803d74ef5",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -26612,8 +26630,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 30854,
-      "sha256": "8acc8695e459deb2dbf34b1118f901564246a686278673a1b1f9f74ea9bebf58",
+      "bytes": 30684,
+      "sha256": "b19e89be2777f563d67526789bebdc8494b443009e83a8537765ef2f5b7a587e",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -27410,8 +27428,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 143533,
-      "sha256": "f1e46afa769762642ee0ca12fb728d5d977a9f7d2d591434dd7a07dd85b6d4d6",
+      "bytes": 144321,
+      "sha256": "2ac86b1603fb225c1e90c0f9b6c3e9bda413498c6eca91f1dbfc3dfaaad3af90",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -27424,6 +27442,7 @@
         "public/kitchen-defaults-calculations.js",
         "public/kitchen-drawing-context.js",
         "public/kitchen-drawing-viewport.js",
+        "public/kitchen-interaction-intent.js",
         "public/kitchen-materials.js",
         "public/kitchen-model.js",
         "public/kitchen-proposal-change.js",
@@ -27842,8 +27861,8 @@
       "family": "design",
       "migrationWave": 4,
       "status": "legacy",
-      "bytes": 63438,
-      "sha256": "7810eb1fa69010550aa914c1135b9850a6d05345aa8cbdfe226eff2f51e9777b",
+      "bytes": 64382,
+      "sha256": "795a6770a86eef751e29545a1a2149abbcf651c3f795b439ae81f5ab72955864",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [
@@ -27854,6 +27873,7 @@
         "public/kitchen-draft-store.js",
         "public/kitchen-drawing-context.js",
         "public/kitchen-drawing-viewport.js",
+        "public/kitchen-interaction-intent.js",
         "public/kitchen-layout-brief.js",
         "public/kitchen-measurement-identity.js",
         "public/kitchen-model.js",
@@ -28296,8 +28316,8 @@
       "family": "operations",
       "migrationWave": 8,
       "status": "legacy",
-      "bytes": 50055,
-      "sha256": "2d741eac77b9baa5ae350111e654f654675bc388b0569ca9a0fee1f1089746bb",
+      "bytes": 49513,
+      "sha256": "decfcb65a3e7baa5707f4e124d28be9cd29d3387485bb7baba3a0d5339d781b2",
       "entryLinked": false,
       "reachableFromEntry": true,
       "references": [

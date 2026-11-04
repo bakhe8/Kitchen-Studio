@@ -454,7 +454,7 @@ const factoryBody=nodes.get('[data-k-panel-body]');
 assert.match(factoryBody.innerHTML,/name="widthMm"/);
 const submitMm=valueAsNumber=>{const form={dataset:{kForm:'factory-width'},closest:()=>form,querySelectorAll:()=>[{dataset:{kField:'widthMm'},valueAsNumber}]};factoryBody.fire('submit',{target:form});};
 const verifyCandidate=(delta)=>{
- const expected=previewKitchenWidthChange(project,rice.id,delta);assert(expected.ok,expected.reason);
+ const expected=previewKitchenWidthChange(project,rice.id,delta,{explicitUserChange:true});assert(expected.ok,expected.reason);
  assert.match(factoryBody.innerHTML,/data-k-act="confirm-factory-width"/);
  assert.equal(project.kitchen.units.find(u=>u.id===rice.id).width*10,600);
  btn({kAct:'confirm-factory-width'});assert.deepEqual(project.kitchen.units,expected.doc.kitchen.units);assert.deepEqual(project.room.workshop.rows,expected.doc.room.workshop.rows);

@@ -211,6 +211,11 @@ export function previewKitchenWidthChange(doc,unitId,deltaMm,{withEffects=true,e
   const moves=[{id:unitId,startMm:a.targetStart,widthMm:width}];
   for(const side of [a.left,a.right])for(let link=side;link.move;link=link.next)moves.push(link.move);
   const out=rearrange(doc,run,row,moves);if(!out.ok){reason=out.reason;continue;}
+  if(explicitUserChange){
+   const changed=out.doc.room.workshop.rows[run.id];
+   out.doc={...out.doc,room:{...out.doc.room,workshop:{...out.doc.room.workshop,rows:{...out.doc.room.workshop.rows,
+    [run.id]:{...changed,units:changed.units.map(m=>m.id===unitId?{...m,locks:{...m.locks,width:true}}:m)}}}}};
+  }
   if(!withEffects)return out; // During a grip gesture only validate and draw geometry.
   const summary=describeProposalChange(doc,out.doc);
   return {...out,unitId,...summary,donors:summary.changes.filter(c=>c.unitId!==unitId&&c.deltaWidthMm<0).map(c=>({unitId:c.unitId,label:c.label,amountMm:-c.deltaWidthMm})),protectedUnits};

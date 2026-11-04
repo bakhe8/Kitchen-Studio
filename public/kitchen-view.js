@@ -16,7 +16,8 @@ import {surveyDoorMark,surveyFloorPointMark,surveyPlanBounds,surveyWallBand} fro
 import {kitchenRoom,kitchenRunPoint,kitchenRunLocal,kitchenRunPolygon,transformFreeRun,createKitchen,kitchenGeometry,kitchenUnitSpecs,kitchenFeatureSpecs,kitchenWallPoint,kitchenWallLocal,addRun,updateRun,addUnit,updateUnit,addFeature,updateFeature,removeKitchenItem,suggestKitchenFix} from './kitchen-model.js';
 import {cadPartTarget,faceComponent,openDrawerIndex} from './kitchen-cad-parts.js';
 import {mountKitchenCreative} from './kitchen-creative.js';
-import {previewKitchenWidthChange,snapFactoryWidthMm,factoryWidthEditable,factoryGeometryReason} from './kitchen-proposal-change.js';
+import {snapFactoryWidthMm,factoryWidthEditable,factoryGeometryReason} from './kitchen-proposal-change.js';
+import {createInteractionSession,previewInteractionIntent,commitInteractionPreview} from './kitchen-interaction-intent.js';
 import {kitchenFrontFinishes,kitchenWorktopFinishes} from './kitchen-materials.js';
 import {onHorizontal,onWall,onRunAxis,pickVolume,volumeEditOverlay} from './kitchen-volume-edit.js';
 import {renderKitchenRoom} from './kitchen-render.js';
@@ -95,6 +96,13 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  let ruler=null,rulerLayer=null,rulerMoveFrame=0,rulerPointer=null;let previewLayer=null,ghost=null,hoverFrame=0,hoverEvent=null,placementCache=null,ghostStamp='',lastOver=null,previousRoomSize='';const previewNote=q('[data-k-preview-note]');if(previewNote)previewNote.hidden=true;
  let creative=null,inspectInteriorId=null,runPlacement='wall',freeDepth=60;const wallDepth={base:60,upper:34};let view=initialViewport?.view==='volume'?'volume':'top',orbit=false,tool='select',tier='base',layer='all',unitKind='storage',featKind='window',wantWidth=null,selected=null,opened=false,emptyRequest=null,visible=false,dead=false,gesture=null,frame=0,vol=null,quickStamp='',panelStamp='',prevKitchen=null,baseK=null,geoCache=null,geoRoom=null,geoK=null,lastScene=null,focusConflict=null,camera={yaw:Number.isFinite(initialViewport?.yaw)?initialViewport.yaw%360:32,pitch:Number.isFinite(initialViewport?.pitch)?clamp(initialViewport.pitch,-60,72):25};
  let seenPlan=null,roomCache=null,factoryPreview=null,viewKey='',drawingZoom=1,gripZoom=1;
+ let widthInteraction=null;
+ function clearFactoryPreview(){widthInteraction?.cancel();widthInteraction=null;factoryPreview=null;}
+ function widthIntent(source,unit,widthMm,{edge=null,withEffects=true}={}){
+  if(widthInteraction?.baseRevision!==source){clearFactoryPreview();widthInteraction=createInteractionSession(source);}
+  return previewInteractionIntent(source,{sessionId:widthInteraction.sessionId,baseRevision:source,objectId:unit.id,
+   property:'widthMm',requestedValue:widthMm,referenceEdge:edge,inputKind:edge?'grip':'number',explicitUserChange:true,withEffects},widthInteraction);
+ }
  const factoryMember=u=>u&&getProject?.()?.room.workshop?.rows?.[u.runId]?.units.find(e=>e.id===u.id);
  const resizable=u=>{
    if(!u||kitchenUnitSpecs[u.kind]?.fixedWidth)return false;
@@ -121,7 +129,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  const geom=(k,r)=>{if(geoK!==k||r!==geoRoom){geoCache=kitchenGeometry(k,r);geoK=k;geoRoom=r;}return geoCache;};
  const lookup=(g,s=selected)=>s?(s.kind==='unit'?g.units:s.kind==='feature'?g.features:g.runs).find(x=>x.id===s.id):null;
  const nameOf=(s,e)=>!e?'التفاصيل':s.kind==='unit'?uLabel(e.kind):s.kind==='feature'?featLabel(e.kind):free(e)?runTitle(e,geom(current(),room()).runs):'صف '+tierName(e.tier)+' · '+wn(e.wall);
- const setSelection=(kind,id,show=true)=>{if(factoryPreview?.change.unitId!==id)factoryPreview=null;if(kind!=='unit'||id!==inspectInteriorId)inspectInteriorId=null;selected=id?{kind,id}:null;opened=!!selected&&show;panelStamp='';};
+ const setSelection=(kind,id,show=true)=>{if(factoryPreview?.change.unitId!==id)clearFactoryPreview();if(kind!=='unit'||id!==inspectInteriorId)inspectInteriorId=null;selected=id?{kind,id}:null;opened=!!selected&&show;panelStamp='';};
  const pointEvent=e=>{const m=svg.getScreenCTM();if(!m)return null;const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const a=p.matrixTransform(m.inverse());return Number.isFinite(a.x+a.y)?{x:a.x,z:a.y}:null;};
  const nearest=(r,p)=>{const scores=roomArchitecture(r).walls.map(edge=>{const w=edge.id,l=kitchenWallLocal(r,w,p);return {wall:w,...l,dist:Math.hypot(l.d,l.u-clamp(l.u,edge.start,edge.end))};}).sort((a,b)=>a.dist-b.dist);return scores[0];};
  const placeRun=(g,r,p,kind,desired=null)=>{const pool=g.runs.filter(v=>(!kind||kitchenUnitAllowed(kind,v))&&(!desired||v.tier===desired)&&(layer==='all'||v.tier===layer));let best=null;
@@ -491,7 +499,7 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
      const doc=getProject(),widthMm=snapFactoryWidthMm(doc,d.entity.id,rawWidth*10),width=widthMm/10;
      if(d.factoryDoc===doc&&d.widthMm===widthMm)return d.result;
      d.factoryDoc=doc;d.widthMm=widthMm;
-     const delta=widthMm-Math.round(d.entity.width*10),out=delta?previewKitchenWidthChange(doc,d.entity.id,delta,{withEffects:false,edge:'end'}):{ok:true,doc};
+     const delta=widthMm-Math.round(d.entity.width*10),out=delta?widthIntent(doc,d.entity,widthMm,{withEffects:false,edge:'end'}):{ok:true,doc};
      return packageProposal({...out,kitchen:out.doc.kitchen},'unit',out.ok?{...d.entity,...out.doc.kitchen.units.find(u=>u.id===d.entity.id)}:{...d.entity,width},r,k);
    }
    const width=round(rawWidth);return packageProposal(updateUnit(k,r,d.entity.id,{width}),'unit',{...d.entity,width},r,k);}
@@ -1013,17 +1021,17 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
  function previewFactoryWidth(unit,widthMm,edge){
    if(scoped){reject(scopedRowReason);return;}
    const source=getProject(),delta=widthMm-Math.round(unit.width*10);
-   factoryPreview=null;panelStamp='';
+   clearFactoryPreview();panelStamp='';
    setSelection('unit',unit.id,true);
    if(!delta){paint();note('هذا هو العرض المحفوظ.');return;}
-   const change=previewKitchenWidthChange(source,unit.id,delta,{edge,explicitUserChange:true,inputKind:edge?'grip':'number'});
+   const change=widthIntent(source,unit,widthMm,{edge});
    if(!change.ok){paint();reject(change.reason);return;}
-   factoryPreview={source,change};paint();note('راجع الوحدات المتأثرة ثم طبّق التعديل.');
+   factoryPreview={source,change,session:widthInteraction};paint();note('راجع الوحدات المتأثرة ثم طبّق التعديل.');
  }
  on(body,'input',e=>{
    if(ghost)clearGhost();
    if(factoryPreview&&e.target?.name==='widthMm'){
-     factoryPreview=null;
+     clearFactoryPreview();
      const confirm=body.querySelector('[data-k-act="confirm-factory-width"]');
      if(confirm)confirm.closest('section')?.remove();
    }
@@ -1125,14 +1133,16 @@ export function mountKitchenView(host,{getProject,onCommitProject,onFactoryRow,g
   note('تُزال القراءة من ورقة الجدار حتى تتحدّث الفتحة وحصرها معًا.');onSurveyReading?.(obj.wall,obj.id);return;
  }
  if(act==='factory-row'&&factoryMember(obj)){if(scoped)scopedLayouts();else onFactoryRow?.(obj.runId);return;}
- if(act==='cancel-factory-width'){factoryPreview=null;panelStamp='';paint();return;}
+ if(act==='cancel-factory-width'){clearFactoryPreview();panelStamp='';paint();return;}
  if(act==='confirm-factory-width'){
    if(scoped){reject(scopedRowReason);return;}
-   if(!factoryPreview||factoryPreview.source!==getProject()||factoryPreview.change.unitId!==obj?.id){factoryPreview=null;panelStamp='';paint();reject('تغيّر المشروع. أعد معاينة عرض الوحدة.');return;}
+   if(!factoryPreview||factoryPreview.source!==getProject()||factoryPreview.change.unitId!==obj?.id){clearFactoryPreview();panelStamp='';paint();reject('تغيّر المشروع. أعد معاينة عرض الوحدة.');return;}
    if(factoryPreview.change.hold){reject(factoryPreview.change.hold);return;}
-   const next=factoryPreview.change.doc,out=onCommitProject(next,'حُفظ مقاس الوحدة والوحدات المتأثرة وحصر صف المصنع.');
+   const committed=commitInteractionPreview(factoryPreview.change,factoryPreview.session);
+   if(!committed.ok){reject(committed.reason);return;}
+   const next=committed.candidate,out=onCommitProject(next,'حُفظ مقاس الوحدة والوحدات المتأثرة وحصر صف المصنع.');
    if(out?.ok===false){reject(out.reason);return;}
-   factoryPreview=null;panelStamp='';paint();note('حُفظ مقاس الوحدة وأُعيد حساب صف المصنع.');return;
+   clearFactoryPreview();panelStamp='';paint();note('حُفظ مقاس الوحدة وأُعيد حساب صف المصنع.');return;
  }
  if(act==='window-upstand'&&selected?.kind==='feature'&&obj?.kind==='window'){
   const form=body.querySelector('[data-k-form="site-feature"],[data-k-form="survey-feature"],[data-k-form="preview-survey-feature"]');

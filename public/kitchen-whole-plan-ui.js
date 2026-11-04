@@ -12,7 +12,8 @@ import {savedProjectText} from './kitchen-project.js';
 import {writeDraft,readDraft,clearDraft} from './kitchen-draft-store.js';
 import {registerUnsavedWork} from './kitchen-unsaved-work.js';
 import {proposeWholeKitchen,reviewWholeProposal} from './kitchen-whole-plan.js';
-import {previewKitchenWidthChange,previewKitchenUnitMove,snapFactoryWidthMm} from './kitchen-proposal-change.js';
+import {previewKitchenUnitMove,snapFactoryWidthMm} from './kitchen-proposal-change.js';
+import {createInteractionSession,previewInteractionIntent,commitInteractionPreview} from './kitchen-interaction-intent.js';
 import {mountDesignerPrecision} from './kitchen-designer-precision.js';
 import {decorateDesignerStudio,positionDesignerHud} from './kitchen-designer-studio.js';
 import {budgetHold} from './kitchen-layout-brief.js';
@@ -46,6 +47,14 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  const s=newSession(getDoc());
  let pending=false,epoch=0,error='',pick=null,volumeTarget=null,drag=null,dragged=false,questionList=[],computed=null,rotationFrame=0;
  let draftTimer=0,draftSaved=true,resuming=false,discarded=false,widthPreview=null,redos=[],precision=null,resizeObserver=null;
+ let widthInteraction=null;
+ function cancelWidthInteraction(){widthInteraction?.cancel();widthInteraction=null;}
+ function widthIntent(source,objectId,delta,{edge=null,inputKind='number',withEffects=true}={}){
+  if(widthInteraction?.baseRevision!==source){cancelWidthInteraction();widthInteraction=createInteractionSession(source);}
+  const unit=source.kitchen.units.find(u=>u.id===objectId);
+  return previewInteractionIntent(source,{sessionId:widthInteraction.sessionId,baseRevision:source,objectId,property:'widthMm',
+   requestedValue:Math.round(unit.width*10)+delta,referenceEdge:edge,inputKind,explicitUserChange:true,withEffects},widthInteraction);
+ }
  const stale=()=>s.base!==getDoc();
  const candidate=()=>s.model?.candidates[s.alternative],history=()=>s.histories[s.alternative]||[],last=()=>history().at(-1);
  const drawing=()=>last()?.doc||candidate()?.doc||s.base;
@@ -260,7 +269,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   paintScene();if(focusSelector)host.querySelector(focusSelector)?.focus({preventScroll:true});
   if(unapplied())scheduleDesignDraft();
  }
- function clearInteraction(){pending=false;epoch++;error='';widthPreview=null;cancelDrag(false);dragged=false;computed=null;}
+ function clearInteraction(){pending=false;epoch++;error='';widthPreview=null;cancelWidthInteraction();cancelDrag(false);dragged=false;computed=null;}
  function observeDesignerSize(){if(!resizeObserver)return;resizeObserver.disconnect();resizeObserver.observe(host);const wrap=host.querySelector('.ds-canvas-wrap');if(wrap)resizeObserver.observe(wrap);}
  function rawBlocked(){
   if(!widthPreview)return false;
@@ -273,7 +282,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   if(input!==host.querySelector('[name="widthMm"]')||!canEdit()||!usable()||s.sheet)return;
   const p=facts().units.find(u=>u.id===s.part);if(!p?.resizable)return;
   const next=assistNumber(input.value),same=Number.isSafeInteger(next)&&next===p.widthMm;
-  const out=same?{ok:true,doc:drawing()}:Number.isSafeInteger(next)?previewKitchenWidthChange(drawing(),p.id,next-p.widthMm,{withEffects:false,explicitUserChange:true,inputKind:'number'}):{ok:false,reason:'أدخل عرضًا صحيحًا بالملليمتر.'};
+  const out=same?{ok:true,doc:drawing()}:Number.isSafeInteger(next)?widthIntent(drawing(),p.id,next-p.widthMm,{withEffects:false}):{ok:false,reason:'أدخل عرضًا صحيحًا بالملليمتر.'};
   widthPreview=same?null:{part:p.id,source:drawing(),raw:input.value,next,valid:out.ok};
   showEditError(out.ok?'':out.reason);paintScene(out.ok?out.doc:drawing());
   const exact=host.querySelector('[data-wp-exact]');if(exact)exact.hidden=same;
@@ -282,7 +291,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
   scheduleDesignDraft();
  }
  function cancelWidth(){
-  if(!widthPreview||!canEdit())return;precision?.cancel();widthPreview=null;showEditError('');render('[name="widthMm"]');writeDesignDraft();sayGesture('أُلغيت معاينة المقاس وبقيت المسودة السابقة.');
+  if(!widthPreview||!canEdit())return;precision?.cancel();cancelWidthInteraction();widthPreview=null;showEditError('');render('[name="widthMm"]');writeDesignDraft();sayGesture('أُلغيت معاينة المقاس وبقيت المسودة السابقة.');
  }
  function historyAvailable(forward){
   if(!canEdit()||pending||stale()||widthPreview||drag)return false;
@@ -353,7 +362,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function adjust(delta,focus,edge=null){
   if(!canEdit()||!s.part||!usable()||s.sheet)return;
   if(stale()){tell('تغيّر الرسم. احسب المقترح مجددًا.');return;}
-  const before=drawing(),out=previewKitchenWidthChange(before,s.part,delta,{edge,explicitUserChange:true,inputKind:edge?'grip':'button'});
+  const before=drawing(),preview=widthIntent(before,s.part,delta,{edge,inputKind:edge?'grip':focus==='[name="widthMm"]'?'number':'button'}),out=commitInteractionPreview(preview,widthInteraction);
   stageChange(out,before,{part:s.part,delta,edge},focus);
  }
  function selectUnit(id,focus,part=null){
@@ -546,6 +555,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  }
  function cancelDrag(repaint=true){
   const was=drag;drag=null;
+  if(was?.edge&&was.edge!=='move')cancelWidthInteraction();
   if(rotationFrame){cancelAnimationFrame(rotationFrame);rotationFrame=0;}
   if(was?.canvas?.hasPointerCapture?.(was.id))was.canvas.releasePointerCapture(was.id);
   if(was?.edge&&repaint){
@@ -561,7 +571,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  function previewWidth(d,delta){
   if(d.delta===delta)return;
   d.delta=delta;
-  const out=delta?previewKitchenWidthChange(d.source,d.unit.id,delta,{withEffects:false,edge:d.edge}):{ok:true,doc:d.source};
+  const out=delta?widthIntent(d.source,d.unit.id,delta,{withEffects:false,edge:d.edge,inputKind:'grip'}):{ok:true,doc:d.source};
   paintScene(out.ok?out.doc:d.source);
   sayGesture(n(d.unit.widthMm+delta)+' مم · '+(out.ok?'أفلت لتثبيت العرض في المسوّدة.':out.reason));
  }
@@ -687,7 +697,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
     for(const raw of list.slice(0,40)){
      const a=cleanEdit(raw);if(!a)break;
      const before=s.histories[i]?.at(-1)?.doc||s.model.candidates[i].doc;
-     const out=a.kind==='move'?previewKitchenUnitMove(before,a.part,a.targetId):previewKitchenWidthChange(before,a.part,a.delta,{edge:a.edge});
+     const out=a.kind==='move'?previewKitchenUnitMove(before,a.part,a.targetId):commitInteractionPreview(widthIntent(before,a.part,a.delta,{edge:a.edge,inputKind:'button'}),widthInteraction);
      if(!out.ok)break;
      (s.histories[i]??=[]).push({...out,before,args:a});
     }
@@ -721,7 +731,7 @@ export function mountWholePlan(host,{getDoc,apply,tell,onAdvance,onHistory,canHi
  }else{render();void resumeDesignDraft();}
  const dispose=()=>{
   precision?.destroy();resizeObserver?.disconnect();writeDesignDraft();stopGuarding();globalThis.document?.removeEventListener?.('visibilitychange',hideDesignDraft);globalThis.removeEventListener?.('pagehide',writeDesignDraft);
-  epoch++;cancelDrag(false);menu.destroy();view.destroy();controller.abort();
+  epoch++;cancelWidthInteraction();cancelDrag(false);menu.destroy();view.destroy();controller.abort();
  };
  // The person chose to leave without applying: the copy kept for a reload goes too.
  dispose.discardDraft=()=>{discarded=true;clearTimeout(draftTimer);draftTimer=0;clearDraft('design',projectKey());};
